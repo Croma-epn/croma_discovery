@@ -13,8 +13,8 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #b5a4dc;outline-offset:2px}button:disabled{opacity:.5;cursor:not-allowed}.hidden{display:none!important}.muted{color:var(--muted)}.eyebrow{font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--green)}.btn{border:1px solid transparent;border-radius:10px;padding:10px 15px;font-weight:650;display:inline-flex;align-items:center;justify-content:center;gap:9px;transition:background .16s,border-color .16s,transform .16s}.btn:active{transform:scale(.985)}.btn-primary{background:var(--green);color:#fff;box-shadow:0 3px 8px #37256222}.btn-primary:hover{background:var(--green-dark)}.btn-secondary{background:#fff;border-color:var(--line);color:var(--ink)}.btn-secondary:hover{background:#f8f7fa}.btn-quiet{background:transparent;color:var(--muted);padding:8px}.btn-danger{color:var(--danger);background:#fff;border-color:#f1d9dc}.btn-danger:hover{background:var(--danger-soft)}.icon-btn{width:38px;height:38px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);display:grid;place-items:center;font-size:19px}.field{display:grid;gap:7px;margin-bottom:18px}.field label{font-size:12px;font-weight:700;color:#474351}.field input,.field textarea{width:100%;border:1px solid #d9d6e1;border-radius:10px;padding:12px 13px;background:#fff;color:var(--ink);transition:border .15s,box-shadow .15s}.field textarea{min-height:130px;resize:vertical}.field input:focus,.field textarea:focus{border-color:var(--green);outline:3px solid #e7e1f4}.field input.invalid,.field textarea.invalid{border-color:var(--danger);background:#fffafb;outline-color:#ffe2e5}.field small{font-size:11px;color:var(--muted)}.field .field-error{color:var(--danger);font-size:11px;animation:pop .18s ease}.app-mark{width:39px;height:39px;border-radius:13px;background:var(--green);color:#fff;display:grid;place-items:center;font:800 21px Manrope;letter-spacing:-.06em;box-shadow:0 5px 12px #37256224;overflow:hidden;position:relative}.app-mark img.app-logo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;display:none}.app-mark img.app-logo-img[src]:not([src=""]){display:block}.app-mark .app-mark-text{position:relative;z-index:1}.app-mark:has(img.app-logo-img[src]:not([src=""])) .app-mark-text{display:none}.field label{display:inline-flex;align-items:center;gap:6px}.field label .ic{width:14px;height:14px;color:var(--green);flex:none}.page-heading h1{display:inline-flex;align-items:center;gap:10px}.page-heading h1 .ic{width:22px;height:22px;color:var(--green);flex:none}.auth-card h2{display:flex;align-items:center;gap:10px}.auth-card h2 .ic{width:22px;height:22px;color:var(--green);flex:none}.side-section-label{display:inline-flex;align-items:center;gap:6px}.side-section-label .ic{width:12px;height:12px;flex:none}.count-pill{display:inline-flex;align-items:center;gap:5px}.count-pill .ic{width:12px;height:12px}.saved-state{display:inline-flex;align-items:center;gap:6px}.saved-state:before{display:none}.form-card h2{display:flex;align-items:center;gap:8px}.form-card h2 .ic{width:18px;height:18px;color:var(--green)}.brand{display:flex;align-items:center;gap:11px}.brand strong{font:800 17px Manrope;letter-spacing:-.04em}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:1px}.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle;flex:none}
 .auth-shell{min-height:100vh;display:grid;grid-template-columns:minmax(330px,.9fr) minmax(440px,1.1fr);background:#fff}.auth-aside{background:#201639;color:#fff;padding:44px clamp(28px,5vw,76px);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}.auth-aside:before,.auth-aside:after{content:"";position:absolute;border:1px solid #ffffff18;border-radius:50%;pointer-events:none}.auth-aside:before{width:530px;height:530px;right:-250px;bottom:-130px;box-shadow:0 0 0 45px #ffffff06,0 0 0 90px #ffffff05}.auth-aside:after{width:240px;height:240px;right:12%;top:22%;box-shadow:0 0 0 25px #ffffff05}.auth-aside .app-mark{background:#fff;color:var(--green)}.auth-aside .brand small{color:#c2b9d8}.aside-copy{max-width:470px;position:relative;z-index:1;margin:65px 0}.aside-copy .eyebrow{color:#a894d7}.aside-copy h1{font:800 clamp(34px,4vw,53px)/1.08 Manrope;letter-spacing:-.06em;margin:16px 0}.aside-copy p{color:#cbc4dc;max-width:400px;line-height:1.8;font-size:15px}.aside-points{display:grid;gap:13px;margin-top:30px;color:#e5e1ee;font-size:12px}.aside-points span{display:flex;align-items:center;gap:10px}.point-dot{width:24px;height:24px;border-radius:8px;background:#ffffff14;color:#a894d7;display:grid;place-items:center}.aside-tag{border-top:1px solid #ffffff25;padding-top:18px;color:#b3a9c9;font-size:11px;position:relative;z-index:1}.auth-main{display:flex;align-items:center;justify-content:center;padding:45px 30px}.auth-card{width:min(100%,390px);animation:fadeUp .24s ease both}.auth-card>.brand{margin-bottom:38px}.auth-card h2{font:800 29px/1.2 Manrope;letter-spacing:-.05em;margin:10px 0}.auth-card>p{margin:0 0 27px;color:var(--muted);line-height:1.7}.auth-switch{font-size:12px;text-align:center;color:var(--muted);margin-top:22px}.text-button{border:0;background:none;color:var(--green);font-weight:750;padding:3px}.auth-note{font-size:11px;color:var(--muted);margin-top:24px;line-height:1.7}.auth-footer{font-size:11px;color:#9e9aa7;text-align:center;margin-top:44px}.form-error{padding:10px 12px;border-radius:9px;background:var(--danger-soft);color:var(--danger);font-size:12px;margin-bottom:14px}.form-success{padding:10px 12px;border-radius:9px;background:var(--green-pale);color:var(--green);font-size:12px;margin-bottom:14px}
 .app-shell{min-height:100vh;display:grid;grid-template-columns:248px minmax(0,1fr)}.sidebar{height:100vh;position:sticky;top:0;background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column;padding:24px 15px 14px;z-index:20}.sidebar .brand{padding:0 9px 26px}.side-section-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:#9e9aa7;padding:8px 10px 10px}.side-nav{display:grid;gap:4px}.nav-item{display:flex;align-items:center;gap:11px;width:100%;border:0;background:transparent;text-align:left;padding:10px 11px;border-radius:10px;color:#686473;font-weight:600;font-size:12px;transition:.15s}.nav-item:hover{background:#f6f5f8;color:var(--ink)}.nav-item.active{background:var(--green-soft);color:var(--green)}.nav-item .nav-icon{width:23px;height:23px;display:grid;place-items:center}.side-projects{margin-top:20px;min-height:0;display:flex;flex-direction:column;flex:1}.side-projects-head{display:flex;align-items:center;justify-content:space-between;padding:8px 9px}.side-projects-head .side-section-label{padding:0}.mini-add{border:0;background:transparent;color:#736e80;border-radius:7px;width:26px;height:26px;font-size:19px}.mini-add:hover{background:var(--green-soft);color:var(--green)}.side-project-list{overflow:auto;display:grid;gap:3px}.side-project{border:0;background:transparent;text-align:left;padding:9px 10px;border-radius:9px;color:#625d6c;font-size:12px;display:flex;align-items:center;gap:9px;min-width:0}.side-project:hover{background:#f7f6f8}.side-project.active{background:#f0edf7;color:var(--green);font-weight:700}.side-project .project-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.project-dot{width:8px;height:8px;border-radius:3px;background:#8f77c7;flex:none}.side-bottom{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}.account-mini{display:flex;align-items:center;gap:10px;padding:9px 8px 12px;min-width:0}.account-avatar{width:34px;height:34px;border-radius:11px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;font-weight:800;font-size:11px;flex:none}.account-copy{min-width:0;flex:1}.account-copy strong,.account-copy small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.account-copy strong{font-size:12px}.account-copy small{font-size:10px;color:var(--muted);margin-top:2px}.logout-btn{width:100%;display:flex;align-items:center;gap:11px;padding:10px 11px;border:1px solid transparent;border-radius:10px;background:#fff;color:#6d6877;text-align:left;font-size:12px;font-weight:650}.logout-btn:hover{background:var(--danger-soft);color:var(--danger)}.main-area{min-width:0}.app-topbar{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,3vw,42px);gap:16px;position:sticky;top:0;z-index:10}.breadcrumbs{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted);min-width:0}.breadcrumbs strong{color:var(--ink);font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.crumb-sep{color:#c1bdc9}.topbar-right{display:flex;align-items:center;gap:13px}.saved-state{font-size:11px;color:var(--green);display:flex;align-items:center;gap:6px;white-space:nowrap}.saved-state:before{display:none}.user-chip{width:34px;height:34px;border-radius:50%;background:var(--green-soft);color:var(--green);display:grid;place-items:center;font-size:11px;font-weight:800}
-.page{max-width:1480px;margin:0 auto;padding:38px clamp(20px,3vw,42px) 60px;animation:fadeIn .2s ease}.page-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:30px}.page-heading h1{font:800 clamp(25px,2.3vw,31px)/1.2 Manrope;letter-spacing:-.05em;margin:7px 0}.page-heading p{margin:0;color:var(--muted);font-size:13px}.heading-meta{display:flex;align-items:center;gap:10px;margin-top:12px}.count-pill{font-size:11px;background:#ece8f4;color:var(--green);padding:5px 10px;border-radius:30px;font-weight:800}.project-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:26px}.project-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px;align-items:stretch}.project-card{position:relative;animation:fadeUp .2s ease both;background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px;min-height:225px;display:flex;flex-direction:column;transition:transform .16s,border-color .16s,box-shadow .16s;cursor:pointer}.project-card:hover{transform:translateY(-3px);border-color:#c1b5dd;box-shadow:var(--shadow)}.project-card .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:19px}.project-symbol{width:42px;height:42px;border-radius:13px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;font-size:19px}.project-card h3{font:750 16px Manrope;letter-spacing:-.025em;margin:0 0 8px;overflow-wrap:anywhere}.project-card .desc{font-size:12px;color:var(--muted);line-height:1.65;margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.card-meta{margin-top:auto;padding-top:20px;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:10px}.screen-count{background:#f2f0f5;padding:5px 8px;border-radius:7px;white-space:nowrap}.create-card{border:1.5px solid #3d296c;background:var(--green);color:#fff;justify-content:center;align-items:flex-start;min-height:225px;overflow:hidden}.create-card:before{content:"";position:absolute;width:190px;height:190px;border:1px solid #ffffff28;border-radius:50%;right:-80px;bottom:-80px;box-shadow:0 0 0 22px #ffffff0b,0 0 0 45px #ffffff08}.create-card:hover{background:#302054;border-color:#302054}.create-card .create-plus{width:43px;height:43px;border-radius:13px;background:#ffffff20;display:grid;place-items:center;font-size:26px;margin-bottom:20px;position:relative}.create-card strong{font:800 18px Manrope;position:relative}.create-card span{font-size:12px;color:#dbd3ee;margin-top:8px;max-width:190px;position:relative;line-height:1.6}.empty-state{grid-column:1/-1;background:#fff;border:1px solid var(--line);border-radius:15px;padding:50px 24px;text-align:center}.empty-state h2{font:750 19px Manrope;margin:0 0 7px}.empty-state p{color:var(--muted);font-size:12px;margin:0 auto;max-width:400px}
-.create-layout{display:grid;grid-template-columns:minmax(0,680px) minmax(220px,1fr);gap:36px;align-items:start}.form-card,.guide-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:27px}.form-card h2{font:800 20px Manrope;letter-spacing:-.035em;margin:6px 0 8px}.form-card>p{font-size:12px;color:var(--muted);margin:0 0 27px;line-height:1.7}.form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:24px;padding-top:19px;border-top:1px solid var(--line)}.guide-card{background:var(--green-pale);border-color:#e2dcef;padding:23px}.guide-icon{width:39px;height:39px;border-radius:12px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;margin-bottom:17px}.guide-card h3{font:800 15px Manrope;margin:0 0 8px}.guide-card p{font-size:12px;color:#645c76;line-height:1.75;margin:0 0 16px}.guide-line{display:flex;align-items:flex-start;gap:9px;font-size:11px;color:#514866;margin:12px 0}.guide-line b{width:20px;height:20px;border-radius:7px;background:#e0d9f0;color:var(--green);display:grid;place-items:center;flex:none}
+.page{max-width:1480px;margin:0 auto;padding:38px clamp(20px,3vw,42px) 60px;animation:fadeIn .2s ease}.page-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:30px}.page-heading h1{font:800 clamp(25px,2.3vw,31px)/1.2 Manrope;letter-spacing:-.05em;margin:7px 0}.page-heading p{margin:0;color:var(--muted);font-size:13px}.heading-meta{display:flex;align-items:center;gap:10px;margin-top:12px}.count-pill{font-size:11px;background:#ece8f4;color:var(--green);padding:5px 10px;border-radius:30px;font-weight:800}.project-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:26px}.project-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px;align-items:stretch}.project-card{position:relative;animation:fadeUp .2s ease both;background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px;min-height:225px;display:flex;flex-direction:column;transition:transform .16s,border-color .16s,box-shadow .16s;cursor:pointer}.project-card:hover{transform:translateY(-3px);border-color:#c1b5dd;box-shadow:var(--shadow)}.project-card .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:19px}.project-symbol{width:42px;height:42px;border-radius:13px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;font-size:19px}.project-card h3{font:750 16px Manrope;letter-spacing:-.025em;margin:0 0 8px;overflow-wrap:anywhere}.project-card .desc{font-size:12px;color:var(--muted);line-height:1.65;margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.card-meta{margin-top:auto;padding-top:20px;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:10px}.screen-count{background:#f2f0f5;padding:5px 8px;border-radius:7px;white-space:nowrap}.create-card{border:1px solid var(--green);background:var(--green);color:#fff;justify-content:center;align-items:flex-start;min-height:225px;overflow:hidden}.create-card:before{content:"";position:absolute;width:190px;height:190px;border:1px solid #ffffff28;border-radius:50%;right:-80px;bottom:-80px;box-shadow:0 0 0 22px #ffffff0b,0 0 0 45px #ffffff08}.create-card:hover{background:#302054;border-color:#302054}.create-card .create-plus{width:43px;height:43px;border-radius:13px;background:#ffffff20;display:grid;place-items:center;font-size:26px;margin-bottom:20px;position:relative}.create-card strong{font:800 18px Manrope;position:relative}.create-card span{font-size:12px;color:#dbd3ee;margin-top:8px;max-width:190px;position:relative;line-height:1.6}.empty-state{grid-column:1/-1;background:#fff;border:1px solid var(--line);border-radius:15px;padding:50px 24px;text-align:center}.empty-state h2{font:750 19px Manrope;margin:0 0 7px}.empty-state p{color:var(--muted);font-size:12px;margin:0 auto;max-width:400px}
+.create-layout{display:grid;grid-template-columns:minmax(0,680px);justify-content:center;gap:36px;align-items:start}#createProjectPage .page-heading{justify-content:center;align-items:center}.form-card,.guide-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:27px}.form-card h2{font:800 20px Manrope;letter-spacing:-.035em;margin:6px 0 8px}.form-card>p{font-size:12px;color:var(--muted);margin:0 0 27px;line-height:1.7}.form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:24px;padding-top:19px;border-top:1px solid var(--line)}.guide-card{background:var(--green-pale);border-color:#e2dcef;padding:23px}.guide-icon{width:39px;height:39px;border-radius:12px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;margin-bottom:17px}.guide-card h3{font:800 15px Manrope;margin:0 0 8px}.guide-card p{font-size:12px;color:#645c76;line-height:1.75;margin:0 0 16px}.guide-line{display:flex;align-items:flex-start;gap:9px;font-size:11px;color:#514866;margin:12px 0}.guide-line b{width:20px;height:20px;border-radius:7px;background:#e0d9f0;color:var(--green);display:grid;place-items:center;flex:none}
 .workspace{height:calc(100vh - 68px);min-height:520px;display:grid;grid-template-rows:minmax(0,1fr);animation:fadeIn .2s ease}.workspace-body{display:grid;grid-template-columns:218px minmax(0,1fr);min-height:0}.palette{background:#fff;border-right:1px solid var(--line);padding:22px 15px}.panel-title{font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.12em;color:#8b8794;margin:0 0 15px}.palette-hint{font-size:11px;color:var(--muted);line-height:1.7;margin:0 0 19px}.palette-item{width:100%;display:flex;align-items:center;gap:11px;padding:12px;border:1px solid #ded9e9;border-radius:12px;background:#f9f7fc;text-align:left;color:var(--ink);transition:.15s}.palette-item:hover{border-color:#9781c9;background:var(--green-pale);transform:translateY(-1px)}.palette-icon{width:39px;height:39px;border-radius:10px;background:var(--green-soft);color:var(--green);display:grid;place-items:center}.palette-item strong{display:block;font-size:12px}.palette-item small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.canvas-wrap{position:relative;min-width:0;min-height:0;background-color:#f8f7f9;background-image:radial-gradient(#cdc9d7 1px,transparent 1px);background-size:22px 22px}.canvas-viewport{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}.canvas-viewport.panning{cursor:grabbing}.canvas-world{position:absolute;inset:0;transform-origin:0 0}.canvas-empty{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;width:min(340px,80%);pointer-events:none}.canvas-empty .empty-icon{width:56px;height:56px;border-radius:17px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;margin:0 auto 14px;font-size:25px}.canvas-empty h3{font:800 17px Manrope;margin:0 0 7px}.canvas-empty p{font-size:11px;line-height:1.7;color:var(--muted);margin:0}.canvas-controls{position:absolute;left:18px;bottom:18px;display:flex;align-items:center;gap:4px;padding:5px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 5px 18px #28203a0a;z-index:3}.canvas-controls button{border:0;background:transparent;border-radius:7px;width:30px;height:30px;display:grid;place-items:center;color:#696376}.canvas-controls button:hover{background:var(--green-soft);color:var(--green)}.zoom-label{font-size:10px;font-weight:750;color:#595367;min-width:42px;text-align:center}.canvas-status{position:absolute;right:18px;bottom:22px;font-size:10px;color:#8b8794;display:flex;align-items:center;gap:7px;z-index:3}.screen-node{position:absolute;width:224px;min-height:118px;background:#fff;border:1px solid #dcd9e3;border-radius:13px;box-shadow:0 7px 20px #281d400c;cursor:grab;user-select:none;touch-action:none;transition:border-color .15s,box-shadow .15s;overflow:hidden}.screen-node:hover{border-color:#a08ecb;box-shadow:0 10px 25px #33225b18}.screen-node.selected{border:2px solid var(--green);box-shadow:0 0 0 4px #37256212,0 10px 25px #33225b18}.screen-node.dragging{cursor:grabbing;z-index:10;box-shadow:0 15px 35px #20163924}.node-head{height:37px;background:#f5f4f8;border-bottom:1px solid #e9e7ee;display:flex;align-items:center;justify-content:space-between;padding:0 11px}.node-kind{font-size:9px;font-weight:800;color:var(--green);letter-spacing:.09em;text-transform:uppercase;display:flex;align-items:center;gap:6px}.node-kind:before{content:"";width:6px;height:6px;background:#5d3ea5;border-radius:2px}.node-code{font:700 10px ui-monospace,monospace;color:#8f8b99}.node-body{padding:12px}.node-business{font:800 13px Manrope;letter-spacing:-.025em;margin-bottom:4px;overflow-wrap:anywhere}.node-tech{font-size:10px;color:var(--muted);overflow-wrap:anywhere}.node-edit{position:absolute;right:8px;bottom:7px;border:0;background:#e9e4f5;color:var(--green);border-radius:7px;width:25px;height:25px;display:grid;place-items:center;opacity:0;transition:opacity .15s}.screen-node:hover .node-edit,.screen-node.selected .node-edit{opacity:1}.canvas-empty.hidden{display:none!important}
 .modal-backdrop{position:fixed;inset:0;background:#17102870;backdrop-filter:blur(3px);z-index:100;display:grid;place-items:center;padding:22px;animation:fadeIn .16s ease}.modal{width:min(100%,510px);background:#fff;border-radius:18px;box-shadow:0 25px 80px #17102830;padding:25px;animation:fadeUp .2s ease}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:22px}.modal-head h2{font:800 22px Manrope;letter-spacing:-.04em;margin:5px 0}.modal-head p{margin:0;color:var(--muted);font-size:12px}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:22px}.dialog-icon{width:43px;height:43px;border-radius:13px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;margin-bottom:15px}.dialog-copy{font-size:13px;line-height:1.7;color:#635e6e}.dialog-buttons{display:flex;justify-content:flex-end;gap:9px;margin-top:23px}.toast-stack{position:fixed;right:24px;bottom:24px;z-index:150;display:grid;gap:9px;pointer-events:none}.toast{display:flex;align-items:center;gap:10px;background:#24183f;color:#fff;border-radius:12px;padding:13px 16px;box-shadow:0 12px 30px #17102824;font-size:12px;min-width:230px;max-width:min(390px,calc(100vw - 40px));animation:toastIn .2s ease both}.toast .ic{color:#a995d7}.toast.error-toast{background:#8f2836}.toast.error-toast .ic{color:#ffd6da}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@keyframes pop{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:translateY(0)}}@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -106,10 +106,33 @@
 #projectGrid.list-view .create-project-row:focus-visible{outline:2px solid var(--green);outline-offset:4px}
 
 .screen-node .node-body{padding-bottom:38px}
-.screen-node .node-del{right:8px;bottom:7px;display:grid;place-items:center;opacity:1;cursor:pointer}
+.screen-node .node-del{right:8px;bottom:7px;display:grid;place-items:center;cursor:pointer}
 .screen-node .node-del .ic{width:14px;height:14px}
 .screen-node .node-del:hover{background:#f8d6dc}
-.screen-node .node-del:focus-visible{outline:2px solid var(--danger);outline-offset:2px}
+.screen-node .node-del:focus-visible{outline:2px solid var(--danger);outline-offset:2px;opacity:1}
+
+/* v9: rail de paneles, card ícono-label-valor, ojo de contraseña */
+.workspace-body{position:relative;padding-left:84px}
+.rail{position:absolute;left:0;top:0;bottom:0;width:84px;background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:14px;z-index:2}
+.rail-btn{width:72px;padding:7px 4px;border:0;border-radius:10px;background:transparent;color:#686473;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9.5px;font-weight:650}
+@media(max-width:430px){.workspace-body{padding-left:48px}.rail{width:48px}.rail-btn{width:36px}.rail-btn span{display:none}}
+.rail-btn:hover{background:#f6f5f8;color:var(--ink)}
+.rail-btn.active{background:var(--green-soft);color:var(--green)}
+[data-panel=tools] .tree-block,[data-panel=nav] .panel-tools{display:none}
+.screen-node{width:260px;min-height:0;padding:10px 12px}
+.screen-node .node-head{margin:-10px -12px 6px;padding:0 6px 0 12px;gap:7px;justify-content:flex-start}
+.node-head>.ic{width:16px;height:16px;color:var(--green)}
+.node-head .node-business{flex:1;min-width:0;margin:0;font:700 12.5px Inter,system-ui,sans-serif;letter-spacing:0;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.node-head .node-code{font:500 10.5px Inter,system-ui,sans-serif;color:var(--muted);white-space:nowrap}
+.screen-node{min-height:80px}
+.screen-node .node-del{width:24px;height:24px;background:none;color:var(--muted)}
+.screen-node .node-del:hover{background:var(--danger-soft);color:var(--danger)}
+#treeProject{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prop-type{display:flex;align-items:center;gap:6px;font-size:12px;color:#474351;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.prop-type .ic{width:12px;height:12px;color:var(--green)}.prop-type b{display:flex;align-items:center;gap:5px;color:var(--ink);font-weight:600}
+.pw-wrap{position:relative;display:grid}.pw-wrap input{padding-right:42px}
+.pw-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:0;border-radius:8px;background:none;color:var(--muted);display:grid;place-items:center}
+.pw-toggle:hover{color:var(--green);background:var(--green-soft)}
 </style>
 <style>
 /* ===== Demo animado del aside (lienzo del modelador) ===== */
@@ -299,24 +322,28 @@
 .aside-demo{max-width:470px;margin:2px auto 30px}
 
 /* Workspace: 3 columnas */
-.workspace-body{grid-template-columns:218px minmax(0,1fr) 300px!important}
+.workspace-body{--pal:218px}[data-panel=tools] .palette-inner{width:max-content}
+@media(max-width:1100px){.workspace-body:not([data-panel=tools]){--pal:190px}}
+@media(max-width:760px){.workspace-body:not([data-panel=tools]){--pal:150px}}
+@media(max-width:430px){.workspace-body:not([data-panel=tools]){--pal:62px}}
+.workspace-body{grid-template-columns:var(--pal) minmax(0,1fr) 300px!important}
 .workspace-body.palette-collapsed{grid-template-columns:0 minmax(0,1fr) 300px!important}
-.workspace-body.properties-collapsed{grid-template-columns:218px minmax(0,1fr) 0!important}
+.workspace-body.properties-collapsed{grid-template-columns:var(--pal) minmax(0,1fr) 0!important}
 .workspace-body.palette-collapsed.properties-collapsed{grid-template-columns:0 minmax(0,1fr) 0!important}
 @media(max-width:1100px){
-  .workspace-body{grid-template-columns:190px minmax(0,1fr) 272px!important}
+  .workspace-body{grid-template-columns:var(--pal) minmax(0,1fr) 272px!important}
   .workspace-body.palette-collapsed{grid-template-columns:0 minmax(0,1fr) 272px!important}
-  .workspace-body.properties-collapsed{grid-template-columns:190px minmax(0,1fr) 0!important}
+  .workspace-body.properties-collapsed{grid-template-columns:var(--pal) minmax(0,1fr) 0!important}
   .workspace-body.palette-collapsed.properties-collapsed{grid-template-columns:0 minmax(0,1fr) 0!important}
   .properties-inner{width:272px}
 }
 @media(max-width:980px){
-  .workspace-body{grid-template-columns:190px minmax(0,1fr) 0!important}
+  .workspace-body{grid-template-columns:var(--pal) minmax(0,1fr) 0!important}
   .workspace-body.palette-collapsed{grid-template-columns:0 minmax(0,1fr) 0!important}
   .properties,.edge-tab-properties{display:none!important}
 }
 @media(max-width:760px){
-  .workspace-body{grid-template-columns:150px minmax(0,1fr) 0!important}
+  .workspace-body{grid-template-columns:var(--pal) minmax(0,1fr) 0!important}
   .workspace-body.palette-collapsed{grid-template-columns:0 minmax(0,1fr) 0!important}
   .heading-tools{width:100%}
   .search-box{flex:1}
@@ -324,7 +351,7 @@
   .row-meta{display:none}
 }
 @media(max-width:430px){
-  .workspace-body{grid-template-columns:62px minmax(0,1fr) 0!important}
+  .workspace-body{grid-template-columns:var(--pal) minmax(0,1fr) 0!important}
 }
 
 /* Árbol de pantallas */
@@ -333,14 +360,14 @@
 @media(max-width:1100px){.palette-inner{width:190px}}
 @media(max-width:760px){.palette-inner{width:150px;padding:16px 10px}}
 @media(max-width:430px){.palette-inner{width:62px;padding:13px 6px}}
-.tree-block{margin-top:20px;border-top:1px solid var(--line);padding-top:15px;display:flex;flex-direction:column;min-height:0;flex:1}
+.tree-block{display:flex;flex-direction:column;min-height:0;flex:1}
 .tree-title{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:#8b8794;margin-bottom:9px}
 .tree-count{margin-left:auto;background:#f1edf8;color:var(--green);border-radius:20px;padding:2px 8px;font-size:10px;letter-spacing:0;font-weight:800}
 .screen-tree{display:flex;flex-direction:column;gap:2px;overflow:auto;min-height:0}
 .tree-item{display:flex;align-items:center;gap:8px;width:100%;border:0;background:none;border-radius:8px;padding:8px 9px;text-align:left;color:#5d5769;font-size:11.5px;transition:background .12s,color .12s}
 .tree-item:hover{background:#f6f4f9}
 .tree-item.active{background:var(--green-soft);color:var(--green);font-weight:750}
-.tree-item .tree-dot{width:7px;height:7px;border-radius:2.5px;background:#a894d7;flex:none}
+.tree-item .ic{width:14px;height:14px;color:#a894d7}.tree-item.active .ic{color:var(--green)}
 .tree-item .tree-name{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tree-item .tree-code{font:600 9.5px ui-monospace,monospace;color:#a29cae;flex:none}
 .tree-item.active .tree-code{color:var(--green)}
@@ -375,7 +402,8 @@
 /* ===== v8: ajustes de portada, toolbar, tarjetas y paneles ===== */
 
 /* Demo del login: las pantallas flotan sobre el fondo principal */
-.aside-demo{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important;overflow:visible!important;max-width:500px;margin:2px auto 30px}
+.aside-demo{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important;overflow:visible!important;max-width:min(500px,45vh);margin:8px auto 22px}
+.auth-shell{height:100vh;min-height:0}.auth-main{overflow:auto}
 
 /* Toolbar del portafolio */
 .page-heading{flex-wrap:wrap}
@@ -393,8 +421,6 @@
 
 /* Tamaños de tarjeta en la vista de galería */
 #projectGrid.card-sm{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
-#projectGrid.card-md{grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
-#projectGrid.card-lg{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
 #projectGrid.card-sm .project-card{padding:16px}
 #projectGrid.card-sm .project-cover{margin:-16px -16px 13px;height:92px}
 #projectGrid.card-sm .project-card h3{font-size:14px}
@@ -403,20 +429,12 @@
 #projectGrid.card-sm .screen-count{font-size:9px;padding:4px 6px}
 #projectGrid.card-sm .create-card{min-height:190px;padding:16px}
 #projectGrid.card-sm .create-card strong{font-size:15px}
-#projectGrid.card-md .project-cover{margin:-20px -20px 15px;height:138px}
-#projectGrid.card-lg .project-card{padding:22px}
-#projectGrid.card-lg .project-cover{margin:-22px -22px 17px;height:190px}
-#projectGrid.card-lg .project-card h3{font-size:18px}
-#projectGrid.card-lg .project-card .desc{font-size:12.5px}
-#projectGrid.card-lg .card-meta{padding-top:24px}
 @media(max-width:1240px){#projectGrid.card-sm{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:1100px){
   #projectGrid.card-sm{grid-template-columns:repeat(3,minmax(0,1fr))}
-  #projectGrid.card-md{grid-template-columns:repeat(2,minmax(0,1fr))}
-  #projectGrid.card-lg{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:760px){
-  #projectGrid.card-sm,#projectGrid.card-md,#projectGrid.card-lg{grid-template-columns:1fr}
+  #projectGrid.card-sm{grid-template-columns:1fr}
   #projectGrid.card-sm .project-cover{height:130px}
 }
 
@@ -503,31 +521,39 @@
 <symbol id="i-more" viewBox="0 0 24 24"><path d="M12 5h.01M12 12h.01M12 19h.01" stroke-width="3.2" stroke-linecap="round"/></symbol>
 <symbol id="i-sort" viewBox="0 0 24 24"><path d="M4 7h10M4 12h7M4 17h4"/><path d="M18 5v14M14.5 15.5 18 19l3.5-3.5"/></symbol>
 <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M5 3v3m0 4v11M12 3v10m0 4v4M19 3v3m0 4v11M2 6h6M9 17h6M16 6h6"/></symbol>
-<symbol id="i-cube" viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></symbol>
+<symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+<symbol id="i-tag" viewBox="0 0 24 24"><path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r="1"/></symbol>
+<symbol id="i-hash" viewBox="0 0 24 24"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+<symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+<symbol id="i-text" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-canvas" viewBox="0 0 24 24"><path d="M22 6H2M22 18H2M6 2v20M18 2v20"/></symbol>
 <symbol id="i-cards-sm" viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="6" rx="1"/><rect x="9.5" y="4" width="5" height="6" rx="1"/><rect x="16" y="4" width="5" height="6" rx="1"/><rect x="3" y="14" width="5" height="6" rx="1"/><rect x="9.5" y="14" width="5" height="6" rx="1"/><rect x="16" y="14" width="5" height="6" rx="1"/></symbol>
 <symbol id="i-cards-md" viewBox="0 0 24 24"><rect x="3" y="4" width="8" height="7" rx="1.2"/><rect x="13" y="4" width="8" height="7" rx="1.2"/><rect x="3" y="13" width="8" height="7" rx="1.2"/><rect x="13" y="13" width="8" height="7" rx="1.2"/></symbol>
 <symbol id="i-cards-lg" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6A16.6 16.6 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 4.4-1M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
 </svg>
 
 <section id="loginPage" class="auth-shell">
-  <aside class="auth-aside"><div class="brand"><div class="app-mark"><img class="app-logo-img" src="" alt="Croma"><span class="app-mark-text">c.</span></div><div><strong>Croma</strong><small>Modelador de interacción</small></div></div><div class="aside-copy"><div class="aside-demo" aria-hidden="true"><svg viewBox="0 0 360 236" role="img" aria-label="Demostración: un cursor arrastra una pantalla por el lienzo y la conecta con otra"><path class="demo-line" pathLength="1" d="M172,154 C192,154 198,90 220,90"/><g><rect class="demo-screen-body" x="216" y="52" width="112" height="76" rx="10"/><rect x="225" y="62" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="232" cy="66.5" r="2" fill="#c6b5f2"/><rect x="225" y="80" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="225" y="91" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="102" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="113" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><path class="demo-arrow" d="M216 90 L205 84.5 L205 95.5 Z"/><circle class="demo-port demo-port-b" cx="216" cy="90" r="4.5"/></g><g class="demo-screen-a"><rect class="demo-ants" x="-5" y="-5" width="122" height="86" rx="12"/><rect class="demo-screen-body" x="0" y="0" width="112" height="76" rx="10"/><rect x="9" y="10" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="16" cy="14.5" r="2" fill="#c6b5f2"/><rect x="9" y="28" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="9" y="39" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="50" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="61" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><circle class="demo-port demo-port-a" cx="112" cy="38" r="4.5"/></g><g class="demo-cursor"><path d="M0 0 L0 16.9 L4.3 13.2 L6.9 19.3 L10.2 17.9 L7.6 11.9 L13.2 11.4 Z" fill="#fff" stroke="#2a1e4a" stroke-width="1.4" stroke-linejoin="round"/></g></svg></div><span class="eyebrow">Modela. Conecta. Valida.</span><h1>Diseña el flujo, no solo las pantallas.</h1><p>Arrastra pantallas al lienzo, conéctalas con flechas y define la navegación completa de tu producto. Croma convierte tu modelo en un prototipo navegable — sin escribir una sola línea de código.</p></div></aside>
+  <aside class="auth-aside"><div class="brand"><div class="app-mark"><img class="app-logo-img" src="logo.webp" alt="Croma"></div><div><strong>Croma</strong><small>Modelador de interacción</small></div></div><div class="aside-copy"><h1>Diseña el flujo, no solo las pantallas.</h1><div class="aside-demo" aria-hidden="true"><svg viewBox="0 0 360 236" role="img" aria-label="Demostración: un cursor arrastra una pantalla por el lienzo y la conecta con otra"><path class="demo-line" pathLength="1" d="M172,154 C192,154 198,90 220,90"/><g><rect class="demo-screen-body" x="216" y="52" width="112" height="76" rx="10"/><rect x="225" y="62" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="232" cy="66.5" r="2" fill="#c6b5f2"/><rect x="225" y="80" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="225" y="91" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="102" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="113" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><path class="demo-arrow" d="M216 90 L205 84.5 L205 95.5 Z"/><circle class="demo-port demo-port-b" cx="216" cy="90" r="4.5"/></g><g class="demo-screen-a"><rect class="demo-ants" x="-5" y="-5" width="122" height="86" rx="12"/><rect class="demo-screen-body" x="0" y="0" width="112" height="76" rx="10"/><rect x="9" y="10" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="16" cy="14.5" r="2" fill="#c6b5f2"/><rect x="9" y="28" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="9" y="39" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="50" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="61" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><circle class="demo-port demo-port-a" cx="112" cy="38" r="4.5"/></g><g class="demo-cursor"><path d="M0 0 L0 16.9 L4.3 13.2 L6.9 19.3 L10.2 17.9 L7.6 11.9 L13.2 11.4 Z" fill="#fff" stroke="#2a1e4a" stroke-width="1.4" stroke-linejoin="round"/></g></svg></div><span class="eyebrow">Modela. Conecta. Valida.</span><p>Arrastra pantallas al lienzo, conéctalas con flechas y define la navegación completa de tu producto. Croma convierte tu modelo en un prototipo navegable — sin escribir una sola línea de código.</p></div></aside>
   <main class="auth-main"><div class="auth-card"><h2>Continúa tu trabajo</h2><form id="loginForm" novalidate><div class="field"><label for="loginEmail"><svg class="ic"><use href="#i-mail"/></svg> Correo institucional</label><input id="loginEmail" type="email" autocomplete="username" placeholder="nombre@epn.edu.ec" required><small id="loginEmailError" class="field-error"></small></div><div class="field"><label for="loginPassword"><svg class="ic"><use href="#i-lock"/></svg> Contraseña</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Ingresa tu contraseña" required><small id="loginPasswordError" class="field-error"></small></div><div class="forgot-row"><button id="goRecover" class="text-button" type="button">¿Olvidaste tu contraseña?</button></div><div id="loginMessage" class="form-msg" role="alert"></div><button class="btn btn-primary" type="submit" style="width:100%;padding:12px">Iniciar sesión</button></form><div class="auth-switch">¿Todavía no tienes cuenta? <button id="goRegister" class="text-button" type="button">Crear una cuenta</button></div></main>
 </section>
 
 <section id="registerPage" class="auth-shell hidden">
-  <aside class="auth-aside"><div class="brand"><div class="app-mark"><img class="app-logo-img" src="" alt="Croma"><span class="app-mark-text">c.</span></div><div><strong>Croma</strong><small>Modelador de interacción</small></div></div><div class="aside-copy"><div class="aside-demo" aria-hidden="true"><svg viewBox="0 0 360 236" role="img" aria-label="Demostración: un cursor arrastra una pantalla por el lienzo y la conecta con otra"><path class="demo-line" pathLength="1" d="M172,154 C192,154 198,90 220,90"/><g><rect class="demo-screen-body" x="216" y="52" width="112" height="76" rx="10"/><rect x="225" y="62" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="232" cy="66.5" r="2" fill="#c6b5f2"/><rect x="225" y="80" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="225" y="91" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="102" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="113" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><path class="demo-arrow" d="M216 90 L205 84.5 L205 95.5 Z"/><circle class="demo-port demo-port-b" cx="216" cy="90" r="4.5"/></g><g class="demo-screen-a"><rect class="demo-ants" x="-5" y="-5" width="122" height="86" rx="12"/><rect class="demo-screen-body" x="0" y="0" width="112" height="76" rx="10"/><rect x="9" y="10" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="16" cy="14.5" r="2" fill="#c6b5f2"/><rect x="9" y="28" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="9" y="39" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="50" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="61" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><circle class="demo-port demo-port-a" cx="112" cy="38" r="4.5"/></g><g class="demo-cursor"><path d="M0 0 L0 16.9 L4.3 13.2 L6.9 19.3 L10.2 17.9 L7.6 11.9 L13.2 11.4 Z" fill="#fff" stroke="#2a1e4a" stroke-width="1.4" stroke-linejoin="round"/></g></svg></div><span class="eyebrow">Modela. Conecta. Valida.</span><h1>Diseña el flujo, no solo las pantallas.</h1><p>Arrastra pantallas al lienzo, conéctalas con flechas y define la navegación completa de tu producto. Croma convierte tu modelo en un prototipo navegable — sin escribir una sola línea de código.</p></div></aside>
+  <aside class="auth-aside"><div class="brand"><div class="app-mark"><img class="app-logo-img" src="logo.webp" alt="Croma"></div><div><strong>Croma</strong><small>Modelador de interacción</small></div></div><div class="aside-copy"><h1>Diseña el flujo, no solo las pantallas.</h1><div class="aside-demo" aria-hidden="true"><svg viewBox="0 0 360 236" role="img" aria-label="Demostración: un cursor arrastra una pantalla por el lienzo y la conecta con otra"><path class="demo-line" pathLength="1" d="M172,154 C192,154 198,90 220,90"/><g><rect class="demo-screen-body" x="216" y="52" width="112" height="76" rx="10"/><rect x="225" y="62" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="232" cy="66.5" r="2" fill="#c6b5f2"/><rect x="225" y="80" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="225" y="91" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="102" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="113" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><path class="demo-arrow" d="M216 90 L205 84.5 L205 95.5 Z"/><circle class="demo-port demo-port-b" cx="216" cy="90" r="4.5"/></g><g class="demo-screen-a"><rect class="demo-ants" x="-5" y="-5" width="122" height="86" rx="12"/><rect class="demo-screen-body" x="0" y="0" width="112" height="76" rx="10"/><rect x="9" y="10" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="16" cy="14.5" r="2" fill="#c6b5f2"/><rect x="9" y="28" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="9" y="39" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="50" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="61" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><circle class="demo-port demo-port-a" cx="112" cy="38" r="4.5"/></g><g class="demo-cursor"><path d="M0 0 L0 16.9 L4.3 13.2 L6.9 19.3 L10.2 17.9 L7.6 11.9 L13.2 11.4 Z" fill="#fff" stroke="#2a1e4a" stroke-width="1.4" stroke-linejoin="round"/></g></svg></div><span class="eyebrow">Modela. Conecta. Valida.</span><p>Arrastra pantallas al lienzo, conéctalas con flechas y define la navegación completa de tu producto. Croma convierte tu modelo en un prototipo navegable — sin escribir una sola línea de código.</p></div></aside>
   <main class="auth-main"><div class="auth-card"><h2>Crea tu cuenta</h2><form id="registerForm" novalidate><div class="field"><label for="registerName"><svg class="ic"><use href="#i-user"/></svg> Nombre completo</label><input id="registerName" autocomplete="name" placeholder="Ej. Ana Pérez" maxlength="100" required><small id="registerNameError" class="field-error"></small></div><div class="field"><label for="registerEmail"><svg class="ic"><use href="#i-mail"/></svg> Correo institucional</label><input id="registerEmail" type="email" autocomplete="email" placeholder="nombre@epn.edu.ec" required><small id="registerEmailError" class="field-error"></small></div><div class="field"><label for="registerPassword"><svg class="ic"><use href="#i-lock"/></svg> Contraseña</label><input id="registerPassword" type="password" autocomplete="new-password" placeholder="Crea una contraseña" required><small id="registerPasswordError" class="field-error"></small></div><div class="field"><label for="registerConfirm"><svg class="ic"><use href="#i-check"/></svg> Confirmar contraseña</label><input id="registerConfirm" type="password" autocomplete="new-password" placeholder="Repite tu contraseña" required><small id="registerConfirmError" class="field-error"></small></div><div id="registerMessage" class="form-msg" role="alert"></div><button class="btn btn-primary" type="submit" style="width:100%;padding:12px">Crear cuenta <span></span></button></form><div class="auth-switch">¿Ya tienes cuenta? <button id="goLogin" class="text-button" type="button">Iniciar sesión</button></div></div></main>
 </section>
 
 <section id="recoverPage" class="auth-shell hidden">
-  <aside class="auth-aside"><div class="brand"><div class="app-mark"><img class="app-logo-img" src="" alt="Croma"><span class="app-mark-text">c.</span></div><div><strong>Croma</strong><small>Modelador de interacción</small></div></div><div class="aside-copy"><div class="aside-demo" aria-hidden="true"><svg viewBox="0 0 360 236" role="img" aria-label="Demostración: un cursor arrastra una pantalla por el lienzo y la conecta con otra"><path class="demo-line" pathLength="1" d="M172,154 C192,154 198,90 220,90"/><g><rect class="demo-screen-body" x="216" y="52" width="112" height="76" rx="10"/><rect x="225" y="62" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="232" cy="66.5" r="2" fill="#c6b5f2"/><rect x="225" y="80" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="225" y="91" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="102" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="113" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><path class="demo-arrow" d="M216 90 L205 84.5 L205 95.5 Z"/><circle class="demo-port demo-port-b" cx="216" cy="90" r="4.5"/></g><g class="demo-screen-a"><rect class="demo-ants" x="-5" y="-5" width="122" height="86" rx="12"/><rect class="demo-screen-body" x="0" y="0" width="112" height="76" rx="10"/><rect x="9" y="10" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="16" cy="14.5" r="2" fill="#c6b5f2"/><rect x="9" y="28" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="9" y="39" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="50" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="61" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><circle class="demo-port demo-port-a" cx="112" cy="38" r="4.5"/></g><g class="demo-cursor"><path d="M0 0 L0 16.9 L4.3 13.2 L6.9 19.3 L10.2 17.9 L7.6 11.9 L13.2 11.4 Z" fill="#fff" stroke="#2a1e4a" stroke-width="1.4" stroke-linejoin="round"/></g></svg></div><span class="eyebrow">Modela. Conecta. Valida.</span><h1>Diseña el flujo, no solo las pantallas.</h1><p>Arrastra pantallas al lienzo, conéctalas con flechas y define la navegación completa de tu producto. Croma convierte tu modelo en un prototipo navegable — sin escribir una sola línea de código.</p></div></aside>
-  <main class="auth-main"><div class="auth-card"><button id="backToLogin" class="back-link" type="button"><svg class="ic" style="width:14px;height:14px"><use href="#i-chev-left"/></svg> Volver a iniciar sesión</button><h2>Recupera tu contraseña</h2><p class="auth-sub">Escribe tu correo institucional y te enviaremos un enlace para crear una contraseña nueva.</p><form id="recoverForm" novalidate><div class="field"><label for="recoverEmail"><svg class="ic"><use href="#i-mail"/></svg> Correo institucional</label><input id="recoverEmail" type="email" autocomplete="email" placeholder="nombre@epn.edu.ec" required><small id="recoverEmailError" class="field-error"></small></div><div id="recoverMessage" class="form-msg" role="alert"></div><button class="btn btn-primary" type="submit" style="width:100%;padding:12px">Enviar enlace de recuperación</button></form></div></main>
+  <aside class="auth-aside"><div class="brand"><div class="app-mark"><img class="app-logo-img" src="logo.webp" alt="Croma"></div><div><strong>Croma</strong><small>Modelador de interacción</small></div></div><div class="aside-copy"><h1>Diseña el flujo, no solo las pantallas.</h1><div class="aside-demo" aria-hidden="true"><svg viewBox="0 0 360 236" role="img" aria-label="Demostración: un cursor arrastra una pantalla por el lienzo y la conecta con otra"><path class="demo-line" pathLength="1" d="M172,154 C192,154 198,90 220,90"/><g><rect class="demo-screen-body" x="216" y="52" width="112" height="76" rx="10"/><rect x="225" y="62" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="232" cy="66.5" r="2" fill="#c6b5f2"/><rect x="225" y="80" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="225" y="91" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="102" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="113" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><path class="demo-arrow" d="M216 90 L205 84.5 L205 95.5 Z"/><circle class="demo-port demo-port-b" cx="216" cy="90" r="4.5"/></g><g class="demo-screen-a"><rect class="demo-ants" x="-5" y="-5" width="122" height="86" rx="12"/><rect class="demo-screen-body" x="0" y="0" width="112" height="76" rx="10"/><rect x="9" y="10" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="16" cy="14.5" r="2" fill="#c6b5f2"/><rect x="9" y="28" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="9" y="39" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="50" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="61" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><circle class="demo-port demo-port-a" cx="112" cy="38" r="4.5"/></g><g class="demo-cursor"><path d="M0 0 L0 16.9 L4.3 13.2 L6.9 19.3 L10.2 17.9 L7.6 11.9 L13.2 11.4 Z" fill="#fff" stroke="#2a1e4a" stroke-width="1.4" stroke-linejoin="round"/></g></svg></div><span class="eyebrow">Modela. Conecta. Valida.</span><p>Arrastra pantallas al lienzo, conéctalas con flechas y define la navegación completa de tu producto. Croma convierte tu modelo en un prototipo navegable — sin escribir una sola línea de código.</p></div></aside>
+  <main class="auth-main"><div class="auth-card"><button id="backToLogin" class="back-link" type="button"><svg class="ic" style="width:14px;height:14px"><use href="#i-chev-left"/></svg> Volver a iniciar sesión</button><h2>Recupera tu contraseña</h2><p id="recoverIntro" class="auth-sub"></p><form id="recoverForm" novalidate><div id="recoverStep1"><div class="field"><label for="recoverEmail"><svg class="ic"><use href="#i-mail"/></svg> Correo institucional</label><input id="recoverEmail" type="email" autocomplete="email" placeholder="nombre@epn.edu.ec" required><small id="recoverEmailError" class="field-error"></small></div></div><div id="recoverStep2" class="hidden"><div class="field"><label for="recoverCode"><svg class="ic"><use href="#i-key"/></svg> Código de verificación</label><input id="recoverCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000"><small id="recoverCodeError" class="field-error"></small><small>Prototipo: el código aparece en una notificación en lugar de enviarse por correo. <button id="recoverResend" class="text-button" type="button" style="font-size:11px">Reenviar código</button></small></div></div><div id="recoverStep3" class="hidden"><div class="field"><label for="recoverPassword"><svg class="ic"><use href="#i-lock"/></svg> Nueva contraseña</label><input id="recoverPassword" type="password" autocomplete="new-password" placeholder="Crea una contraseña"><small id="recoverPasswordError" class="field-error"></small></div><div class="field"><label for="recoverConfirm"><svg class="ic"><use href="#i-check"/></svg> Confirmar contraseña</label><input id="recoverConfirm" type="password" autocomplete="new-password" placeholder="Repite tu contraseña"><small id="recoverConfirmError" class="field-error"></small></div></div><div id="recoverMessage" class="form-msg" role="alert"></div><button class="btn btn-primary" type="submit" style="width:100%;padding:12px"><span id="recoverSubmitLabel">Enviar código</span> <span>→</span></button></form></div></main>
 </section>
 
 <div id="appShell" class="app-shell hidden">
   <header class="app-topbar">
     <div class="left">
-      <button id="brandHome" class="topbar-brand" type="button" title="Volver a Mis proyectos" aria-label="Croma — ir a Mis proyectos"><span class="app-mark"><img class="app-logo-img" src="" alt=""><span class="app-mark-text">c.</span></span><strong>Croma</strong></button>
+      <button id="brandHome" class="topbar-brand" type="button" title="Volver a Mis proyectos" aria-label="Croma — ir a Mis proyectos"><span class="app-mark"><img class="app-logo-img" src="logo.webp" alt=""></span><strong>Croma</strong></button>
       <span class="crumb-sep">/</span>
       <div class="topbar-current"><strong id="breadcrumbCurrent">Mis proyectos</strong></div>
     </div>
@@ -546,38 +572,38 @@
   <div class="main-area">
     <main id="portfolioPage" class="page">
       <div class="page-heading">
-        <div><h1><svg class="ic"><use href="#i-grid"/></svg> Mis proyectos</h1><div class="heading-meta"><span id="projectCount" class="count-pill">0 proyectos</span></div></div>
+        <div><h1><svg class="ic"><use href="#i-folder"/></svg> Mis proyectos</h1><div class="heading-meta"><span id="projectCount" class="count-pill">0 proyectos</span></div></div>
         <div class="heading-tools">
-          <div class="search-box"><svg class="ic"><use href="#i-search"/></svg><input id="projectSearch" type="search" placeholder="Buscar proyectos…" aria-label="Buscar proyectos" autocomplete="off"></div>
+          <div class="search-box"><svg class="ic"><use href="#i-search"/></svg><input id="projectSearch" type="search" maxlength="150"placeholder="Buscar proyectos…" aria-label="Buscar proyectos" autocomplete="off"></div>
           <div class="toolbar-dropdown"><button id="sortProjects" class="sort-btn" type="button" aria-label="Orden de los proyectos" aria-haspopup="menu" aria-expanded="false" aria-controls="sortProjectsMenu"><svg class="ic"><use href="#i-sort"/></svg><span class="dropdown-label"></span><svg class="ic sort-chev"><use href="#i-chev-down"/></svg></button><div id="sortProjectsMenu" class="toolbar-menu hidden" role="menu" aria-label="Orden de los proyectos"><button type="button" role="menuitemradio" aria-checked="false" data-value="recent">Recientes<svg class="ic"><use href="#i-check"/></svg></button><button type="button" role="menuitemradio" aria-checked="false" data-value="oldest">Antiguos<svg class="ic"><use href="#i-check"/></svg></button></div></div>
           <div class="view-toggle" role="group" aria-label="Vista de proyectos">
             <button id="viewGrid" class="active" type="button" aria-pressed="true" title="Vista de tablero"><svg class="ic"><use href="#i-grid"/></svg></button>
             <button id="viewList" type="button" aria-pressed="false" title="Vista de lista"><svg class="ic"><use href="#i-list"/></svg></button>
           </div>
-          <div id="cardSizeToggle"><div class="toolbar-dropdown"><button id="cardSizeSelect" class="sort-btn" type="button" aria-label="Tamaño de las tarjetas" aria-haspopup="menu" aria-expanded="false" aria-controls="cardSizeSelectMenu"><svg class="ic"><use href="#i-cards-md"/></svg><span class="dropdown-label"></span><svg class="ic sort-chev"><use href="#i-chev-down"/></svg></button><div id="cardSizeSelectMenu" class="toolbar-menu hidden" role="menu" aria-label="Tamaño de las tarjetas"><button type="button" role="menuitemradio" aria-checked="false" data-value="sm">Pequeñas<svg class="ic"><use href="#i-check"/></svg></button><button type="button" role="menuitemradio" aria-checked="false" data-value="md">Medianas<svg class="ic"><use href="#i-check"/></svg></button><button type="button" role="menuitemradio" aria-checked="false" data-value="lg">Grandes<svg class="ic"><use href="#i-check"/></svg></button></div></div></div>
         </div>
       </div>
       <div id="projectGrid" class="project-grid"></div>
     </main>
     <main id="createProjectPage" class="page hidden">
       <div class="page-heading"><div><h1><svg class="ic"><use href="#i-plus"/></svg> Crear proyecto</h1></div></div>
-      <div class="create-layout"><section class="form-card"><h2><svg class="ic"><use href="#i-folder"/></svg> Detalles del proyecto</h2><form id="projectForm" novalidate><div class="field"><label for="projectName"><svg class="ic"><use href="#i-folder"/></svg> Nombre del proyecto <span style="color:var(--danger)">*</span></label><input id="projectName" maxlength="30" placeholder="Ej. Sistema de tutorías" required><small id="projectNameError" class="field-error"></small><small><span id="nameCount">0</span>/30 caracteres</small></div><div class="field"><label for="projectDescription"><svg class="ic"><use href="#i-edit"/></svg> Descripción</label><textarea id="projectDescription" maxlength="150" placeholder="¿Para qué sirve la aplicación y a quién está dirigida?"></textarea><small id="projectDescriptionError" class="field-error"></small><small><span id="descriptionCount">0</span>/150 caracteres</small></div><div class="field"><label for="projectImageInput"><svg class="ic"><use href="#i-image"/></svg> Imagen de portada <span class="optional">(opcional)</span></label><div class="cover-picker"><div id="projectImagePreview" class="cover-preview"><svg class="ic" style="width:22px;height:22px"><use href="#i-image"/></svg></div><div class="cover-picker-copy"><button id="pickProjectImage" class="btn btn-secondary btn-sm" type="button">Subir imagen</button><small>JPG o PNG · máx. 4 MB</small><button id="removeProjectImage" class="text-button hidden" type="button">Quitar imagen</button></div></div><input id="projectImageInput" type="file" accept="image/*" class="hidden"><small id="projectImageError" class="field-error"></small></div><div id="projectMessage" class="form-msg" role="alert"></div><div class="form-actions"><button id="cancelProject" class="btn btn-secondary" type="button">Cancelar</button><button class="btn btn-primary" type="submit">Crear proyecto <span>→</span></button></div></form></section></div>
+      <div class="create-layout"><section class="form-card"><form id="projectForm" novalidate><div class="field"><label for="projectName"><svg class="ic"><use href="#i-folder"/></svg> Nombre del proyecto <span style="color:var(--danger)">*</span></label><input id="projectName" maxlength="30" placeholder="Ej. Sistema de tutorías" required><small id="projectNameError" class="field-error"></small><small><span id="nameCount">0</span>/30 caracteres</small></div><div class="field"><label for="projectDescription"><svg class="ic"><use href="#i-text"/></svg> Descripción</label><textarea id="projectDescription" maxlength="150" placeholder="¿Para qué sirve la aplicación y a quién está dirigida?"></textarea><small id="projectDescriptionError" class="field-error"></small><small><span id="descriptionCount">0</span>/150 caracteres</small></div><div class="field"><label for="projectImageInput"><svg class="ic"><use href="#i-image"/></svg> Imagen de portada <span class="optional">(opcional)</span></label><div class="cover-picker"><div id="projectImagePreview" class="cover-preview"><svg class="ic" style="width:22px;height:22px"><use href="#i-image"/></svg></div><div class="cover-picker-copy"><button id="pickProjectImage" class="btn btn-secondary btn-sm" type="button">Subir imagen</button><small>JPG o PNG · máx. 4 MB</small><button id="removeProjectImage" class="text-button hidden" type="button">Quitar imagen</button></div></div><input id="projectImageInput" type="file" accept="image/*" class="hidden"><small id="projectImageError" class="field-error"></small></div><div id="projectMessage" class="form-msg" role="alert"></div><div class="form-actions"><button id="cancelProject" class="btn btn-secondary" type="button">Cancelar</button><button class="btn btn-primary" type="submit">Crear proyecto <span>→</span></button></div></form></section></div>
     </main>
     <main id="workspacePage" class="workspace hidden">
-      <div id="workspaceBody" class="workspace-body">
+      <div id="workspaceBody" class="workspace-body" data-panel="tools"><nav class="rail" aria-label="Paneles"><button id="railTools" class="rail-btn active" type="button" title="Panel de herramientas" aria-label="Panel de herramientas"><svg class="ic"><use href="#i-tool"/></svg><span>Herramientas</span></button><button id="railNav" class="rail-btn" type="button" title="Panel de elementos" aria-label="Panel de elementos"><svg class="ic"><use href="#i-layers"/></svg><span>Elementos</span></button></nav>
         <aside class="palette"><div class="palette-inner">
-          <div class="palette-head"><h2 class="panel-title">Elementos</h2></div>
-          <button id="screenPalette" class="palette-item" type="button" draggable="true" aria-label="Agregar pantalla"><span class="palette-icon"><svg class="ic"><use href="#i-phone"/></svg></span><span><strong>＋ Pantalla</strong><small>Clic o arrastrar al lienzo</small></span></button>
-          <div class="tree-block"><div class="tree-title"><svg class="ic" style="width:13px;height:13px"><use href="#i-layers"/></svg> Pantallas <span id="treeCount" class="tree-count">0</span></div><div id="screenTree" class="screen-tree"></div></div>
+          <p class="palette-hint panel-tools">Clic o arrastrar al lienzo</p>
+          <button id="screenPalette" class="palette-item panel-tools" type="button" draggable="true" aria-label="Agregar pantalla"><span class="palette-icon"><svg class="ic"><use href="#i-phone"/></svg></span><span><strong>Pantalla</strong></span></button>
+          <div class="tree-block"><div class="tree-title"><svg class="ic" style="width:13px;height:13px"><use href="#i-folder"/></svg> <span id="treeProject"></span> <span id="treeCount" class="tree-count">0</span></div><div id="screenTree" class="screen-tree"></div></div>
         </div></aside>
-        <section class="canvas-wrap" aria-label="Lienzo del modelo"><button id="collapsePalette" class="mini-collapse" type="button" aria-expanded="true" aria-label="Ocultar elementos" title="Ocultar elementos"><svg class="ic" style="width:16px;height:16px"><use href="#i-chev-left"/></svg></button><button id="collapseProperties" class="mini-collapse" type="button" aria-expanded="true" aria-label="Ocultar propiedades" title="Ocultar propiedades"><svg class="ic" style="width:16px;height:16px"><use href="#i-chev-right"/></svg></button><button id="expandPalette" class="edge-tab edge-tab-palette panel-edge-tab" type="button" aria-label="Mostrar elementos" title="Mostrar elementos"><svg class="ic"><use href="#i-cube"/></svg><span>Elementos</span></button><button id="expandProperties" class="edge-tab edge-tab-properties panel-edge-tab" type="button" aria-label="Mostrar propiedades" title="Mostrar propiedades"><svg class="ic"><use href="#i-sliders"/></svg><span>Propiedades</span></button><div id="canvasViewport" class="canvas-viewport"><div id="canvasWorld" class="canvas-world"></div><div id="canvasEmpty" class="canvas-empty"><div class="empty-icon"><svg class="ic" style="width:25px;height:25px"><use href="#i-phone"/></svg></div><h3>Tu modelo empieza aquí</h3><p>Haz clic o arrastra «Pantalla» desde la paleta para colocar la primera pantalla.</p></div></div><div class="canvas-controls"><button id="zoomOut" aria-label="Reducir zoom" type="button"><svg class="ic"><use href="#i-minus"/></svg></button><span id="zoomLabel" class="zoom-label">100%</span><button id="zoomIn" aria-label="Aumentar zoom" type="button"><svg class="ic"><use href="#i-zoom"/></svg></button><span style="width:1px;height:22px;background:var(--line);margin:0 3px"></span><button id="fitCanvas" aria-label="Ajustar al contenido" title="Ajustar al contenido" type="button"><svg class="ic"><use href="#i-fit"/></svg></button></div><div class="canvas-status"><svg class="ic"><use href="#i-layers"/></svg> Lienzo de modelado · <span id="canvasScreenCount">0 pantallas</span></div></section>
+        <section class="canvas-wrap" aria-label="Lienzo del modelo"><button id="collapseProperties" class="mini-collapse" type="button" aria-expanded="true" aria-label="Ocultar propiedades" title="Ocultar propiedades"><svg class="ic" style="width:16px;height:16px"><use href="#i-chev-right"/></svg></button><button id="expandProperties" class="edge-tab edge-tab-properties panel-edge-tab" type="button" aria-label="Mostrar propiedades" title="Mostrar propiedades"><svg class="ic"><use href="#i-sliders"/></svg><span>Propiedades</span></button><div id="canvasViewport" class="canvas-viewport"><div id="canvasWorld" class="canvas-world"></div><div id="canvasEmpty" class="canvas-empty"><div class="empty-icon"><svg class="ic" style="width:25px;height:25px"><use href="#i-phone"/></svg></div><h3>Tu modelo empieza aquí</h3><p>Haz clic o arrastra «Pantalla» desde la paleta para colocar la primera pantalla.</p></div></div><div class="canvas-controls"><button id="zoomOut" aria-label="Reducir zoom" type="button"><svg class="ic"><use href="#i-minus"/></svg></button><span id="zoomLabel" class="zoom-label">100%</span><button id="zoomIn" aria-label="Aumentar zoom" type="button"><svg class="ic"><use href="#i-zoom"/></svg></button><span style="width:1px;height:22px;background:var(--line);margin:0 3px"></span><button id="fitCanvas" aria-label="Ajustar al contenido" title="Ajustar al contenido" type="button"><svg class="ic"><use href="#i-fit"/></svg></button></div><div class="canvas-status"><svg class="ic"><use href="#i-canvas"/></svg> Lienzo de modelado · <span id="canvasScreenCount">0 pantallas</span></div></section>
         <aside class="properties" id="propertiesPanel"><div class="properties-inner">
           <div class="palette-head"><h2 class="panel-title">Propiedades de elemento</h2></div>
           <div id="propertiesEmpty" class="properties-empty"><div class="empty-icon"><svg class="ic" style="width:22px;height:22px"><use href="#i-phone"/></svg></div><h3>Sin selección</h3><p>Selecciona una pantalla en el lienzo o en el árbol de la izquierda para ver y editar sus propiedades.</p></div>
           <form id="inlineProperties" class="properties-form hidden" novalidate>
-            <div class="prop-field"><label for="screenCode"><svg class="ic" style="width:12px;height:12px"><use href="#i-layers"/></svg> Código <span class="req">*</span></label><input id="screenCode" maxlength="30" placeholder="VC-01" required autocomplete="off"><small id="screenCodeError" class="field-error"></small><small class="prop-hint"><span id="screenCodeCount">0</span>/30 · Identificador único del modelo.</small></div>
-            <div class="prop-field"><label for="screenTechnical"><svg class="ic" style="width:12px;height:12px"><use href="#i-edit"/></svg> Nombre técnico <span class="req">*</span></label><input id="screenTechnical" maxlength="60" placeholder="PantallaInicio" required autocomplete="off"><small id="screenTechnicalError" class="field-error"></small><small class="prop-hint"><span id="screenTechnicalCount">0</span>/60 · Nombre en el código, sin espacios.</small></div>
-            <div class="prop-field"><label for="screenBusiness"><svg class="ic" style="width:12px;height:12px"><use href="#i-phone"/></svg> Nombre de negocio <span class="req">*</span></label><input id="screenBusiness" maxlength="80" placeholder="Inicio de sesión" required autocomplete="off"><small id="screenBusinessError" class="field-error"></small><small class="prop-hint"><span id="screenBusinessCount">0</span>/80 · Nombre funcional para usuarios y negocio.</small></div>
+            <div class="prop-type">Tipo: <b><svg class="ic"><use href="#i-phone"/></svg>Pantalla</b></div>
+            <div class="prop-field"><label for="screenCode"><svg class="ic" style="width:12px;height:12px"><use href="#i-hash"/></svg> Código <span class="req">*</span></label><input id="screenCode" maxlength="20" placeholder="VC-01" required autocomplete="off"><small id="screenCodeError" class="field-error"></small><small class="prop-hint"><span id="screenCodeCount">0</span>/20 · Identificador único del modelo.</small></div>
+            <div class="prop-field"><label for="screenTechnical"><svg class="ic" style="width:12px;height:12px"><use href="#i-code"/></svg> Nombre técnico <span class="req">*</span></label><input id="screenTechnical" maxlength="20" placeholder="PantallaInicio" required autocomplete="off"><small id="screenTechnicalError" class="field-error"></small><small class="prop-hint"><span id="screenTechnicalCount">0</span>/20 · Nombre en el código, sin espacios.</small></div>
+            <div class="prop-field"><label for="screenBusiness"><svg class="ic" style="width:12px;height:12px"><use href="#i-briefcase"/></svg> Nombre de negocio <span class="req">*</span></label><input id="screenBusiness" maxlength="20" placeholder="Inicio de sesión" required autocomplete="off"><small id="screenBusinessError" class="field-error"></small><small class="prop-hint"><span id="screenBusinessCount">0</span>/20 · Nombre funcional para usuarios y negocio.</small></div>
           </form>
         </div></aside>
       </div>
@@ -592,7 +618,7 @@
     </div>
     <form id="editProjectForm" novalidate>
       <div class="field"><label for="editProjectName"><svg class="ic"><use href="#i-folder"/></svg> Nombre del proyecto <span style="color:var(--danger)">*</span></label><input id="editProjectName" maxlength="30" placeholder="Ej. Sistema de tutorías" required autocomplete="off"><small id="editProjectNameError" class="field-error"></small><small><span id="editNameCount">0</span>/30 caracteres</small></div>
-      <div class="field"><label for="editProjectDescription"><svg class="ic"><use href="#i-edit"/></svg> Descripción</label><textarea id="editProjectDescription" maxlength="150" placeholder="¿Para qué sirve la aplicación y a quién está dirigida?"></textarea><small id="editProjectDescriptionError" class="field-error"></small><small><span id="editDescriptionCount">0</span>/150 caracteres</small></div>
+      <div class="field"><label for="editProjectDescription"><svg class="ic"><use href="#i-text"/></svg> Descripción</label><textarea id="editProjectDescription" maxlength="150" placeholder="¿Para qué sirve la aplicación y a quién está dirigida?"></textarea><small id="editProjectDescriptionError" class="field-error"></small><small><span id="editDescriptionCount">0</span>/150 caracteres</small></div>
       <div class="field"><label for="editCoverInput"><svg class="ic"><use href="#i-image"/></svg> Imagen de portada <span class="optional">(opcional)</span></label><div class="cover-picker"><div id="editCoverPreview" class="cover-preview"><svg class="ic" style="width:22px;height:22px"><use href="#i-image"/></svg></div><div class="cover-picker-copy"><button id="editPickCover" class="btn btn-secondary btn-sm" type="button">Subir imagen</button><small>JPG o PNG · máx. 4 MB</small><button id="editRemoveCover" class="text-button hidden" type="button">Quitar imagen</button></div></div><input id="editCoverInput" type="file" accept="image/*" class="hidden"><small id="editCoverError" class="field-error"></small></div>
       <div id="editProjectMessage" class="form-msg" role="alert"></div>
       <div class="modal-actions"><button id="cancelEditProject" class="btn btn-secondary" type="button">Cancelar</button><button class="btn btn-primary" type="submit">Guardar cambios</button></div>
@@ -609,28 +635,24 @@
   const STORAGE_KEY = 'frontera-interaction-prototype-v2';
   const VIEW_KEY = 'frontera-view-mode';
   const SORT_KEY = 'frontera-sort-order';
-  const SIZE_KEY = 'frontera-card-size';
   let db = loadDB(), activeUser = null, activeProjectId = null, selectedScreenId = null;
   let zoom = 1, worldX = 110, worldY = 80, dragScreen = null, panState = null, dialogResolve = null;
-  let searchQuery = '', viewMode = 'grid', sortOrder = 'recent', cardSize = 'md', pendingProjectImage = '', editingProjectId = null, pendingEditImage = '', saveTimer = null;
+  let searchQuery = '', viewMode = 'grid', sortOrder = 'recent',pendingProjectImage = '', editingProjectId = null, pendingEditImage = '', saveTimer = null;
   try {
     viewMode = localStorage.getItem(VIEW_KEY) === 'list' ? 'list' : 'grid';
-    sortOrder = localStorage.getItem(SORT_KEY) === 'oldest' ? 'oldest' : 'recent';
-    const savedSize = localStorage.getItem(SIZE_KEY);
-    if (['sm','md','lg'].includes(savedSize)) cardSize = savedSize;
-  } catch {}
+    sortOrder = localStorage.getItem(SORT_KEY) === 'oldest' ? 'oldest' : 'recent';  } catch {}
   function loadDB(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||{users:[],projects:[]}}catch{return {users:[],projects:[]}}}
   function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db))}catch{}}
   function schedulePersist(){clearTimeout(saveTimer);saveTimer=setTimeout(persist,300)}
   function uid(){return crypto?.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2)}
   function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
   function initials(s='Estudiante'){return s.trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'ES'}
-  function showToast(message,type='success',action=null){
+  function showToast(message,type='success',action=null,ms=0){
     const t=document.createElement('div');t.className='toast'+(type==='error'?' error-toast':'');
     t.innerHTML=`<svg class="ic"><use href="#${type==='error'?'i-info':'i-check'}"/></svg><span>${esc(message)}</span>`;
     let timer;
     const dismiss=()=>{clearTimeout(timer);t.remove()};
-    const schedule=()=>{clearTimeout(timer);timer=setTimeout(dismiss,action?8000:3400)};
+    const schedule=()=>{clearTimeout(timer);timer=setTimeout(dismiss,ms||(action?8000:3400))};
     if(action){const button=document.createElement('button');button.type='button';button.className='toast-action';button.textContent=action.label;button.addEventListener('click',()=>{dismiss();action.onClick()},{once:true});t.append(button)}
     t.addEventListener('mouseenter',()=>clearTimeout(timer));t.addEventListener('mouseleave',schedule);
     t.addEventListener('focusin',()=>clearTimeout(timer));t.addEventListener('focusout',schedule);
@@ -654,7 +676,7 @@
     $('recoverPage').classList.toggle('hidden',page!=='recover');
     ['loginMessage','registerMessage','recoverMessage'].forEach(id=>setMessage(id,''));
     ['loginEmail','loginPassword','registerName','registerEmail','registerPassword','registerConfirm','recoverEmail'].forEach(id=>setFieldError(id,''));
-    closeUserMenu();
+    resetRecover();closeUserMenu();
   }
   function renderAccount(){
     if(!activeUser)return;
@@ -751,15 +773,6 @@
     try{localStorage.setItem(SORT_KEY,sortOrder)}catch{}
     updateSortControl();renderProjects();
   }
-  function updateCardSizeControl(){
-    updateToolbarDropdown('cardSizeSelect',cardSize);
-  }
-  function setCardSize(size){
-    if(!['sm','md','lg'].includes(size))return;
-    cardSize=size;
-    try{localStorage.setItem(SIZE_KEY,cardSize)}catch{}
-    updateCardSizeControl();renderProjects();
-  }
   function renderProjects(){
     const projects=userProjects();
     const q=searchQuery.trim().toLowerCase();
@@ -768,9 +781,7 @@
     const grid=$('projectGrid');
     closeCardMenus();
     grid.classList.toggle('list-view',viewMode==='list');
-    grid.classList.remove('card-sm','card-md','card-lg');
-    grid.classList.add('card-'+cardSize);
-    $('cardSizeToggle').classList.toggle('hidden',viewMode!=='grid');
+    grid.classList.add('card-sm');
     const showCreate=!q;
     const menuHtml=p=>`<div class="card-menu-wrap"><button class="card-menu-btn" data-menu="${esc(p.id)}" type="button" aria-haspopup="menu" aria-expanded="false" title="Opciones del proyecto" aria-label="Opciones de ${esc(p.name)}"><svg class="ic"><use href="#i-more"/></svg></button><div class="card-menu hidden" role="menu" aria-label="Opciones de ${esc(p.name)}"><button class="card-menu-item" data-edit-project="${esc(p.id)}" type="button" role="menuitem"><svg class="ic"><use href="#i-edit"/></svg><span>Editar proyecto</span></button><button class="card-menu-item danger" data-delete-project="${esc(p.id)}" type="button" role="menuitem"><svg class="ic"><use href="#i-trash"/></svg><span>Borrar proyecto</span></button></div></div>`;
     if(viewMode==='grid'){
@@ -824,7 +835,7 @@
     activeProjectId=id;selectedScreenId=p.screens[0]?.id||null;
     $('portfolioPage').classList.add('hidden');
     $('createProjectPage').classList.add('hidden');
-    $('workspacePage').classList.remove('hidden');
+    $('workspacePage').classList.remove('hidden');syncPal();
     $('breadcrumbCurrent').textContent=p.name;
     $('savedState').classList.remove('hidden');
     closeCardMenus();closeUserMenu();
@@ -844,13 +855,12 @@
     const n=document.createElement('article');
     n.className='screen-node';n.dataset.screen=s.id;
     n.style.left=s.x+'px';n.style.top=s.y+'px';
-    n.innerHTML=`<div class="node-head"><span class="node-kind">Pantalla</span><span class="node-code">${esc(s.code)}</span></div><div class="node-body"><div class="node-business">${esc(s.businessName)}</div><div class="node-tech">${esc(s.technicalName)}</div></div><button class="node-del" type="button" title="Eliminar elemento" aria-label="Eliminar ${esc(s.businessName)}"><svg class="ic"><use href="#i-trash"/></svg></button>`;
+    n.innerHTML=`<div class="node-head"><svg class="ic"><use href="#i-phone"/></svg><span class="node-business">${esc(s.businessName)}</span><span class="node-code">${esc(s.code)}</span><button class="node-del" type="button" title="Eliminar elemento" aria-label="Eliminar ${esc(s.businessName)}"><svg class="ic"><use href="#i-trash"/></svg></button></div>`;
     $('canvasWorld').append(n);
     const deleteButton=n.querySelector('.node-del');
     deleteButton.addEventListener('pointerdown',e=>e.stopPropagation());
     deleteButton.addEventListener('dblclick',e=>e.stopPropagation());
-    deleteButton.addEventListener('click',e=>{e.stopPropagation();deleteScreen(s.id)});
-    n.addEventListener('pointerdown',onNodePointerDown);
+    deleteButton.addEventListener('click',e=>{e.stopPropagation();deleteScreen(s.id)});    n.addEventListener('pointerdown',onNodePointerDown);
     n.addEventListener('dblclick',()=>{selectScreen(s.id);setTimeout(()=>$('screenCode').focus(),40)});
     n.addEventListener('click',()=>{if(!dragScreen?.moved)selectScreen(s.id)});
     return n;
@@ -860,7 +870,7 @@
     const p=currentProject();if(!p)return;
     const num=nextScreenNum(p);
     p.nextScreenNumber=Math.max(p.nextScreenNumber||1,num+1);
-    const s={id:uid(),code:`VC-${String(num).padStart(2,'0')}`,technicalName:`Pantalla${num}`,businessName:`Nueva pantalla ${num}`,x:x??Math.max(40,120+(p.screens.length%4)*255),y:y??Math.max(40,90+Math.floor(p.screens.length/4)*165)};
+    const s={id:uid(),code:`VC-${String(num).padStart(2,'0')}`,technicalName:`Pantalla${num}`,businessName:`Nueva pantalla ${num}`,x:x??Math.max(40,120+(p.screens.length%4)*290),y:y??Math.max(40,90+Math.floor(p.screens.length/4)*165)};
     p.screens.push(s);p.updatedAt=Date.now();persist();
     createNode(s);
     $('canvasEmpty').classList.add('is-off');
@@ -877,7 +887,7 @@
   }
   function ensureVisible(s){
     if(!s)return;
-    const rect=$('canvasViewport').getBoundingClientRect(),m=70,nodeW=224,nodeH=118;
+    const rect=$('canvasViewport').getBoundingClientRect(),m=70,nodeW=260,nodeH=118;
     const left=s.x*zoom+worldX,top=s.y*zoom+worldY,right=left+nodeW*zoom,bottom=top+nodeH*zoom;
     if(left<m||top<m||right>rect.width-m||bottom>rect.height-m){
       worldX=rect.width/2-(s.x+nodeW/2)*zoom;
@@ -890,9 +900,9 @@
   function renderScreenTree(){
     const p=currentProject(),box=$('screenTree');
     if(!p||!box)return;
-    $('treeCount').textContent=String(p.screens.length);
+    $('treeCount').textContent=String(p.screens.length);$('treeProject').textContent=p.name;
     box.innerHTML=p.screens.length
-      ? p.screens.map(s=>`<button class="tree-item ${s.id===selectedScreenId?'active':''}" data-tree="${esc(s.id)}" type="button" title="${esc(s.businessName)}"><span class="tree-dot"></span><span class="tree-name">${esc(s.businessName)}</span><span class="tree-code">${esc(s.code)}</span></button>`).join('')
+      ? p.screens.map(s=>`<button class="tree-item ${s.id===selectedScreenId?'active':''}" data-tree="${esc(s.id)}" type="button" title="${esc(s.businessName)}"><svg class="ic"><use href="#i-phone"/></svg><span class="tree-name">${esc(s.businessName)}</span><span class="tree-code">${esc(s.code)}</span></button>`).join('')
       : '<p class="tree-empty">Aún no hay pantallas. Agrega la primera desde la paleta.</p>';
     box.querySelectorAll('[data-tree]').forEach(b=>b.addEventListener('click',()=>{
       const p2=currentProject(),s=p2?.screens.find(x=>x.id===b.dataset.tree);
@@ -936,14 +946,14 @@
     }
     p.updatedAt=Date.now();schedulePersist();
     const n=nodeEl(s.id);
-    if(n){n.querySelector('.node-code').textContent=s.code;n.querySelector('.node-business').textContent=s.businessName;n.querySelector('.node-tech').textContent=s.technicalName}
+    if(n){n.querySelector('.node-code').textContent=s.code;n.querySelector('.node-business').textContent=s.businessName}
     renderScreenTree();
   }
 
   /* ---------- Vista / pan / zoom ---------- */
   function applyWorldTransform(){$('canvasWorld').style.transform=`translate(${worldX}px,${worldY}px) scale(${zoom})`;$('zoomLabel').textContent=`${Math.round(zoom*100)}%`}
   function zoomAt(next){zoom=Math.max(.5,Math.min(1.6,next));applyWorldTransform()}
-  function fitCanvas(){const p=currentProject();if(!p||!p.screens.length){zoom=1;worldX=120;worldY=100;applyWorldTransform();return}const rect=$('canvasViewport').getBoundingClientRect(),minX=Math.min(...p.screens.map(s=>s.x)),minY=Math.min(...p.screens.map(s=>s.y)),maxX=Math.max(...p.screens.map(s=>s.x+224)),maxY=Math.max(...p.screens.map(s=>s.y+118));zoom=Math.max(.5,Math.min(1.15,Math.min((rect.width-100)/(maxX-minX+40),(rect.height-100)/(maxY-minY+40))));worldX=(rect.width-(maxX-minX)*zoom)/2-minX*zoom;worldY=(rect.height-(maxY-minY)*zoom)/2-minY*zoom;applyWorldTransform()}
+  function fitCanvas(){const p=currentProject();if(!p||!p.screens.length){zoom=1;worldX=120;worldY=100;applyWorldTransform();return}const rect=$('canvasViewport').getBoundingClientRect(),minX=Math.min(...p.screens.map(s=>s.x)),minY=Math.min(...p.screens.map(s=>s.y)),maxX=Math.max(...p.screens.map(s=>s.x+260)),maxY=Math.max(...p.screens.map(s=>s.y+118));zoom=Math.max(.5,Math.min(1.15,Math.min((rect.width-100)/(maxX-minX+40),(rect.height-100)/(maxY-minY+40))));worldX=(rect.width-(maxX-minX)*zoom)/2-minX*zoom;worldY=(rect.height-(maxY-minY)*zoom)/2-minY*zoom;applyWorldTransform()}
   function canvasPoint(cx,cy){const r=$('canvasViewport').getBoundingClientRect();return{x:(cx-r.left-worldX)/zoom,y:(cy-r.top-worldY)/zoom}}
   function onNodePointerDown(e){if(e.button!==0)return;const node=e.currentTarget,id=node.dataset.screen;selectScreen(id);const p=currentProject(),s=p?.screens.find(x=>x.id===id);if(!s)return;const pt=canvasPoint(e.clientX,e.clientY);dragScreen={id,node,pointerId:e.pointerId,offsetX:pt.x-s.x,offsetY:pt.y-s.y,startX:e.clientX,startY:e.clientY,moved:false};try{node.setPointerCapture(e.pointerId)}catch{}window.addEventListener('pointermove',onNodePointerMove);window.addEventListener('pointerup',onNodePointerUp);window.addEventListener('pointercancel',onNodePointerUp)}
   function onNodePointerMove(e){if(!dragScreen||e.pointerId!==dragScreen.pointerId)return;if(!dragScreen.moved){if(Math.abs(e.clientX-dragScreen.startX)<3&&Math.abs(e.clientY-dragScreen.startY)<3)return;dragScreen.moved=true;dragScreen.node.classList.add('dragging')}const p=currentProject(),s=p?.screens.find(x=>x.id===dragScreen.id);if(!s)return;const pt=canvasPoint(e.clientX,e.clientY);s.x=Math.round((pt.x-dragScreen.offsetX)/10)*10;s.y=Math.round((pt.y-dragScreen.offsetY)/10)*10;dragScreen.node.style.left=s.x+'px';dragScreen.node.style.top=s.y+'px'}
@@ -1082,42 +1092,17 @@
     db.users.push(activeUser);persist();
     showAuth('login');$('loginEmail').value=email;$('loginPassword').value='';showToast('Cuenta creada correctamente.');
   });
-  const RECOVERY_KEY = STORAGE_KEY + '-recovery-next-at';
-  let recoveryNextAt = 0, recoveryPending = false, recoveryTimer = null;
-  function updateRecoveryButton(){
-    try { recoveryNextAt = Math.max(recoveryNextAt, Number(localStorage.getItem(RECOVERY_KEY)) || 0); } catch {}
-    const seconds = Math.max(0, Math.ceil((recoveryNextAt - Date.now()) / 1000));
-    const button = $('recoverForm').querySelector('button[type="submit"]');
-    button.disabled = recoveryPending || seconds > 0;
-    button.textContent = recoveryPending ? 'Enviando enlace…' : seconds > 0 ? 'Reenviar enlace en ' + seconds + ' s' : recoveryNextAt ? 'Reenviar enlace de recuperación' : 'Enviar enlace de recuperación';
-    clearTimeout(recoveryTimer);
-    if(seconds > 0) recoveryTimer = setTimeout(updateRecoveryButton, 250);
-  }
-  window.addEventListener('storage',e=>{if(e.key === RECOVERY_KEY) updateRecoveryButton()});
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden) updateRecoveryButton()});
-  updateRecoveryButton();
-  $('recoverForm').addEventListener('submit',e=>{
-    e.preventDefault();
-    updateRecoveryButton();
-    if(recoveryPending || Date.now() < recoveryNextAt) return;
-    const email=$('recoverEmail').value.trim().toLowerCase();
-    let ok=true;
-    if(!email){setFieldError('recoverEmail','Ingresa tu correo institucional.');ok=false}
-    else if(!emailValid(email)){setFieldError('recoverEmail','Usa tu correo institucional @epn.edu.ec.');ok=false}
-    else setFieldError('recoverEmail','');
-    if(!ok)return;
-    setMessage('recoverMessage','');
-    recoveryPending = true;
-    recoveryNextAt = Date.now() + 60000;
-    try { localStorage.setItem(RECOVERY_KEY, String(recoveryNextAt)); } catch {}
-    updateRecoveryButton();
-    setTimeout(()=>{
-      recoveryPending = false;
-      updateRecoveryButton();
-      setMessage('recoverMessage',`Si existe una cuenta con ${email}, recibirás un enlace para restablecer tu contraseña. Revisa también tu carpeta de spam.`,'success');
-      showToast('Solicitud de recuperación enviada.');
-    },600);
-  });
+  let recovery=null,recoverN=1;
+  function recoverStep(n){recoverN=n;[1,2,3].forEach(i=>$('recoverStep'+i).classList.toggle('hidden',i!==n));$('recoverIntro').textContent=[,'Escribe tu correo institucional y te enviaremos un código de verificación.','Escribe el código de 6 dígitos que enviamos a '+(recovery?recovery.user.email:'')+'.','Crea tu nueva contraseña. Debe tener al menos 6 caracteres.'][n];$('recoverSubmitLabel').textContent=[,'Enviar código','Verificar código','Cambiar contraseña'][n];setMessage('recoverMessage','');setTimeout(()=>$([,'recoverEmail','recoverCode','recoverPassword'][n]).focus(),40)}
+  function resetRecover(){recovery=null;['recoverCode','recoverPassword','recoverConfirm'].forEach(id=>{$(id).value='';setFieldError(id,'')});recoverStep(1)}
+  function sendCode(user){recovery={user,code:String(Math.floor(100000+Math.random()*900000))};showToast('Correo simulado: tu código de recuperación es '+recovery.code,'success',null,20000)}
+  $('recoverResend').addEventListener('click',()=>{if(!recovery)return;sendCode(recovery.user);$('recoverCode').value='';setFieldError('recoverCode','')});
+  $('recoverCode').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'')});
+  $('recoverPassword').addEventListener('input',()=>{if($('recoverConfirm').value)setFieldError('recoverConfirm',live.recoverConfirm($('recoverConfirm').value))});
+  $('recoverForm').addEventListener('submit',e=>{e.preventDefault();setMessage('recoverMessage','');
+    if(recoverN===1){const email=$('recoverEmail').value.trim().toLowerCase(),err=live.recoverEmail(email);setFieldError('recoverEmail',err);if(err)return;const user=db.users.find(u=>u.email===email);if(!user){setFieldError('recoverEmail','No encontramos una cuenta con ese correo.');return}sendCode(user);recoverStep(2)}
+    else if(recoverN===2){const err=live.recoverCode($('recoverCode').value);setFieldError('recoverCode',err);if(err)return;if($('recoverCode').value!==recovery.code){setFieldError('recoverCode','El código es incorrecto.');return}recoverStep(3)}
+    else{const pw=$('recoverPassword').value,e1=live.recoverPassword(pw),e2=live.recoverConfirm($('recoverConfirm').value);setFieldError('recoverPassword',e1);setFieldError('recoverConfirm',e2);if(e1||e2)return;recovery.user.password=pw;persist();const email=recovery.user.email;showAuth('login');$('loginEmail').value=email;$('loginPassword').value='';showToast('Contraseña actualizada. Inicia sesión con tu nueva contraseña.')}});
 
   /* ---------- Eventos: shell / usuario ---------- */
   $('brandHome').addEventListener('click',showPortfolio);
@@ -1140,9 +1125,9 @@
     $(id).querySelector('.dropdown-label').textContent=items.find(item=>item.dataset.value===value).textContent.trim();
   }
   function closeToolbarDropdowns(){
-    ['sortProjects','cardSizeSelect'].forEach(id=>{$(id).setAttribute('aria-expanded','false');$(id+'Menu').classList.add('hidden')});
+    ['sortProjects'].forEach(id=>{$(id).setAttribute('aria-expanded','false');$(id+'Menu').classList.add('hidden')});
   }
-  [['sortProjects',setSortOrder],['cardSizeSelect',setCardSize]].forEach(([id,select])=>{
+  [['sortProjects',setSortOrder]].forEach(([id,select])=>{
     const trigger=$(id),menu=$(id+'Menu'),items=[...menu.querySelectorAll('[data-value]')];
     function open(){closeToolbarDropdowns();menu.classList.remove('hidden');trigger.setAttribute('aria-expanded','true')}
     trigger.addEventListener('click',()=>{const expanded=trigger.getAttribute('aria-expanded')==='true';closeToolbarDropdowns();if(!expanded)open()});
@@ -1215,14 +1200,15 @@
   $('screenPalette').addEventListener('click',()=>addScreen());
   $('screenPalette').addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain','screen');e.dataTransfer.effectAllowed='copy'});
   $('canvasViewport').addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='copy'});
-  $('canvasViewport').addEventListener('drop',e=>{e.preventDefault();const pt=canvasPoint(e.clientX,e.clientY);addScreen(Math.round((pt.x-112)/10)*10,Math.round((pt.y-55)/10)*10)});
+  $('canvasViewport').addEventListener('drop',e=>{e.preventDefault();const pt=canvasPoint(e.clientX,e.clientY);addScreen(Math.round((pt.x-130)/10)*10,Math.round((pt.y-55)/10)*10)});
   $('zoomIn').addEventListener('click',()=>zoomAt(zoom+.1));
   $('zoomOut').addEventListener('click',()=>zoomAt(zoom-.1));
   $('fitCanvas').addEventListener('click',fitCanvas);
   $('canvasViewport').addEventListener('pointerdown',e=>{if(e.target.closest('.screen-node')||e.button!==0)return;panState={x:e.clientX,y:e.clientY,worldX,worldY,moved:false};$('canvasViewport').classList.add('panning');window.addEventListener('pointermove',onPanMove);window.addEventListener('pointerup',onPanUp,{once:true})});
-  function setPalette(c){$('workspaceBody').classList.toggle('palette-collapsed',c);$('collapsePalette').setAttribute('aria-expanded',String(!c))}
-  $('collapsePalette').addEventListener('click',()=>setPalette(true));
-  $('expandPalette').addEventListener('click',()=>setPalette(false));
+  function setPanel(p){const b=$('workspaceBody'),close=b.dataset.panel===p&&!b.classList.contains('palette-collapsed');b.dataset.panel=p;b.classList.toggle('palette-collapsed',close);$('railTools').classList.toggle('active',!close&&p==='tools');$('railNav').classList.toggle('active',!close&&p==='nav');syncPal()}
+  function syncPal(){const b=$('workspaceBody');b.style.setProperty('--pal',b.dataset.panel==='tools'?b.querySelector('.palette-inner').offsetWidth+'px':'')}
+  $('railTools').addEventListener('click',()=>setPanel('tools'));
+  $('railNav').addEventListener('click',()=>setPanel('nav'));
   function setPropertiesCollapsed(c){$('workspaceBody').classList.toggle('properties-collapsed',c);$('collapseProperties').setAttribute('aria-expanded',String(!c))}
   $('collapseProperties').addEventListener('click',()=>setPropertiesCollapsed(true));
   $('expandProperties').addEventListener('click',()=>setPropertiesCollapsed(false));
@@ -1236,12 +1222,16 @@
     registerPassword:v=>v.length<6?'Usa al menos 6 caracteres.':'',
     registerConfirm:v=>(!v||v!==$('registerPassword').value)?'Las contraseñas deben coincidir.':'',
     projectName:v=>!v.trim()?'El nombre del proyecto es obligatorio.':v.length>30?'Usa máximo 30 caracteres.':'',
-    recoverEmail:v=>{v=(v||'').trim();return !v?'Ingresa tu correo institucional.':!emailValid(v)?'Usa tu correo institucional @epn.edu.ec.':''}
+    recoverEmail:v=>{v=(v||'').trim();return !v?'Ingresa tu correo institucional.':!emailValid(v)?'Usa tu correo institucional @epn.edu.ec.':''},
+    recoverCode:v=>/^\d{6}$/.test(v)?'':'Ingresa el código de 6 dígitos.',
+    recoverPassword:v=>v.length<6?'Usa al menos 6 caracteres.':'',
+    recoverConfirm:v=>(!v||v!==$('recoverPassword').value)?'Las contraseñas deben coincidir.':''
   };
   Object.keys(live).forEach(id=>['input','blur'].forEach(ev=>$(id).addEventListener(ev,()=>{
     setFieldError(id,live[id]($(id).value));
     if(id==='registerPassword'&&$('registerConfirm').value)setFieldError('registerConfirm',live.registerConfirm($('registerConfirm').value));
   })));
+  document.querySelectorAll('input[maxlength]:not(#recoverCode),textarea[maxlength]').forEach(el=>el.addEventListener('input',()=>{if(el.value.length>=el.maxLength&&!el.classList.contains('invalid'))setFieldError(el.id,`Alcanzaste el máximo de ${el.maxLength} caracteres.`)}));
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){
       closeCardMenus();
@@ -1259,9 +1249,14 @@
     e.preventDefault();deleteScreen(selectedScreenId);
   });
   $('dialogBackdrop').addEventListener('click',e=>{if(e.target===$('dialogBackdrop'))finishDialog(false)});
+  document.querySelectorAll('input[type=password]').forEach(i=>{
+    const w=document.createElement('div'),b=document.createElement('button');
+    w.className='pw-wrap';b.type='button';b.className='pw-toggle';b.setAttribute('aria-label','Mostrar contraseña');b.innerHTML='<svg class="ic"><use href="#i-eye"/></svg>';
+    i.replaceWith(w);w.append(i,b);
+    b.addEventListener('click',()=>{const show=i.type==='password';i.type=show?'text':'password';b.setAttribute('aria-label',show?'Ocultar contraseña':'Mostrar contraseña');b.innerHTML=`<svg class="ic"><use href="#${show?'i-eye-off':'i-eye'}"/></svg>`});
+  });
 
   updateViewToggle();
-  updateCardSizeControl();
   updateSortControl();
   renderProjectImagePreview();
   showAuth('login');
