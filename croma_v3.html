@@ -44,7 +44,7 @@
 @media(max-width:430px){.palette-inner{width:62px;padding:13px 6px}}
 /* ---- v4: errores sin desplazar el layout ---- */
 .field{gap:6px;margin-bottom:2px}
-.field .field-error{display:block;min-height:17px;order:99;opacity:0;transform:translateY(-3px);transition:opacity .2s ease,transform .2s ease;animation:none}
+.field .field-error{display:block;min-height:20px;order:99;opacity:0;transform:translateY(-3px);transition:opacity .2s ease,transform .2s ease;animation:none}
 .field .field-error.show{opacity:1;transform:none}
 .form-msg{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .25s ease,opacity .2s ease,margin .25s ease}
 .form-msg.show{grid-template-rows:1fr;opacity:1;margin-bottom:14px}
@@ -389,8 +389,11 @@
 .prop-field input{width:100%;border:1px solid #d9d6e1;border-radius:9px;padding:9px 10px;background:#fff;color:var(--ink);font-size:12px;transition:border .15s,box-shadow .15s}
 .prop-field input:focus{border-color:var(--green);outline:3px solid #e7e1f4}
 .prop-field input.invalid{border-color:var(--danger);background:#fffafb;outline-color:#ffe2e5}
-.prop-field .field-error{display:none;font-size:10.5px;color:var(--danger);margin:0}
-.prop-field .field-error.show{display:block}
+/* Espacio reservado para el mensaje: aparecer o desaparecer no mueve los campos de abajo */
+.prop-field .field-error{display:block;min-height:15px;font-size:10.5px;line-height:15px;color:var(--danger);margin:0;opacity:0;transition:opacity .2s ease}
+.prop-field .field-error.show{opacity:1}
+/* Ancho y Alto van en media columna: sus mensajes ocupan hasta dos líneas, así que se reservan dos. */
+.prop-size-row .field-error{min-height:30px}
 .prop-hint{font-size:10px;color:var(--muted);line-height:1.5}
 .properties-foot{margin-top:4px;padding-top:14px;border-top:1px solid var(--line)}
 .properties-foot .btn-danger-soft{font-size:11.5px;width:100%}
@@ -417,7 +420,15 @@
 .btn-new-project .ic{width:15px;height:15px}
 @media(max-width:1240px){.search-box input{width:210px}}
 @media(max-width:760px){.heading-tools{width:100%;justify-content:flex-start}.search-box{flex:1 1 100%}.search-box input{width:100%}.btn-new-project{margin-left:auto}}
-@media(max-width:480px){.sort-btn span{display:none}.sort-btn{padding:0 9px}.btn-new-project{width:36px;padding:0;margin-left:0}.btn-new-project span{display:none}.btn-new-project .ic{width:17px;height:17px}}
+.sort-btn .sort-icon{display:none}
+.toolbar-dropdown .sort-btn{gap:5px}
+.sort-btn .sort-prefix{color:#7a7189;font-weight:600}
+.sort-btn .dropdown-label{color:var(--ink)}
+.sort-btn:hover .dropdown-label,.sort-btn[aria-expanded="true"] .dropdown-label{color:var(--green)}
+.sort-btn .sort-chev{margin-left:5px}
+.toolbar-menu-title{padding:8px 12px 6px;font-size:10px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;color:#7a7189}
+@media(max-width:480px){.sort-btn .sort-prefix{display:none}.sort-btn .sort-icon{display:inline-block}}
+@media(max-width:480px){.sort-btn span:not(.dropdown-label){display:none}.sort-btn{padding:0 9px}.btn-new-project{width:36px;padding:0;margin-left:0}.btn-new-project span{display:none}.btn-new-project .ic{width:17px;height:17px}}
 
 /* Tamaños de tarjeta en la vista de galería */
 #projectGrid.card-sm{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
@@ -483,12 +494,95 @@
 .canvas-wrap>#collapsePalette{left:0;border-left:0;border-radius:0 8px 8px 0}
 .canvas-wrap>#collapseProperties{right:0;border-right:0;border-radius:8px 0 0 8px}
 .workspace-body.palette-collapsed #collapsePalette,.workspace-body.properties-collapsed #collapseProperties{display:none}
+/* Lengüeta izquierda: al ocultar, se esconden la barra de íconos y el panel abierto */
+.workspace-body{transition:grid-template-columns .28s ease,padding-left .28s ease}
+.rail{transition:transform .28s ease,visibility 0s linear 0s}
+.workspace-body.palette-collapsed{padding-left:0}
+.workspace-body.palette-collapsed .rail{transform:translateX(-100%);visibility:hidden;transition:transform .28s ease,visibility 0s linear .28s}
+.edge-tab.panel-edge-tab.edge-tab-palette{border-left:0;border-right:1px solid #d9cee9;border-radius:0 12px 12px 0}
 @media(max-width:980px){.canvas-wrap>#collapseProperties{display:none}}
+.props-close{display:none}
+/* Las pestañas y paneles que se deslizan en los bordes no deben generar scroll horizontal en la página. */
+#workspaceBody{overflow:hidden}
+/* ===== Redimensionar pantallas ===== */
+.screen-node{overflow:visible}
+.screen-node .node-head{border-radius:12px 12px 0 0}
+.screen-node .rz{display:none;position:absolute;width:calc(10px / var(--z,1));height:calc(10px / var(--z,1));background:#fff;border:calc(1.5px / var(--z,1)) solid var(--green);border-radius:calc(2px / var(--z,1));z-index:3;transform:translate(-50%,-50%);touch-action:none}
+.screen-node .rz::before{content:"";position:absolute;inset:calc(-7px / var(--z,1))} /* área táctil de 24 px */
+.screen-node.selected .rz{display:block}
+.rz-nw{left:0;top:0;cursor:nwse-resize}.rz-n{left:50%;top:0;cursor:ns-resize}.rz-ne{left:100%;top:0;cursor:nesw-resize}
+.rz-e{left:100%;top:50%;cursor:ew-resize}.rz-se{left:100%;top:100%;cursor:nwse-resize}.rz-s{left:50%;top:100%;cursor:ns-resize}
+.rz-sw{left:0;top:100%;cursor:nesw-resize}.rz-w{left:0;top:50%;cursor:ew-resize}
+.screen-node.resizing{z-index:10;transition:none}
+.rz-size{display:none;position:absolute;left:50%;top:100%;transform:translate(-50%,calc(12px / var(--z,1))) scale(calc(1 / var(--z,1)));transform-origin:top center;background:var(--green);color:#fff;font:700 11px Inter,system-ui,sans-serif;padding:3px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;z-index:4}
+.screen-node.resizing .rz-size{display:block}
+.prop-size{display:flex;flex-direction:column;gap:8px;padding-top:14px;border-top:1px solid var(--line)}
+.prop-size-title{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:750;color:var(--ink)}
+.prop-size-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.px-input{position:relative}.px-input input{padding-right:30px}
+.px-input span{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--muted);pointer-events:none}
+/* Resaltado breve de la copia recién creada */
+/* Al duplicar, las tarjetas que ya estaban no repiten su animación de entrada; solo la copia aparece. */
+.project-grid.no-enter .project-card,.project-grid.no-enter .project-row{animation:none}
+.project-grid.no-enter .just-added{animation:fadeUp .25s ease both}
+/* El contorno va en una capa aparte: al quitarlo no se reinicia la animación de la tarjeta. */
+@keyframes justAdded{0%,65%{opacity:1}100%{opacity:0}}
+.project-row{position:relative}
+.just-added::after{content:"";position:absolute;inset:-1px;border-radius:inherit;box-shadow:0 0 0 3px #a58ad9,0 12px 30px #6b4fbb33;pointer-events:none;animation:justAdded 2.2s ease both}
+/* ===== Tablet (≤980 px): Propiedades flota sobre el lienzo y se abre con su lengüeta ===== */
+@media(max-width:980px){
+  #workspaceBody .properties{display:block!important;position:absolute;top:0;right:0;bottom:0;width:min(300px,calc(100% - 40px));z-index:20;border-left:1px solid var(--line);box-shadow:-14px 0 32px #24183f24;transform:none;visibility:visible;transition:transform .28s ease,visibility 0s linear 0s}
+  #workspaceBody.properties-collapsed .properties{transform:translateX(105%);visibility:hidden;transition:transform .28s ease,visibility 0s linear .28s}
+  #workspaceBody .properties-inner{width:100%}
+  #workspaceBody .edge-tab-properties{display:flex!important}
+  .props-close{display:grid;margin-left:auto}
+  .properties .palette-head{display:flex;align-items:center;gap:8px}
+}
+/* ===== Celular (≤760 px): los paneles izquierdos también flotan; Propiedades sube desde abajo ===== */
+@media(max-width:760px){
+  #workspaceBody{--railw:84px;--palw:min(250px,calc(100vw - var(--railw) - 44px));grid-template-columns:minmax(0,1fr)!important;padding-left:0}
+  #workspaceBody .rail{z-index:22;box-shadow:none}
+  #workspaceBody .palette{position:absolute;top:0;bottom:0;left:var(--railw);width:var(--palw);z-index:21;border-right:1px solid var(--line);box-shadow:14px 0 32px #24183f24;visibility:visible;transform:none;transition:transform .28s ease,visibility 0s linear 0s}
+  #workspaceBody.palette-collapsed .palette{transform:translateX(calc(-100% - var(--railw)));visibility:hidden;transition:transform .28s ease,visibility 0s linear .28s}
+  #workspaceBody .palette-inner{width:100%;padding:18px 14px}
+  #workspaceBody[data-panel=tools] .palette-hint,#workspaceBody .palette .panel-title,#workspaceBody .palette-item strong{display:block}
+  #workspaceBody .palette-item{justify-content:flex-start;padding:10px;gap:10px}
+  #workspaceBody .palette-icon{width:37px;height:37px}
+  .canvas-wrap>#collapsePalette{left:calc(var(--railw) + var(--palw));z-index:23}
+  #workspaceBody .canvas-status{display:flex;bottom:78px;right:16px}
+  #workspaceBody .properties{top:auto;left:0;right:0;bottom:0;width:auto;height:min(64%,470px);border-left:0;border-top:1px solid var(--line);border-radius:18px 18px 0 0;box-shadow:0 -14px 32px #24183f29;z-index:24}
+  #workspaceBody.properties-collapsed .properties{transform:translateY(105%)}
+  #workspaceBody .properties-inner{padding:16px 18px;overflow:auto}
+}
+@media(max-width:430px){#workspaceBody{--railw:48px}}
 
 .toast{pointer-events:auto}
 .toast-action{flex:none;margin-left:10px;padding:0;border:0;border-radius:4px;background:transparent;color:#dfd0ff;font-family:inherit;font-size:12px;font-weight:750;cursor:pointer}
 .toast-action:hover{background:#ffffff25;color:#fff}
 .toast-action:focus-visible{outline:2px solid #d6c2ff;outline-offset:2px}
+/* Acceso con Google / GitHub */
+.auth-divider{display:flex;align-items:center;gap:12px;margin:20px 0 14px;color:#9e9aa7;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+.auth-divider:before,.auth-divider:after{content:"";flex:1;height:1px;background:var(--line)}
+.oauth-buttons{display:grid;gap:9px}
+.oauth-btn{width:100%;padding:11px 15px}
+.oauth-ic{width:18px;height:18px;flex:none;display:block}
+.oauth-note{font-size:11px;line-height:1.6;color:#645c76;background:var(--green-pale);border:1px solid #e2dcef;border-radius:9px;padding:9px 11px;margin:-8px 0 16px}
+.oauth-check{display:flex;align-items:center;gap:8px;font-size:12px;color:#474351;margin:2px 0 4px;cursor:pointer}
+.oauth-check input{width:16px;height:16px;accent-color:var(--green);margin:0}
+.oauth-actions{align-items:center}
+.oauth-actions .text-button{margin-right:auto;font-size:12px}
+/* Advertencia (no bloquea): ámbar con texto oscuro, contraste ≈ 7.9:1 sobre el fondo */
+/* Advertencia de portada: se expande y se contrae suavemente en vez de aparecer de golpe.
+   Oculta mide 0 y su margen negativo anula el espacio de la cuadrícula del campo. */
+.field .field-warning{display:flex;order:98;align-items:flex-start;gap:7px;overflow:hidden;max-height:0;opacity:0;margin-top:-6px;padding:0 10px;border:0 solid #ecc96b;border-radius:9px;background:#fff8e1;color:#6b4700;font-size:11.5px;line-height:1.45;font-weight:600;transition:max-height .22s ease,opacity .18s ease,margin-top .22s ease,padding .22s ease,border-width .22s ease}
+.field .field-warning.show{max-height:110px;opacity:1;margin-top:2px;padding:8px 10px;border-width:1px}
+/* Aviso de máximo de caracteres: usa la misma línea reservada del error, en amarillo */
+.field-error.warn{color:#6b4700;font-weight:600}
+.field-error.warn .ic{display:inline-block;width:12px;height:12px;color:#a86a00;vertical-align:-2px;margin-right:4px}
+.field .field-warning .ic{width:14px;height:14px;color:#a86a00;margin-top:1px}
+.prop-field .field-warning{display:none;align-items:flex-start;gap:6px;padding:6px 8px;border:1px solid #ecc96b;border-radius:8px;background:#fff8e1;color:#6b4700;font-size:10.5px;line-height:1.4;font-weight:600;margin:0}
+.prop-field .field-warning.show{display:flex}
+.prop-field .field-warning .ic{width:12px;height:12px;color:#a86a00;margin-top:1px;flex:none}
 </style>
 </head>
 <body>
@@ -503,6 +597,7 @@
 <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
 <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10 18h4"/></symbol>
 <symbol id="i-edit" viewBox="0 0 24 24"><path d="m14 5 5 5M4 20l4.5-1 11-11a2.1 2.1 0 0 0-3-3l-11 11z"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></symbol>
 <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
 <symbol id="i-zoom" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5M10.5 7v7M7 10.5h7"/></symbol>
 <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
@@ -531,23 +626,25 @@
 <symbol id="i-cards-sm" viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="6" rx="1"/><rect x="9.5" y="4" width="5" height="6" rx="1"/><rect x="16" y="4" width="5" height="6" rx="1"/><rect x="3" y="14" width="5" height="6" rx="1"/><rect x="9.5" y="14" width="5" height="6" rx="1"/><rect x="16" y="14" width="5" height="6" rx="1"/></symbol>
 <symbol id="i-cards-md" viewBox="0 0 24 24"><rect x="3" y="4" width="8" height="7" rx="1.2"/><rect x="13" y="4" width="8" height="7" rx="1.2"/><rect x="3" y="13" width="8" height="7" rx="1.2"/><rect x="13" y="13" width="8" height="7" rx="1.2"/></symbol>
 <symbol id="i-cards-lg" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></symbol>
+<symbol id="i-google" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A11.9 11.9 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></symbol>
+<symbol id="i-github" viewBox="0 0 16 16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></symbol>
 <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
 <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6A16.6 16.6 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 4.4-1M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
 </svg>
 
 <section id="loginPage" class="auth-shell">
   <aside class="auth-aside"><div class="brand"><div class="app-mark"><img class="app-logo-img" src="logo.webp" alt="Croma"></div><div><strong>Croma</strong><small>Modelador de interacción</small></div></div><div class="aside-copy"><h1>Diseña el flujo, no solo las pantallas.</h1><div class="aside-demo" aria-hidden="true"><svg viewBox="0 0 360 236" role="img" aria-label="Demostración: un cursor arrastra una pantalla por el lienzo y la conecta con otra"><path class="demo-line" pathLength="1" d="M172,154 C192,154 198,90 220,90"/><g><rect class="demo-screen-body" x="216" y="52" width="112" height="76" rx="10"/><rect x="225" y="62" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="232" cy="66.5" r="2" fill="#c6b5f2"/><rect x="225" y="80" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="225" y="91" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="102" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="113" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><path class="demo-arrow" d="M216 90 L205 84.5 L205 95.5 Z"/><circle class="demo-port demo-port-b" cx="216" cy="90" r="4.5"/></g><g class="demo-screen-a"><rect class="demo-ants" x="-5" y="-5" width="122" height="86" rx="12"/><rect class="demo-screen-body" x="0" y="0" width="112" height="76" rx="10"/><rect x="9" y="10" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="16" cy="14.5" r="2" fill="#c6b5f2"/><rect x="9" y="28" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="9" y="39" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="50" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="61" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><circle class="demo-port demo-port-a" cx="112" cy="38" r="4.5"/></g><g class="demo-cursor"><path d="M0 0 L0 16.9 L4.3 13.2 L6.9 19.3 L10.2 17.9 L7.6 11.9 L13.2 11.4 Z" fill="#fff" stroke="#2a1e4a" stroke-width="1.4" stroke-linejoin="round"/></g></svg></div><span class="eyebrow">Modela. Conecta. Valida.</span><p>Arrastra pantallas al lienzo, conéctalas con flechas y define la navegación completa de tu producto. Croma convierte tu modelo en un prototipo navegable — sin escribir una sola línea de código.</p></div></aside>
-  <main class="auth-main"><div class="auth-card"><h2>Continúa tu trabajo</h2><form id="loginForm" novalidate><div class="field"><label for="loginEmail"><svg class="ic"><use href="#i-mail"/></svg> Correo institucional</label><input id="loginEmail" type="email" autocomplete="username" placeholder="nombre@epn.edu.ec" required><small id="loginEmailError" class="field-error"></small></div><div class="field"><label for="loginPassword"><svg class="ic"><use href="#i-lock"/></svg> Contraseña</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Ingresa tu contraseña" required><small id="loginPasswordError" class="field-error"></small></div><div class="forgot-row"><button id="goRecover" class="text-button" type="button">¿Olvidaste tu contraseña?</button></div><div id="loginMessage" class="form-msg" role="alert"></div><button class="btn btn-primary" type="submit" style="width:100%;padding:12px">Iniciar sesión</button></form><div class="auth-switch">¿Todavía no tienes cuenta? <button id="goRegister" class="text-button" type="button">Crear una cuenta</button></div></main>
+  <main class="auth-main"><div class="auth-card"><h2>Continúa tu trabajo</h2><form id="loginForm" novalidate><div class="field"><label for="loginEmail"><svg class="ic"><use href="#i-mail"/></svg> Correo electrónico</label><input id="loginEmail" type="email" autocomplete="username" placeholder="nombre@correo.com" required><small id="loginEmailError" class="field-error"></small></div><div class="field"><label for="loginPassword"><svg class="ic"><use href="#i-lock"/></svg> Contraseña</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Ingresa tu contraseña" required><small id="loginPasswordError" class="field-error"></small></div><div class="forgot-row"><button id="goRecover" class="text-button" type="button">¿Olvidaste tu contraseña?</button></div><div id="loginMessage" class="form-msg" role="alert"></div><button class="btn btn-primary" type="submit" style="width:100%;padding:12px">Iniciar sesión</button></form><div class="auth-divider"><span>o</span></div><div class="oauth-buttons"><button class="btn btn-secondary oauth-btn" type="button" data-oauth="google"><svg class="oauth-ic" aria-hidden="true"><use href="#i-google"/></svg>Continuar con Google</button><button class="btn btn-secondary oauth-btn" type="button" data-oauth="github"><svg class="oauth-ic" aria-hidden="true"><use href="#i-github"/></svg>Continuar con GitHub</button></div><div class="auth-switch">¿Todavía no tienes cuenta? <button id="goRegister" class="text-button" type="button">Crear una cuenta</button></div></main>
 </section>
 
 <section id="registerPage" class="auth-shell hidden">
   <aside class="auth-aside"><div class="brand"><div class="app-mark"><img class="app-logo-img" src="logo.webp" alt="Croma"></div><div><strong>Croma</strong><small>Modelador de interacción</small></div></div><div class="aside-copy"><h1>Diseña el flujo, no solo las pantallas.</h1><div class="aside-demo" aria-hidden="true"><svg viewBox="0 0 360 236" role="img" aria-label="Demostración: un cursor arrastra una pantalla por el lienzo y la conecta con otra"><path class="demo-line" pathLength="1" d="M172,154 C192,154 198,90 220,90"/><g><rect class="demo-screen-body" x="216" y="52" width="112" height="76" rx="10"/><rect x="225" y="62" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="232" cy="66.5" r="2" fill="#c6b5f2"/><rect x="225" y="80" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="225" y="91" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="102" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="113" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><path class="demo-arrow" d="M216 90 L205 84.5 L205 95.5 Z"/><circle class="demo-port demo-port-b" cx="216" cy="90" r="4.5"/></g><g class="demo-screen-a"><rect class="demo-ants" x="-5" y="-5" width="122" height="86" rx="12"/><rect class="demo-screen-body" x="0" y="0" width="112" height="76" rx="10"/><rect x="9" y="10" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="16" cy="14.5" r="2" fill="#c6b5f2"/><rect x="9" y="28" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="9" y="39" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="50" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="61" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><circle class="demo-port demo-port-a" cx="112" cy="38" r="4.5"/></g><g class="demo-cursor"><path d="M0 0 L0 16.9 L4.3 13.2 L6.9 19.3 L10.2 17.9 L7.6 11.9 L13.2 11.4 Z" fill="#fff" stroke="#2a1e4a" stroke-width="1.4" stroke-linejoin="round"/></g></svg></div><span class="eyebrow">Modela. Conecta. Valida.</span><p>Arrastra pantallas al lienzo, conéctalas con flechas y define la navegación completa de tu producto. Croma convierte tu modelo en un prototipo navegable — sin escribir una sola línea de código.</p></div></aside>
-  <main class="auth-main"><div class="auth-card"><h2>Crea tu cuenta</h2><form id="registerForm" novalidate><div class="field"><label for="registerName"><svg class="ic"><use href="#i-user"/></svg> Nombre completo</label><input id="registerName" autocomplete="name" placeholder="Ej. Ana Pérez" maxlength="100" required><small id="registerNameError" class="field-error"></small></div><div class="field"><label for="registerEmail"><svg class="ic"><use href="#i-mail"/></svg> Correo institucional</label><input id="registerEmail" type="email" autocomplete="email" placeholder="nombre@epn.edu.ec" required><small id="registerEmailError" class="field-error"></small></div><div class="field"><label for="registerPassword"><svg class="ic"><use href="#i-lock"/></svg> Contraseña</label><input id="registerPassword" type="password" autocomplete="new-password" placeholder="Crea una contraseña" required><small id="registerPasswordError" class="field-error"></small></div><div class="field"><label for="registerConfirm"><svg class="ic"><use href="#i-check"/></svg> Confirmar contraseña</label><input id="registerConfirm" type="password" autocomplete="new-password" placeholder="Repite tu contraseña" required><small id="registerConfirmError" class="field-error"></small></div><div id="registerMessage" class="form-msg" role="alert"></div><button class="btn btn-primary" type="submit" style="width:100%;padding:12px">Crear cuenta <span></span></button></form><div class="auth-switch">¿Ya tienes cuenta? <button id="goLogin" class="text-button" type="button">Iniciar sesión</button></div></div></main>
+  <main class="auth-main"><div class="auth-card"><h2>Crea tu cuenta</h2><form id="registerForm" novalidate><div class="field"><label for="registerName"><svg class="ic"><use href="#i-user"/></svg> Nombre completo</label><input id="registerName" autocomplete="name" placeholder="Ej. Ana Pérez" maxlength="100" required><small id="registerNameError" class="field-error"></small></div><div class="field"><label for="registerEmail"><svg class="ic"><use href="#i-mail"/></svg> Correo electrónico</label><input id="registerEmail" type="email" autocomplete="email" placeholder="nombre@correo.com" required><small id="registerEmailError" class="field-error"></small></div><div class="field"><label for="registerPassword"><svg class="ic"><use href="#i-lock"/></svg> Contraseña</label><input id="registerPassword" type="password" autocomplete="new-password" placeholder="Crea una contraseña" required><small id="registerPasswordError" class="field-error"></small></div><div class="field"><label for="registerConfirm"><svg class="ic"><use href="#i-check"/></svg> Confirmar contraseña</label><input id="registerConfirm" type="password" autocomplete="new-password" placeholder="Repite tu contraseña" required><small id="registerConfirmError" class="field-error"></small></div><div id="registerMessage" class="form-msg" role="alert"></div><button class="btn btn-primary" type="submit" style="width:100%;padding:12px">Crear cuenta <span></span></button></form><div class="auth-divider"><span>o</span></div><div class="oauth-buttons"><button class="btn btn-secondary oauth-btn" type="button" data-oauth="google"><svg class="oauth-ic" aria-hidden="true"><use href="#i-google"/></svg>Continuar con Google</button><button class="btn btn-secondary oauth-btn" type="button" data-oauth="github"><svg class="oauth-ic" aria-hidden="true"><use href="#i-github"/></svg>Continuar con GitHub</button></div><div class="auth-switch">¿Ya tienes cuenta? <button id="goLogin" class="text-button" type="button">Iniciar sesión</button></div></div></main>
 </section>
 
 <section id="recoverPage" class="auth-shell hidden">
   <aside class="auth-aside"><div class="brand"><div class="app-mark"><img class="app-logo-img" src="logo.webp" alt="Croma"></div><div><strong>Croma</strong><small>Modelador de interacción</small></div></div><div class="aside-copy"><h1>Diseña el flujo, no solo las pantallas.</h1><div class="aside-demo" aria-hidden="true"><svg viewBox="0 0 360 236" role="img" aria-label="Demostración: un cursor arrastra una pantalla por el lienzo y la conecta con otra"><path class="demo-line" pathLength="1" d="M172,154 C192,154 198,90 220,90"/><g><rect class="demo-screen-body" x="216" y="52" width="112" height="76" rx="10"/><rect x="225" y="62" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="232" cy="66.5" r="2" fill="#c6b5f2"/><rect x="225" y="80" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="225" y="91" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="102" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="113" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><path class="demo-arrow" d="M216 90 L205 84.5 L205 95.5 Z"/><circle class="demo-port demo-port-b" cx="216" cy="90" r="4.5"/></g><g class="demo-screen-a"><rect class="demo-ants" x="-5" y="-5" width="122" height="86" rx="12"/><rect class="demo-screen-body" x="0" y="0" width="112" height="76" rx="10"/><rect x="9" y="10" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="16" cy="14.5" r="2" fill="#c6b5f2"/><rect x="9" y="28" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="9" y="39" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="50" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="61" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><circle class="demo-port demo-port-a" cx="112" cy="38" r="4.5"/></g><g class="demo-cursor"><path d="M0 0 L0 16.9 L4.3 13.2 L6.9 19.3 L10.2 17.9 L7.6 11.9 L13.2 11.4 Z" fill="#fff" stroke="#2a1e4a" stroke-width="1.4" stroke-linejoin="round"/></g></svg></div><span class="eyebrow">Modela. Conecta. Valida.</span><p>Arrastra pantallas al lienzo, conéctalas con flechas y define la navegación completa de tu producto. Croma convierte tu modelo en un prototipo navegable — sin escribir una sola línea de código.</p></div></aside>
-  <main class="auth-main"><div class="auth-card"><button id="backToLogin" class="back-link" type="button"><svg class="ic" style="width:14px;height:14px"><use href="#i-chev-left"/></svg> Volver a iniciar sesión</button><h2>Recupera tu contraseña</h2><p id="recoverIntro" class="auth-sub"></p><form id="recoverForm" novalidate><div id="recoverStep1"><div class="field"><label for="recoverEmail"><svg class="ic"><use href="#i-mail"/></svg> Correo institucional</label><input id="recoverEmail" type="email" autocomplete="email" placeholder="nombre@epn.edu.ec" required><small id="recoverEmailError" class="field-error"></small></div></div><div id="recoverStep2" class="hidden"><div class="field"><label for="recoverCode"><svg class="ic"><use href="#i-key"/></svg> Código de verificación</label><input id="recoverCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000"><small id="recoverCodeError" class="field-error"></small><small>Prototipo: el código aparece en una notificación en lugar de enviarse por correo. <button id="recoverResend" class="text-button" type="button" style="font-size:11px">Reenviar código</button></small></div></div><div id="recoverStep3" class="hidden"><div class="field"><label for="recoverPassword"><svg class="ic"><use href="#i-lock"/></svg> Nueva contraseña</label><input id="recoverPassword" type="password" autocomplete="new-password" placeholder="Crea una contraseña"><small id="recoverPasswordError" class="field-error"></small></div><div class="field"><label for="recoverConfirm"><svg class="ic"><use href="#i-check"/></svg> Confirmar contraseña</label><input id="recoverConfirm" type="password" autocomplete="new-password" placeholder="Repite tu contraseña"><small id="recoverConfirmError" class="field-error"></small></div></div><div id="recoverMessage" class="form-msg" role="alert"></div><button class="btn btn-primary" type="submit" style="width:100%;padding:12px"><span id="recoverSubmitLabel">Enviar código</span> <span>→</span></button></form></div></main>
+  <main class="auth-main"><div class="auth-card"><button id="backToLogin" class="back-link" type="button"><svg class="ic" style="width:14px;height:14px"><use href="#i-chev-left"/></svg> Volver a iniciar sesión</button><h2>Recupera tu contraseña</h2><p id="recoverIntro" class="auth-sub"></p><form id="recoverForm" novalidate><div id="recoverStep1"><div class="field"><label for="recoverEmail"><svg class="ic"><use href="#i-mail"/></svg> Correo electrónico</label><input id="recoverEmail" type="email" autocomplete="email" placeholder="nombre@correo.com" required><small id="recoverEmailError" class="field-error"></small></div></div><div id="recoverStep2" class="hidden"><div class="field"><label for="recoverCode"><svg class="ic"><use href="#i-key"/></svg> Código de verificación</label><input id="recoverCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000"><small id="recoverCodeError" class="field-error"></small><small>Prototipo: el código aparece en una notificación en lugar de enviarse por correo. <button id="recoverResend" class="text-button" type="button" style="font-size:11px">Reenviar código</button></small></div></div><div id="recoverStep3" class="hidden"><div class="field"><label for="recoverPassword"><svg class="ic"><use href="#i-lock"/></svg> Nueva contraseña</label><input id="recoverPassword" type="password" autocomplete="new-password" placeholder="Crea una contraseña"><small id="recoverPasswordError" class="field-error"></small></div><div class="field"><label for="recoverConfirm"><svg class="ic"><use href="#i-check"/></svg> Confirmar contraseña</label><input id="recoverConfirm" type="password" autocomplete="new-password" placeholder="Repite tu contraseña"><small id="recoverConfirmError" class="field-error"></small></div></div><div id="recoverMessage" class="form-msg" role="alert"></div><button class="btn btn-primary" type="submit" style="width:100%;padding:12px"><span id="recoverSubmitLabel">Enviar código</span> <span>→</span></button></form></div></main>
 </section>
 
 <div id="appShell" class="app-shell hidden">
@@ -562,7 +659,7 @@
       <div class="user-menu-wrap">
         <button id="userMenuBtn" class="user-avatar-btn" type="button" aria-haspopup="menu" aria-expanded="false" title="Mi cuenta"><span id="accountAvatar">ES</span></button>
         <div id="userMenu" class="user-menu hidden" role="menu" aria-label="Cuenta">
-          <div class="user-menu-head"><span id="menuAvatar" class="account-avatar">ES</span><div class="user-menu-copy"><strong id="accountName">Estudiante</strong><small id="accountEmail">correo@epn.edu.ec</small></div></div>
+          <div class="user-menu-head"><span id="menuAvatar" class="account-avatar">ES</span><div class="user-menu-copy"><strong id="accountName">Estudiante</strong><small id="accountEmail">nombre@correo.com</small></div></div>
           <div class="user-menu-divider"></div>
           <button id="logoutButton" class="user-menu-item danger" type="button" role="menuitem"><svg class="ic"><use href="#i-logout"/></svg> Cerrar sesión</button>
         </div>
@@ -572,10 +669,10 @@
   <div class="main-area">
     <main id="portfolioPage" class="page">
       <div class="page-heading">
-        <div><h1><svg class="ic"><use href="#i-folder"/></svg> Mis proyectos</h1><div class="heading-meta"><span id="projectCount" class="count-pill">0 proyectos</span></div></div>
+        <div><h1>Mis proyectos</h1><div class="heading-meta"><span id="projectCount" class="count-pill">0 proyectos</span></div></div>
         <div class="heading-tools">
           <div class="search-box"><svg class="ic"><use href="#i-search"/></svg><input id="projectSearch" type="search" maxlength="150"placeholder="Buscar proyectos…" aria-label="Buscar proyectos" autocomplete="off"></div>
-          <div class="toolbar-dropdown"><button id="sortProjects" class="sort-btn" type="button" aria-label="Orden de los proyectos" aria-haspopup="menu" aria-expanded="false" aria-controls="sortProjectsMenu"><svg class="ic"><use href="#i-sort"/></svg><span class="dropdown-label"></span><svg class="ic sort-chev"><use href="#i-chev-down"/></svg></button><div id="sortProjectsMenu" class="toolbar-menu hidden" role="menu" aria-label="Orden de los proyectos"><button type="button" role="menuitemradio" aria-checked="false" data-value="recent">Recientes<svg class="ic"><use href="#i-check"/></svg></button><button type="button" role="menuitemradio" aria-checked="false" data-value="oldest">Antiguos<svg class="ic"><use href="#i-check"/></svg></button></div></div>
+          <div class="toolbar-dropdown"><button id="sortProjects" class="sort-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="sortProjectsMenu"><svg class="ic sort-icon" aria-hidden="true"><use href="#i-sort"/></svg><span class="sort-prefix">Ordenar por:</span><span class="dropdown-label"></span><svg class="ic sort-chev" aria-hidden="true"><use href="#i-chev-down"/></svg></button><div id="sortProjectsMenu" class="toolbar-menu hidden" role="menu" aria-label="Ordenar por fecha de modificación"><div class="toolbar-menu-title" aria-hidden="true">Fecha de modificación</div><button type="button" role="menuitemradio" aria-checked="false" data-value="recent">Más recientes<svg class="ic"><use href="#i-check"/></svg></button><button type="button" role="menuitemradio" aria-checked="false" data-value="oldest">Más antiguos<svg class="ic"><use href="#i-check"/></svg></button></div></div>
           <div class="view-toggle" role="group" aria-label="Vista de proyectos">
             <button id="viewGrid" class="active" type="button" aria-pressed="true" title="Vista de tablero"><svg class="ic"><use href="#i-grid"/></svg></button>
             <button id="viewList" type="button" aria-pressed="false" title="Vista de lista"><svg class="ic"><use href="#i-list"/></svg></button>
@@ -586,24 +683,31 @@
     </main>
     <main id="createProjectPage" class="page hidden">
       <div class="page-heading"><div><h1><svg class="ic"><use href="#i-plus"/></svg> Crear proyecto</h1></div></div>
-      <div class="create-layout"><section class="form-card"><form id="projectForm" novalidate><div class="field"><label for="projectName"><svg class="ic"><use href="#i-folder"/></svg> Nombre del proyecto <span style="color:var(--danger)">*</span></label><input id="projectName" maxlength="30" placeholder="Ej. Sistema de tutorías" required><small id="projectNameError" class="field-error"></small><small><span id="nameCount">0</span>/30 caracteres</small></div><div class="field"><label for="projectDescription"><svg class="ic"><use href="#i-text"/></svg> Descripción</label><textarea id="projectDescription" maxlength="150" placeholder="¿Para qué sirve la aplicación y a quién está dirigida?"></textarea><small id="projectDescriptionError" class="field-error"></small><small><span id="descriptionCount">0</span>/150 caracteres</small></div><div class="field"><label for="projectImageInput"><svg class="ic"><use href="#i-image"/></svg> Imagen de portada <span class="optional">(opcional)</span></label><div class="cover-picker"><div id="projectImagePreview" class="cover-preview"><svg class="ic" style="width:22px;height:22px"><use href="#i-image"/></svg></div><div class="cover-picker-copy"><button id="pickProjectImage" class="btn btn-secondary btn-sm" type="button">Subir imagen</button><small>JPG o PNG · máx. 4 MB</small><button id="removeProjectImage" class="text-button hidden" type="button">Quitar imagen</button></div></div><input id="projectImageInput" type="file" accept="image/*" class="hidden"><small id="projectImageError" class="field-error"></small></div><div id="projectMessage" class="form-msg" role="alert"></div><div class="form-actions"><button id="cancelProject" class="btn btn-secondary" type="button">Cancelar</button><button class="btn btn-primary" type="submit">Crear proyecto <span>→</span></button></div></form></section></div>
+      <div class="create-layout"><section class="form-card"><form id="projectForm" novalidate><div class="field"><label for="projectName"><svg class="ic"><use href="#i-folder"/></svg> Nombre del proyecto <span style="color:var(--danger)">*</span></label><input id="projectName" maxlength="30" placeholder="Ej. Sistema de tutorías" required><small id="projectNameError" class="field-error"></small><small><span id="nameCount">0</span>/30 caracteres</small></div><div class="field"><label for="projectDescription"><svg class="ic"><use href="#i-text"/></svg> Descripción</label><textarea id="projectDescription" maxlength="150" placeholder="¿Para qué sirve la aplicación y a quién está dirigida?"></textarea><small id="projectDescriptionError" class="field-error"></small><small><span id="descriptionCount">0</span>/150 caracteres</small></div><div class="field"><label for="projectImageInput"><svg class="ic"><use href="#i-image"/></svg> Imagen de portada <span class="optional">(opcional)</span></label><div class="cover-picker"><div id="projectImagePreview" class="cover-preview"><svg class="ic" style="width:22px;height:22px"><use href="#i-image"/></svg></div><div class="cover-picker-copy"><button id="pickProjectImage" class="btn btn-secondary btn-sm" type="button">Subir imagen</button><small>JPG o PNG · máx. 4 MB</small><button id="removeProjectImage" class="text-button hidden" type="button">Quitar imagen</button></div></div><input id="projectImageInput" type="file" accept="image/*" class="hidden"><small id="projectImageWarning" class="field-warning" role="status"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span></span></small><small id="projectImageError" class="field-error"></small></div><div id="projectMessage" class="form-msg" role="alert"></div><div class="form-actions"><button id="cancelProject" class="btn btn-secondary" type="button">Cancelar</button><button class="btn btn-primary" type="submit">Crear proyecto <span>→</span></button></div></form></section></div>
     </main>
     <main id="workspacePage" class="workspace hidden">
-      <div id="workspaceBody" class="workspace-body" data-panel="tools"><nav class="rail" aria-label="Paneles"><button id="railTools" class="rail-btn active" type="button" title="Panel de herramientas" aria-label="Panel de herramientas"><svg class="ic"><use href="#i-tool"/></svg><span>Herramientas</span></button><button id="railNav" class="rail-btn" type="button" title="Panel de elementos" aria-label="Panel de elementos"><svg class="ic"><use href="#i-layers"/></svg><span>Elementos</span></button></nav>
+      <div id="workspaceBody" class="workspace-body" data-panel="tools"><nav class="rail" aria-label="Paneles"><button id="railTools" class="rail-btn active" type="button" title="Panel de herramientas" aria-label="Panel de herramientas"><svg class="ic"><use href="#i-tool"/></svg><span>Herramientas</span></button><button id="railNav" class="rail-btn" type="button" title="Panel de capas" aria-label="Panel de capas"><svg class="ic"><use href="#i-layers"/></svg><span>Capas</span></button></nav>
         <aside class="palette"><div class="palette-inner">
           <p class="palette-hint panel-tools">Clic o arrastrar al lienzo</p>
           <button id="screenPalette" class="palette-item panel-tools" type="button" draggable="true" aria-label="Agregar pantalla"><span class="palette-icon"><svg class="ic"><use href="#i-phone"/></svg></span><span><strong>Pantalla</strong></span></button>
           <div class="tree-block"><div class="tree-title"><svg class="ic" style="width:13px;height:13px"><use href="#i-folder"/></svg> <span id="treeProject"></span> <span id="treeCount" class="tree-count">0</span></div><div id="screenTree" class="screen-tree"></div></div>
         </div></aside>
-        <section class="canvas-wrap" aria-label="Lienzo del modelo"><button id="collapseProperties" class="mini-collapse" type="button" aria-expanded="true" aria-label="Ocultar propiedades" title="Ocultar propiedades"><svg class="ic" style="width:16px;height:16px"><use href="#i-chev-right"/></svg></button><button id="expandProperties" class="edge-tab edge-tab-properties panel-edge-tab" type="button" aria-label="Mostrar propiedades" title="Mostrar propiedades"><svg class="ic"><use href="#i-sliders"/></svg><span>Propiedades</span></button><div id="canvasViewport" class="canvas-viewport"><div id="canvasWorld" class="canvas-world"></div><div id="canvasEmpty" class="canvas-empty"><div class="empty-icon"><svg class="ic" style="width:25px;height:25px"><use href="#i-phone"/></svg></div><h3>Tu modelo empieza aquí</h3><p>Haz clic o arrastra «Pantalla» desde la paleta para colocar la primera pantalla.</p></div></div><div class="canvas-controls"><button id="zoomOut" aria-label="Reducir zoom" type="button"><svg class="ic"><use href="#i-minus"/></svg></button><span id="zoomLabel" class="zoom-label">100%</span><button id="zoomIn" aria-label="Aumentar zoom" type="button"><svg class="ic"><use href="#i-zoom"/></svg></button><span style="width:1px;height:22px;background:var(--line);margin:0 3px"></span><button id="fitCanvas" aria-label="Ajustar al contenido" title="Ajustar al contenido" type="button"><svg class="ic"><use href="#i-fit"/></svg></button></div><div class="canvas-status"><svg class="ic"><use href="#i-canvas"/></svg> Lienzo de modelado · <span id="canvasScreenCount">0 pantallas</span></div></section>
+        <section class="canvas-wrap" aria-label="Lienzo del modelo"><button id="collapsePalette" class="mini-collapse" type="button" aria-expanded="true" aria-label="Ocultar paneles laterales" title="Ocultar paneles laterales"><svg class="ic" style="width:16px;height:16px"><use href="#i-chev-left"/></svg></button><button id="expandPalette" class="edge-tab edge-tab-palette panel-edge-tab" type="button" aria-label="Mostrar panel Herramientas" title="Mostrar panel Herramientas"><svg class="ic"><use href="#i-tool"/></svg><span>Herramientas</span></button><button id="collapseProperties" class="mini-collapse" type="button" aria-expanded="true" aria-label="Ocultar propiedades" title="Ocultar propiedades"><svg class="ic" style="width:16px;height:16px"><use href="#i-chev-right"/></svg></button><button id="expandProperties" class="edge-tab edge-tab-properties panel-edge-tab" type="button" aria-label="Mostrar propiedades" title="Mostrar propiedades"><svg class="ic"><use href="#i-sliders"/></svg><span>Propiedades</span></button><div id="canvasViewport" class="canvas-viewport"><div id="canvasWorld" class="canvas-world"></div><div id="canvasEmpty" class="canvas-empty"><div class="empty-icon"><svg class="ic" style="width:25px;height:25px"><use href="#i-phone"/></svg></div><h3>Tu modelo empieza aquí</h3><p>Haz clic o arrastra «Pantalla» desde «Herramientas» para colocar la primera pantalla.</p></div></div><div class="canvas-controls"><button id="zoomOut" aria-label="Reducir zoom" type="button"><svg class="ic"><use href="#i-minus"/></svg></button><span id="zoomLabel" class="zoom-label">100%</span><button id="zoomIn" aria-label="Aumentar zoom" type="button"><svg class="ic"><use href="#i-zoom"/></svg></button><span style="width:1px;height:22px;background:var(--line);margin:0 3px"></span><button id="fitCanvas" aria-label="Ajustar al contenido" title="Ajustar al contenido" type="button"><svg class="ic"><use href="#i-fit"/></svg></button></div><div class="canvas-status"><svg class="ic"><use href="#i-canvas"/></svg> Lienzo de modelado · <span id="canvasScreenCount">0 elementos</span></div></section>
         <aside class="properties" id="propertiesPanel"><div class="properties-inner">
-          <div class="palette-head"><h2 class="panel-title">Propiedades de elemento</h2></div>
-          <div id="propertiesEmpty" class="properties-empty"><div class="empty-icon"><svg class="ic" style="width:22px;height:22px"><use href="#i-phone"/></svg></div><h3>Sin selección</h3><p>Selecciona una pantalla en el lienzo o en el árbol de la izquierda para ver y editar sus propiedades.</p></div>
+          <div class="palette-head"><h2 class="panel-title">Propiedades de elemento</h2><button id="closePropertiesPanel" class="mini-collapse props-close" type="button" aria-label="Ocultar propiedades" title="Ocultar propiedades"><svg class="ic" style="width:15px;height:15px"><use href="#i-close"/></svg></button></div>
+          <div id="propertiesEmpty" class="properties-empty"><div class="empty-icon"><svg class="ic" style="width:22px;height:22px"><use href="#i-phone"/></svg></div><h3>Sin selección</h3><p>Selecciona un elemento en el lienzo o en el panel «Capas» para ver y editar sus propiedades.</p></div>
           <form id="inlineProperties" class="properties-form hidden" novalidate>
             <div class="prop-type">Tipo: <b><svg class="ic"><use href="#i-phone"/></svg>Pantalla</b></div>
             <div class="prop-field"><label for="screenCode"><svg class="ic" style="width:12px;height:12px"><use href="#i-hash"/></svg> Código <span class="req">*</span></label><input id="screenCode" maxlength="20" placeholder="VC-01" required autocomplete="off"><small id="screenCodeError" class="field-error"></small><small class="prop-hint"><span id="screenCodeCount">0</span>/20 · Identificador único del modelo.</small></div>
             <div class="prop-field"><label for="screenTechnical"><svg class="ic" style="width:12px;height:12px"><use href="#i-code"/></svg> Nombre técnico <span class="req">*</span></label><input id="screenTechnical" maxlength="20" placeholder="PantallaInicio" required autocomplete="off"><small id="screenTechnicalError" class="field-error"></small><small class="prop-hint"><span id="screenTechnicalCount">0</span>/20 · Nombre en el código, sin espacios.</small></div>
             <div class="prop-field"><label for="screenBusiness"><svg class="ic" style="width:12px;height:12px"><use href="#i-briefcase"/></svg> Nombre de negocio <span class="req">*</span></label><input id="screenBusiness" maxlength="20" placeholder="Inicio de sesión" required autocomplete="off"><small id="screenBusinessError" class="field-error"></small><small class="prop-hint"><span id="screenBusinessCount">0</span>/20 · Nombre funcional para usuarios y negocio.</small></div>
+            <div class="prop-size"><span class="prop-size-title"><svg class="ic" style="width:12px;height:12px"><use href="#i-fit"/></svg> Tamaño</span>
+              <div class="prop-size-row">
+                <div class="prop-field"><label for="screenWidth">Ancho</label><div class="px-input"><input id="screenWidth" type="number" inputmode="numeric" min="200" max="800" step="10" autocomplete="off"><span aria-hidden="true">px</span></div><small id="screenWidthError" class="field-error"></small><small class="prop-hint">De 200 a 800 px.</small></div>
+                <div class="prop-field"><label for="screenHeight">Alto</label><div class="px-input"><input id="screenHeight" type="number" inputmode="numeric" min="80" max="600" step="10" autocomplete="off"><span aria-hidden="true">px</span></div><small id="screenHeightError" class="field-error"></small><small class="prop-hint">De 80 a 600 px.</small></div>
+              </div>
+              <small class="prop-hint">También puedes arrastrar los bordes del elemento. Mantén Shift en una esquina para conservar la proporción.</small>
+            </div>
           </form>
         </div></aside>
       </div>
@@ -619,9 +723,26 @@
     <form id="editProjectForm" novalidate>
       <div class="field"><label for="editProjectName"><svg class="ic"><use href="#i-folder"/></svg> Nombre del proyecto <span style="color:var(--danger)">*</span></label><input id="editProjectName" maxlength="30" placeholder="Ej. Sistema de tutorías" required autocomplete="off"><small id="editProjectNameError" class="field-error"></small><small><span id="editNameCount">0</span>/30 caracteres</small></div>
       <div class="field"><label for="editProjectDescription"><svg class="ic"><use href="#i-text"/></svg> Descripción</label><textarea id="editProjectDescription" maxlength="150" placeholder="¿Para qué sirve la aplicación y a quién está dirigida?"></textarea><small id="editProjectDescriptionError" class="field-error"></small><small><span id="editDescriptionCount">0</span>/150 caracteres</small></div>
-      <div class="field"><label for="editCoverInput"><svg class="ic"><use href="#i-image"/></svg> Imagen de portada <span class="optional">(opcional)</span></label><div class="cover-picker"><div id="editCoverPreview" class="cover-preview"><svg class="ic" style="width:22px;height:22px"><use href="#i-image"/></svg></div><div class="cover-picker-copy"><button id="editPickCover" class="btn btn-secondary btn-sm" type="button">Subir imagen</button><small>JPG o PNG · máx. 4 MB</small><button id="editRemoveCover" class="text-button hidden" type="button">Quitar imagen</button></div></div><input id="editCoverInput" type="file" accept="image/*" class="hidden"><small id="editCoverError" class="field-error"></small></div>
+      <div class="field"><label for="editCoverInput"><svg class="ic"><use href="#i-image"/></svg> Imagen de portada <span class="optional">(opcional)</span></label><div class="cover-picker"><div id="editCoverPreview" class="cover-preview"><svg class="ic" style="width:22px;height:22px"><use href="#i-image"/></svg></div><div class="cover-picker-copy"><button id="editPickCover" class="btn btn-secondary btn-sm" type="button">Subir imagen</button><small>JPG o PNG · máx. 4 MB</small><button id="editRemoveCover" class="text-button hidden" type="button">Quitar imagen</button></div></div><input id="editCoverInput" type="file" accept="image/*" class="hidden"><small id="editCoverWarning" class="field-warning" role="status"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span></span></small><small id="editCoverError" class="field-error"></small></div>
       <div id="editProjectMessage" class="form-msg" role="alert"></div>
       <div class="modal-actions"><button id="cancelEditProject" class="btn btn-secondary" type="button">Cancelar</button><button class="btn btn-primary" type="submit">Guardar cambios</button></div>
+    </form>
+  </section>
+</div>
+
+<div id="oauthBackdrop" class="modal-backdrop hidden" role="presentation">
+  <section class="modal oauth-modal" role="dialog" aria-modal="true" aria-labelledby="oauthTitle">
+    <div class="modal-head">
+      <div><span class="eyebrow">Acceso simulado</span><h2 id="oauthTitle">Continuar con Google</h2><p id="oauthIntro"></p></div>
+      <button id="closeOauth" class="icon-btn" type="button" aria-label="Cancelar" title="Cancelar"><svg class="ic" style="width:17px;height:17px"><use href="#i-close"/></svg></button>
+    </div>
+    <p class="oauth-note">Prototipo: no se conecta con Google ni con GitHub. Escribe los datos que devolvería el proveedor.</p>
+    <form id="oauthForm" novalidate>
+      <div id="oauthUserField" class="field"><label for="oauthUser"><svg class="ic"><use href="#i-hash"/></svg> Usuario de GitHub</label><input id="oauthUser" maxlength="39" autocomplete="off" placeholder="ana-perez"><small id="oauthUserError" class="field-error"></small></div>
+      <div class="field"><label for="oauthName"><svg class="ic"><use href="#i-user"/></svg> <span id="oauthNameLabel">Nombre de la cuenta</span></label><input id="oauthName" maxlength="100" autocomplete="off" placeholder="Ej. Ana Pérez"><small id="oauthNameError" class="field-error"></small></div>
+      <div class="field"><label for="oauthEmail"><svg class="ic"><use href="#i-mail"/></svg> Correo electrónico</label><input id="oauthEmail" type="email" autocomplete="off" placeholder="nombre@correo.com"><small id="oauthEmailError" class="field-error"></small></div>
+      <label id="oauthVerifiedRow" class="oauth-check"><input id="oauthVerified" type="checkbox" checked> El correo está verificado en GitHub</label>
+      <div class="modal-actions oauth-actions"><button id="oauthFail" class="text-button" type="button">Simular error de conexión</button><button id="cancelOauth" class="btn btn-secondary" type="button">Cancelar</button><button class="btn btn-primary" type="submit">Autorizar</button></div>
     </form>
   </section>
 </div>
@@ -659,10 +780,18 @@
     $('toastStack').append(t);schedule();
   }
   function setMessage(id,msg,type='error'){const el=$(id);if(msg){el.innerHTML='<div><div class="'+(type==='success'?'form-success':'form-error')+'"></div></div>';el.firstElementChild.firstElementChild.textContent=msg}el.classList.toggle('show',!!msg)}
-  function setFieldError(id,msg){const el=$(id),e=$(id+'Error');if(!el||!e)return;el.classList.toggle('invalid',!!msg);el.setAttribute('aria-invalid',msg?'true':'false');if(msg)e.textContent=msg;e.classList.toggle('show',!!msg)}
+  function setFieldError(id,msg){const el=$(id),e=$(id+'Error');if(!el||!e)return;el.classList.toggle('invalid',!!msg);el.setAttribute('aria-invalid',msg?'true':'false');if(msg){e.textContent=msg;e.classList.remove('warn')}e.classList.toggle('show',!!msg);syncMaxWarning(id)}
+  // Aviso amarillo (no bloquea) al llegar al máximo de caracteres. Usa la misma línea reservada del error,
+  // así que no mueve nada; si el campo tiene un error rojo, se muestra solo el error.
+  function syncMaxWarning(id){
+    const el=$(id),e=$(id+'Error');if(!el||!e||!(el.maxLength>0)||el.id==='recoverCode'||el.classList.contains('invalid'))return;
+    const atMax=el.value.length>=el.maxLength;
+    if(atMax){e.innerHTML=`<svg class="ic" aria-hidden="true"><use href="#i-info"/></svg>Alcanzaste el máximo de ${el.maxLength} caracteres.`;e.classList.add('warn','show')}
+    else if(e.classList.contains('warn'))e.classList.remove('show');
+  }
   function showModal(el){el.classList.remove('closing','hidden')}
   function hideModal(el){if(el.classList.contains('hidden'))return;el.classList.add('closing');setTimeout(()=>{if(el.classList.contains('closing')){el.classList.add('hidden');el.classList.remove('closing')}},170)}
-  function emailValid(email){return /^[^\s@]+@epn\.edu\.ec$/i.test(email)}
+  function emailValid(email){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)}
   function userProjects(){return db.projects.filter(p=>p.userId===activeUser?.id).sort((a,b)=>{const diff=((a.updatedAt||a.createdAt)||0)-((b.updatedAt||b.createdAt)||0);return sortOrder==='oldest'?diff:-diff})}
   function currentProject(){return db.projects.find(p=>p.id===activeProjectId&&p.userId===activeUser?.id)}
   function selectedScreen(){return currentProject()?.screens.find(x=>x.id===selectedScreenId)||null}
@@ -676,7 +805,7 @@
     $('recoverPage').classList.toggle('hidden',page!=='recover');
     ['loginMessage','registerMessage','recoverMessage'].forEach(id=>setMessage(id,''));
     ['loginEmail','loginPassword','registerName','registerEmail','registerPassword','registerConfirm','recoverEmail'].forEach(id=>setFieldError(id,''));
-    resetRecover();closeUserMenu();
+    resetRecover();resetProjectForm();closeUserMenu();
   }
   function renderAccount(){
     if(!activeUser)return;
@@ -714,7 +843,10 @@
     $('createProjectPage').classList.remove('hidden');
     $('savedState').classList.add('hidden');
     $('breadcrumbCurrent').textContent='Crear proyecto';
-    resetProjectForm();closeUserMenu();
+    // Conserva el borrador: si el estudiante salió con el logo, ve lo que había escrito.
+    ['projectName','projectDescription'].forEach(k=>setFieldError(k,''));
+    setMessage('projectMessage','');setImageError('');setWarning('projectImageWarning','');renderProjectImagePreview();
+    closeUserMenu();
     setTimeout(()=>$('projectName').focus(),40);
   }
   function resetProjectForm(){
@@ -722,20 +854,22 @@
     $('nameCount').textContent='0';$('descriptionCount').textContent='0';
     ['projectName','projectDescription'].forEach(k=>setFieldError(k,''));
     setMessage('projectMessage','');
-    setImageError('');
+    setImageError('');setWarning('projectImageWarning','');
     pendingProjectImage='';$('projectImageInput').value='';
     renderProjectImagePreview();
   }
   function setImageError(msg){const el=$('projectImageError');if(!el)return;el.textContent=msg||'';el.classList.toggle('show',!!msg)}
+  const COVER_KEPT_WARNING='Archivo inválido, se mantiene la portada actual.';
+  function setWarning(id,msg){const el=$(id);if(!el)return;el.querySelector('span').textContent=msg||'';el.classList.toggle('show',!!msg)}
   function renderProjectImagePreview(){
     const box=$('projectImagePreview');
     if(pendingProjectImage){
       box.innerHTML=`<img src="${pendingProjectImage}" alt="Vista previa de la portada">`;
-      $('removeProjectImage').classList.remove('hidden');
     }else{
       box.innerHTML='<svg class="ic" style="width:22px;height:22px"><use href="#i-image"/></svg>';
-      $('removeProjectImage').classList.add('hidden');
     }
+    // «Quitar imagen» también aparece con un error de portada, para poder quitarlo.
+    $('removeProjectImage').classList.toggle('hidden',!pendingProjectImage&&!$('projectImageError').classList.contains('show'));
   }
   function updateViewToggle(){
     [['viewGrid','grid'],['viewList','list']].forEach(([id,mode])=>{const b=$(id);const on=viewMode===mode;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});
@@ -758,7 +892,7 @@
     return `<div class="projects-empty"><svg class="ic"><use href="#i-search"/></svg><h3>Sin resultados</h3><p>No encontramos proyectos que coincidan con «${esc(searchQuery.trim())}».</p></div>`;
   }
   function emptyProjectsHtml(){
-    return `<div class="projects-empty"><svg class="ic"><use href="#i-folder"/></svg><h3>Aún no tienes proyectos</h3><p>Crea tu primer proyecto con el botón «Nuevo proyecto».</p></div>`;
+    return `<div class="projects-empty"><svg class="ic"><use href="#i-folder"/></svg><h3>Aún no tienes proyectos</h3><p>Crea tu primer proyecto con el botón «Crear proyecto».</p></div>`;
   }
   function closeCardMenus(){
     document.querySelectorAll('.card-menu:not(.hidden)').forEach(m=>m.classList.add('hidden'));
@@ -773,7 +907,8 @@
     try{localStorage.setItem(SORT_KEY,sortOrder)}catch{}
     updateSortControl();renderProjects();
   }
-  function renderProjects(){
+  function renderProjects({animate=true}={}){
+    $('projectGrid').classList.toggle('no-enter',!animate);
     const projects=userProjects();
     const q=searchQuery.trim().toLowerCase();
     const filtered=q?projects.filter(p=>((p.name||'')+' '+(p.description||'')).toLowerCase().includes(q)):projects;
@@ -782,15 +917,14 @@
     closeCardMenus();
     grid.classList.toggle('list-view',viewMode==='list');
     grid.classList.add('card-sm');
-    const showCreate=!q;
-    const menuHtml=p=>`<div class="card-menu-wrap"><button class="card-menu-btn" data-menu="${esc(p.id)}" type="button" aria-haspopup="menu" aria-expanded="false" title="Opciones del proyecto" aria-label="Opciones de ${esc(p.name)}"><svg class="ic"><use href="#i-more"/></svg></button><div class="card-menu hidden" role="menu" aria-label="Opciones de ${esc(p.name)}"><button class="card-menu-item" data-edit-project="${esc(p.id)}" type="button" role="menuitem"><svg class="ic"><use href="#i-edit"/></svg><span>Editar proyecto</span></button><button class="card-menu-item danger" data-delete-project="${esc(p.id)}" type="button" role="menuitem"><svg class="ic"><use href="#i-trash"/></svg><span>Borrar proyecto</span></button></div></div>`;
+    const menuHtml=p=>`<div class="card-menu-wrap"><button class="card-menu-btn" data-menu="${esc(p.id)}" type="button" aria-haspopup="menu" aria-expanded="false" title="Opciones del proyecto" aria-label="Opciones de ${esc(p.name)}"><svg class="ic"><use href="#i-more"/></svg></button><div class="card-menu hidden" role="menu" aria-label="Opciones de ${esc(p.name)}"><button class="card-menu-item" data-edit-project="${esc(p.id)}" type="button" role="menuitem"><svg class="ic"><use href="#i-edit"/></svg><span>Editar proyecto</span></button><button class="card-menu-item" data-duplicate-project="${esc(p.id)}" type="button" role="menuitem"><svg class="ic"><use href="#i-copy"/></svg><span>Duplicar proyecto</span></button><button class="card-menu-item danger" data-delete-project="${esc(p.id)}" type="button" role="menuitem"><svg class="ic"><use href="#i-trash"/></svg><span>Borrar proyecto</span></button></div></div>`;
     if(viewMode==='grid'){
-      let html=showCreate?`<button id="createProjectCard" class="project-card create-card" type="button"><span class="create-plus">+</span><strong>Crear proyecto</strong></button>`:'';
+      let html=`<button id="createProjectCard" class="project-card create-card" type="button"><span class="create-plus">+</span><strong>Crear proyecto</strong></button>`;
       html+=filtered.map((p,i)=>{
         const m=projectMeta(p);
         return `<article class="project-card" role="button" tabindex="0" data-project="${esc(p.id)}" style="animation-delay:${Math.min(i*35,210)}ms"><div class="project-cover">${coverMedia(p)}</div><div class="card-title-row"><h3>${esc(p.name)}</h3>${menuHtml(p)}</div><p class="desc">${esc(p.description||'Sin descripción. Abre el proyecto para comenzar a modelar sus pantallas.')}</p><div class="card-meta"><span>Actualizado ${m.date}</span><span class="screen-count">${m.screensLabel}</span></div></article>`;
       }).join('');
-      if(!filtered.length&&!showCreate)html+=emptySearchHtml();
+      if(!filtered.length)html+=q?emptySearchHtml():emptyProjectsHtml();
       grid.innerHTML=html;
     }else{
       let html=filtered.map(p=>{
@@ -821,10 +955,36 @@
     grid.querySelectorAll('[data-edit-project]').forEach(btn=>btn.addEventListener('click',e=>{
       e.stopPropagation();const id=btn.dataset.editProject;closeCardMenus();openEditProject(id);
     }));
+    grid.querySelectorAll('[data-duplicate-project]').forEach(btn=>btn.addEventListener('click',e=>{
+      e.stopPropagation();const id=btn.dataset.duplicateProject;closeCardMenus();duplicateProject(id);
+    }));
     grid.querySelectorAll('[data-delete-project]').forEach(btn=>btn.addEventListener('click',e=>{
       e.stopPropagation();const id=btn.dataset.deleteProject;closeCardMenus();deleteProject(id);
     }));
     updateSortControl();
+  }
+  /* ---------- Duplicar proyecto ---------- */
+  // Nombre de la copia: «Nombre (copia)», «Nombre (copia 2)»… Se recorta el nombre, nunca la marca, para no pasar de 30 caracteres.
+  function copyName(name){
+    const taken=new Set(userProjects().map(p=>p.name.toLowerCase()));
+    const base=name.replace(/\s\(copia(?: \d+)?\)$/,'');
+    for(let n=1;;n++){
+      const mark=n===1?' (copia)':` (copia ${n})`;
+      const candidate=base.slice(0,30-mark.length).trimEnd()+mark;
+      if(!taken.has(candidate.toLowerCase()))return candidate;
+    }
+  }
+  function duplicateProject(id){
+    const src=db.projects.find(x=>x.id===id&&x.userId===activeUser?.id);if(!src)return;
+    const now=Date.now();
+    const copy={...src,id:uid(),name:copyName(src.name),createdAt:now,updatedAt:now,screens:src.screens.map(s=>({...s,id:uid()}))};
+    db.projects.push(copy);persist();
+    // Si hay una búsqueda que oculta la copia, se limpia para que el estudiante la vea.
+    if(searchQuery.trim()&&!copy.name.toLowerCase().includes(searchQuery.trim().toLowerCase())){searchQuery='';$('projectSearch').value=''}
+    renderProjects({animate:false});
+    const card=$('projectGrid').querySelector(`[data-project="${copy.id}"]`);
+    if(card){card.classList.add('just-added');card.scrollIntoView({block:'nearest',behavior:'smooth'})}
+    showToast(`Se creó «${copy.name}».`);
   }
   function createProject(name,description,image){
     const p={id:uid(),userId:activeUser.id,name,description,image:image||'',createdAt:Date.now(),updatedAt:Date.now(),screens:[],nextScreenNumber:1};
@@ -835,7 +995,10 @@
     activeProjectId=id;selectedScreenId=p.screens[0]?.id||null;
     $('portfolioPage').classList.add('hidden');
     $('createProjectPage').classList.add('hidden');
-    $('workspacePage').classList.remove('hidden');syncPal();
+    $('workspacePage').classList.remove('hidden');
+    // Cada proyecto abre con «Herramientas» activo (HU10 CA1). En celular los paneles empiezan ocultos
+    // tras su lengüeta, y en tablet Propiedades también, para dejar libre el lienzo.
+    setPaletteCollapsed(isPhone());setPropertiesCollapsed(isTablet());setPanel('tools');
     $('breadcrumbCurrent').textContent=p.name;
     $('savedState').classList.remove('hidden');
     closeCardMenus();closeUserMenu();
@@ -843,20 +1006,82 @@
   }
 
   /* ---------- Lienzo ---------- */
+  /* ---------- Tamaño de pantallas ---------- */
+  const SIZE={defW:260,defH:80,minW:200,maxW:800,minH:80,maxH:600};
+  const RZ_DIRS=['nw','n','ne','e','se','s','sw','w'];
+  function sizeOf(s){return{w:s.w||SIZE.defW,h:s.h||SIZE.defH}}
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  function applyNodeSize(s){const n=nodeEl(s.id);if(!n)return;const{w,h}=sizeOf(s);n.style.left=s.x+'px';n.style.top=s.y+'px';n.style.width=w+'px';n.style.height=h+'px';n.querySelector('.rz-size').textContent=`${w} × ${h}`}
+  let resizeState=null;
+  function onResizeDown(e){
+    if(e.button!==0)return;
+    e.stopPropagation();e.preventDefault(); // no inicia el arrastre de la pantalla
+    const node=e.currentTarget.closest('.screen-node'),s=currentProject()?.screens.find(x=>x.id===node.dataset.screen);if(!s)return;
+    const{w,h}=sizeOf(s),pt=canvasPoint(e.clientX,e.clientY);
+    resizeState={s,node,dir:e.currentTarget.dataset.rz,pointerId:e.pointerId,startPt:pt,x:s.x,y:s.y,w,h,changed:false};
+    node.classList.add('resizing');applyNodeSize(s);
+    try{e.currentTarget.setPointerCapture(e.pointerId)}catch{}
+    window.addEventListener('pointermove',onResizeMove);window.addEventListener('pointerup',onResizeUp);window.addEventListener('pointercancel',onResizeUp);
+  }
+  function onResizeMove(e){
+    const r=resizeState;if(!r||e.pointerId!==r.pointerId)return;
+    const pt=canvasPoint(e.clientX,e.clientY),dx=pt.x-r.startPt.x,dy=pt.y-r.startPt.y,d=r.dir;
+    let w=r.w,h=r.h;
+    if(d.includes('e'))w=r.w+dx;if(d.includes('w'))w=r.w-dx;
+    if(d.includes('s'))h=r.h+dy;if(d.includes('n'))h=r.h-dy;
+    if(e.shiftKey&&d.length===2){
+      // Shift en una esquina: conserva la proporción según el eje que más cambió.
+      let k=Math.abs(w/r.w-1)>Math.abs(h/r.h-1)?w/r.w:h/r.h;
+      k=clamp(k,Math.max(SIZE.minW/r.w,SIZE.minH/r.h),Math.min(SIZE.maxW/r.w,SIZE.maxH/r.h));
+      w=Math.round(r.w*k);h=Math.round(r.h*k);
+    }else{
+      // Ajuste a la cuadrícula de 10 px y límites; al llegar al límite simplemente deja de cambiar.
+      w=clamp(Math.round(w/10)*10,SIZE.minW,SIZE.maxW);h=clamp(Math.round(h/10)*10,SIZE.minH,SIZE.maxH);
+    }
+    // El borde opuesto queda fijo.
+    r.s.x=d.includes('w')?r.x+r.w-w:r.x;r.s.y=d.includes('n')?r.y+r.h-h:r.y;
+    r.s.w=w;r.s.h=h;r.changed=true;
+    applyNodeSize(r.s);
+    if(r.s.id===selectedScreenId)fillSizeFields(r.s);
+  }
+  function onResizeUp(e){
+    const r=resizeState;if(!r||(e&&e.pointerId!==undefined&&e.pointerId!==r.pointerId))return;
+    window.removeEventListener('pointermove',onResizeMove);window.removeEventListener('pointerup',onResizeUp);window.removeEventListener('pointercancel',onResizeUp);
+    r.node.classList.remove('resizing');
+    if(r.changed){const p=currentProject();if(p){p.updatedAt=Date.now();persist()}}
+    resizeState=null;
+  }
+  function fillSizeFields(s){const{w,h}=sizeOf(s);$('screenWidth').value=w;$('screenHeight').value=h;setFieldError('screenWidth','');setFieldError('screenHeight','')}
+  // Campos Ancho y Alto: alternativa sin arrastre (WCAG 2.5.7). Un valor inválido no se aplica y se conserva el último válido.
+  function onSizeInput(id){
+    const p=currentProject(),s=selectedScreen();if(!p||!s)return;
+    const isW=id==='screenWidth',min=isW?SIZE.minW:SIZE.minH,max=isW?SIZE.maxW:SIZE.maxH,raw=$(id).value.trim();
+    let err='';
+    if(!raw)err=isW?'Escribe el ancho.':'Escribe el alto.';
+    else if(!/^\d+$/.test(raw))err='Usa solo números enteros.';
+    else if(+raw<min||+raw>max)err=`Usa un valor entre ${min} y ${max}.`;
+    setFieldError(id,err);if(err)return;
+    s[isW?'w':'h']=+raw;
+    if(!s[isW?'h':'w'])s[isW?'h':'w']=isW?SIZE.defH:SIZE.defW;
+    applyNodeSize(s);p.updatedAt=Date.now();schedulePersist();
+  }
   function renderCanvas(){
     const p=currentProject();if(!p)return;
     $('canvasWorld').innerHTML='';
     p.screens.forEach(s=>createNode(s));
     $('canvasEmpty').classList.toggle('is-off',p.screens.length>0);
-    $('canvasScreenCount').textContent=`${p.screens.length} ${p.screens.length===1?'pantalla':'pantallas'}`;
+    $('canvasScreenCount').textContent=`${p.screens.length} ${p.screens.length===1?'elemento':'elementos'}`;
     renderScreenTree();updateSelection();renderPropertiesPanel();
   }
   function createNode(s){
     const n=document.createElement('article');
     n.className='screen-node';n.dataset.screen=s.id;
     n.style.left=s.x+'px';n.style.top=s.y+'px';
-    n.innerHTML=`<div class="node-head"><svg class="ic"><use href="#i-phone"/></svg><span class="node-business">${esc(s.businessName)}</span><span class="node-code">${esc(s.code)}</span><button class="node-del" type="button" title="Eliminar elemento" aria-label="Eliminar ${esc(s.businessName)}"><svg class="ic"><use href="#i-trash"/></svg></button></div>`;
+    const sz=sizeOf(s);n.style.width=sz.w+'px';n.style.height=sz.h+'px';
+    n.innerHTML=`<div class="node-head"><svg class="ic"><use href="#i-phone"/></svg><span class="node-business">${esc(s.businessName)}</span><span class="node-code">${esc(s.code)}</span><button class="node-del" type="button" title="Eliminar elemento" aria-label="Eliminar ${esc(s.businessName)}"><svg class="ic"><use href="#i-trash"/></svg></button></div>`
+      +RZ_DIRS.map(d=>`<span class="rz rz-${d}" data-rz="${d}" aria-hidden="true"></span>`).join('')+`<span class="rz-size" aria-hidden="true"></span>`;
     $('canvasWorld').append(n);
+    n.querySelectorAll('[data-rz]').forEach(h=>h.addEventListener('pointerdown',onResizeDown));
     const deleteButton=n.querySelector('.node-del');
     deleteButton.addEventListener('pointerdown',e=>e.stopPropagation());
     deleteButton.addEventListener('dblclick',e=>e.stopPropagation());
@@ -874,7 +1099,7 @@
     p.screens.push(s);p.updatedAt=Date.now();persist();
     createNode(s);
     $('canvasEmpty').classList.add('is-off');
-    $('canvasScreenCount').textContent=`${p.screens.length} ${p.screens.length===1?'pantalla':'pantallas'}`;
+    $('canvasScreenCount').textContent=`${p.screens.length} ${p.screens.length===1?'elemento':'elementos'}`;
     selectedScreenId=s.id;
     renderScreenTree();updateSelection();renderPropertiesPanel();ensureVisible(s);
     showToast('Pantalla agregada al lienzo.');
@@ -887,7 +1112,7 @@
   }
   function ensureVisible(s){
     if(!s)return;
-    const rect=$('canvasViewport').getBoundingClientRect(),m=70,nodeW=260,nodeH=118;
+    const rect=$('canvasViewport').getBoundingClientRect(),m=70,{w:nodeW,h:nodeH}=sizeOf(s);
     const left=s.x*zoom+worldX,top=s.y*zoom+worldY,right=left+nodeW*zoom,bottom=top+nodeH*zoom;
     if(left<m||top<m||right>rect.width-m||bottom>rect.height-m){
       worldX=rect.width/2-(s.x+nodeW/2)*zoom;
@@ -903,11 +1128,12 @@
     $('treeCount').textContent=String(p.screens.length);$('treeProject').textContent=p.name;
     box.innerHTML=p.screens.length
       ? p.screens.map(s=>`<button class="tree-item ${s.id===selectedScreenId?'active':''}" data-tree="${esc(s.id)}" type="button" title="${esc(s.businessName)}"><svg class="ic"><use href="#i-phone"/></svg><span class="tree-name">${esc(s.businessName)}</span><span class="tree-code">${esc(s.code)}</span></button>`).join('')
-      : '<p class="tree-empty">Aún no hay pantallas. Agrega la primera desde la paleta.</p>';
+      : '<p class="tree-empty">Aún no hay elementos. Agrega el primero desde «Herramientas».</p>';
     box.querySelectorAll('[data-tree]').forEach(b=>b.addEventListener('click',()=>{
       const p2=currentProject(),s=p2?.screens.find(x=>x.id===b.dataset.tree);
       if(!s)return;
       selectScreen(s.id);ensureVisible(s);
+      if(isPhone())setPaletteCollapsed(true); // en celular el panel tapa el lienzo: se cierra para ver la pantalla elegida
     }));
   }
 
@@ -924,6 +1150,7 @@
     updatePropCount('screenCode',s.code.length);
     updatePropCount('screenTechnical',s.technicalName.length);
     updatePropCount('screenBusiness',s.businessName.length);
+    fillSizeFields(s);
   }
   function onPropInput(id){
     const p=currentProject(),s=selectedScreen();if(!p||!s)return;
@@ -951,9 +1178,9 @@
   }
 
   /* ---------- Vista / pan / zoom ---------- */
-  function applyWorldTransform(){$('canvasWorld').style.transform=`translate(${worldX}px,${worldY}px) scale(${zoom})`;$('zoomLabel').textContent=`${Math.round(zoom*100)}%`}
+  function applyWorldTransform(){$('canvasWorld').style.transform=`translate(${worldX}px,${worldY}px) scale(${zoom})`;$('canvasWorld').style.setProperty('--z',zoom);$('zoomLabel').textContent=`${Math.round(zoom*100)}%`}
   function zoomAt(next){zoom=Math.max(.5,Math.min(1.6,next));applyWorldTransform()}
-  function fitCanvas(){const p=currentProject();if(!p||!p.screens.length){zoom=1;worldX=120;worldY=100;applyWorldTransform();return}const rect=$('canvasViewport').getBoundingClientRect(),minX=Math.min(...p.screens.map(s=>s.x)),minY=Math.min(...p.screens.map(s=>s.y)),maxX=Math.max(...p.screens.map(s=>s.x+260)),maxY=Math.max(...p.screens.map(s=>s.y+118));zoom=Math.max(.5,Math.min(1.15,Math.min((rect.width-100)/(maxX-minX+40),(rect.height-100)/(maxY-minY+40))));worldX=(rect.width-(maxX-minX)*zoom)/2-minX*zoom;worldY=(rect.height-(maxY-minY)*zoom)/2-minY*zoom;applyWorldTransform()}
+  function fitCanvas(){const p=currentProject();if(!p||!p.screens.length){zoom=1;worldX=120;worldY=100;applyWorldTransform();return}const rect=$('canvasViewport').getBoundingClientRect(),minX=Math.min(...p.screens.map(s=>s.x)),minY=Math.min(...p.screens.map(s=>s.y)),maxX=Math.max(...p.screens.map(s=>s.x+sizeOf(s).w)),maxY=Math.max(...p.screens.map(s=>s.y+sizeOf(s).h));zoom=Math.max(.5,Math.min(1.15,Math.min((rect.width-100)/(maxX-minX+40),(rect.height-100)/(maxY-minY+40))));worldX=(rect.width-(maxX-minX)*zoom)/2-minX*zoom;worldY=(rect.height-(maxY-minY)*zoom)/2-minY*zoom;applyWorldTransform()}
   function canvasPoint(cx,cy){const r=$('canvasViewport').getBoundingClientRect();return{x:(cx-r.left-worldX)/zoom,y:(cy-r.top-worldY)/zoom}}
   function onNodePointerDown(e){if(e.button!==0)return;const node=e.currentTarget,id=node.dataset.screen;selectScreen(id);const p=currentProject(),s=p?.screens.find(x=>x.id===id);if(!s)return;const pt=canvasPoint(e.clientX,e.clientY);dragScreen={id,node,pointerId:e.pointerId,offsetX:pt.x-s.x,offsetY:pt.y-s.y,startX:e.clientX,startY:e.clientY,moved:false};try{node.setPointerCapture(e.pointerId)}catch{}window.addEventListener('pointermove',onNodePointerMove);window.addEventListener('pointerup',onNodePointerUp);window.addEventListener('pointercancel',onNodePointerUp)}
   function onNodePointerMove(e){if(!dragScreen||e.pointerId!==dragScreen.pointerId)return;if(!dragScreen.moved){if(Math.abs(e.clientX-dragScreen.startX)<3&&Math.abs(e.clientY-dragScreen.startY)<3)return;dragScreen.moved=true;dragScreen.node.classList.add('dragging')}const p=currentProject(),s=p?.screens.find(x=>x.id===dragScreen.id);if(!s)return;const pt=canvasPoint(e.clientX,e.clientY);s.x=Math.round((pt.x-dragScreen.offsetX)/10)*10;s.y=Math.round((pt.y-dragScreen.offsetY)/10)*10;dragScreen.node.style.left=s.x+'px';dragScreen.node.style.top=s.y+'px'}
@@ -1008,11 +1235,10 @@
     const box=$('editCoverPreview');if(!box)return;
     if(pendingEditImage){
       box.innerHTML=`<img src="${esc(pendingEditImage)}" alt="Vista previa de la portada">`;
-      $('editRemoveCover').classList.remove('hidden');
     }else{
       box.innerHTML='<svg class="ic" style="width:22px;height:22px"><use href="#i-image"/></svg>';
-      $('editRemoveCover').classList.add('hidden');
     }
+    $('editRemoveCover').classList.toggle('hidden',!pendingEditImage&&!$('editCoverError').classList.contains('show'));
   }
   function openEditProject(id){
     const p=db.projects.find(x=>x.id===id&&x.userId===activeUser?.id);if(!p)return;
@@ -1023,7 +1249,7 @@
     $('editDescriptionCount').textContent=String((p.description||'').length);
     ['editProjectName','editProjectDescription'].forEach(k=>setFieldError(k,''));
     setMessage('editProjectMessage','');
-    setEditCoverError('');
+    setEditCoverError('');setWarning('editCoverWarning','');
     $('editCoverInput').value='';
     renderEditCoverPreview();
     showModal($('editProjectBackdrop'));
@@ -1069,40 +1295,93 @@
   });
   $('backToLogin').addEventListener('click',backToLoginFromRecover);
   $('loginForm').addEventListener('submit',e=>{
-    e.preventDefault();
+    e.preventDefault();setMessage('loginMessage','');
     const email=$('loginEmail').value.trim().toLowerCase(),password=$('loginPassword').value;
-    let ok=true;
-    if(!emailValid(email)){setFieldError('loginEmail','Usa tu correo institucional @epn.edu.ec.');ok=false}else setFieldError('loginEmail','');
-    if(!password){setFieldError('loginPassword','Ingresa tu contraseña.');ok=false}else setFieldError('loginPassword','');
-    if(!ok)return;
-    const user=db.users.find(u=>u.email===email&&u.password===password);
-    if(!user){setMessage('loginMessage','No encontramos una cuenta con esos datos. Revisa tus credenciales o crea una cuenta.');return}
+    const emailErr=live.loginEmail(email),passwordErr=live.loginPassword(password);
+    setFieldError('loginEmail',emailErr);setFieldError('loginPassword',passwordErr);
+    if(emailErr||passwordErr)return;
+    const user=db.users.find(u=>u.email===email);
+    if(user&&!user.password){const label=PROVIDER_LABEL[socialProviderOf(user)]||'otro método';setMessage('loginMessage',`Esta cuenta usa ${label} para iniciar sesión. Pulsa “Continuar con ${label}”.`);return}
+    if(!user||user.password!==password){setMessage('loginMessage','No encontramos una cuenta con esos datos. Revisa tus credenciales o crea una cuenta.');return}
     activeUser=user;showApp();showToast('Sesión iniciada correctamente.');
   });
   $('registerForm').addEventListener('submit',e=>{
-    e.preventDefault();
+    e.preventDefault();setMessage('registerMessage','');
     const name=$('registerName').value.trim(),email=$('registerEmail').value.trim().toLowerCase(),password=$('registerPassword').value,confirm=$('registerConfirm').value;
     let ok=true;
     if(!name){setFieldError('registerName','Escribe tu nombre completo.');ok=false}else setFieldError('registerName','');
-    if(!emailValid(email)){setFieldError('registerEmail','Usa tu correo institucional @epn.edu.ec.');ok=false}else if(db.users.some(u=>u.email===email)){setFieldError('registerEmail','Este correo ya tiene una cuenta.');ok=false}else setFieldError('registerEmail','');
+    const emailErr=live.registerEmail(email)||(db.users.some(u=>u.email===email)?'Este correo ya tiene una cuenta.':'');setFieldError('registerEmail',emailErr);if(emailErr)ok=false;
     if(password.length<6){setFieldError('registerPassword','Usa al menos 6 caracteres.');ok=false}else setFieldError('registerPassword','');
     if(confirm!==password||!confirm){setFieldError('registerConfirm','Las contraseñas deben coincidir.');ok=false}else setFieldError('registerConfirm','');
     if(!ok)return;
-    activeUser={id:uid(),name,email,password};
+    activeUser={id:uid(),name,email,password,providers:['password']};
     db.users.push(activeUser);persist();
     showAuth('login');$('loginEmail').value=email;$('loginPassword').value='';showToast('Cuenta creada correctamente.');
   });
   let recovery=null,recoverN=1;
-  function recoverStep(n){recoverN=n;[1,2,3].forEach(i=>$('recoverStep'+i).classList.toggle('hidden',i!==n));$('recoverIntro').textContent=[,'Escribe tu correo institucional y te enviaremos un código de verificación.','Escribe el código de 6 dígitos que enviamos a '+(recovery?recovery.user.email:'')+'.','Crea tu nueva contraseña. Debe tener al menos 6 caracteres.'][n];$('recoverSubmitLabel').textContent=[,'Enviar código','Verificar código','Cambiar contraseña'][n];setMessage('recoverMessage','');setTimeout(()=>$([,'recoverEmail','recoverCode','recoverPassword'][n]).focus(),40)}
+  function recoverStep(n){recoverN=n;[1,2,3].forEach(i=>$('recoverStep'+i).classList.toggle('hidden',i!==n));$('recoverIntro').textContent=[,'Escribe tu correo y te enviaremos un código de verificación.','Escribe el código de 6 dígitos que enviamos a '+(recovery?recovery.user.email:'')+'.','Crea tu nueva contraseña. Debe tener al menos 6 caracteres.'][n];$('recoverSubmitLabel').textContent=[,'Enviar código','Verificar código','Cambiar contraseña'][n];setMessage('recoverMessage','');setTimeout(()=>$([,'recoverEmail','recoverCode','recoverPassword'][n]).focus(),40)}
   function resetRecover(){recovery=null;['recoverCode','recoverPassword','recoverConfirm'].forEach(id=>{$(id).value='';setFieldError(id,'')});recoverStep(1)}
   function sendCode(user){recovery={user,code:String(Math.floor(100000+Math.random()*900000))};showToast('Correo simulado: tu código de recuperación es '+recovery.code,'success',null,20000)}
   $('recoverResend').addEventListener('click',()=>{if(!recovery)return;sendCode(recovery.user);$('recoverCode').value='';setFieldError('recoverCode','')});
   $('recoverCode').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'')});
   $('recoverPassword').addEventListener('input',()=>{if($('recoverConfirm').value)setFieldError('recoverConfirm',live.recoverConfirm($('recoverConfirm').value))});
   $('recoverForm').addEventListener('submit',e=>{e.preventDefault();setMessage('recoverMessage','');
-    if(recoverN===1){const email=$('recoverEmail').value.trim().toLowerCase(),err=live.recoverEmail(email);setFieldError('recoverEmail',err);if(err)return;const user=db.users.find(u=>u.email===email);if(!user){setFieldError('recoverEmail','No encontramos una cuenta con ese correo.');return}sendCode(user);recoverStep(2)}
+    if(recoverN===1){const email=$('recoverEmail').value.trim().toLowerCase(),err=live.recoverEmail(email);setFieldError('recoverEmail',err);if(err)return;const user=db.users.find(u=>u.email===email);if(!user){setFieldError('recoverEmail','No encontramos una cuenta con ese correo.');return}if(!user.password){setFieldError('recoverEmail',`Esta cuenta usa ${PROVIDER_LABEL[socialProviderOf(user)]||'otro método'} para iniciar sesión.`);return}sendCode(user);recoverStep(2)}
     else if(recoverN===2){const err=live.recoverCode($('recoverCode').value);setFieldError('recoverCode',err);if(err)return;if($('recoverCode').value!==recovery.code){setFieldError('recoverCode','El código es incorrecto.');return}recoverStep(3)}
     else{const pw=$('recoverPassword').value,e1=live.recoverPassword(pw),e2=live.recoverConfirm($('recoverConfirm').value);setFieldError('recoverPassword',e1);setFieldError('recoverConfirm',e2);if(e1||e2)return;recovery.user.password=pw;persist();const email=recovery.user.email;showAuth('login');$('loginEmail').value=email;$('loginPassword').value='';showToast('Contraseña actualizada. Inicia sesión con tu nueva contraseña.')}});
+
+  /* ---------- Acceso con Google / GitHub (simulado: el prototipo no tiene servidor) ---------- */
+  const PROVIDER_LABEL={google:'Google',github:'GitHub'};
+  let oauthProvider=null,oauthOrigin='login';
+  function providersOf(u){return u.providers||(u.password?['password']:[])}
+  function socialProviderOf(u){return providersOf(u).find(p=>p!=='password')}
+  function openOauth(provider,origin){
+    oauthProvider=provider;oauthOrigin=origin;
+    const gh=provider==='github',label=PROVIDER_LABEL[provider];
+    setMessage(origin+'Message','');
+    $('oauthTitle').textContent='Continuar con '+label;
+    $('oauthIntro').textContent=`Croma quiere acceder a tu nombre y a tu correo de ${label}.`;
+    $('oauthNameLabel').textContent=gh?'Nombre del perfil (opcional)':'Nombre de la cuenta';
+    $('oauthUserField').classList.toggle('hidden',!gh);
+    $('oauthVerifiedRow').classList.toggle('hidden',!gh);
+    ['oauthUser','oauthName','oauthEmail'].forEach(id=>{$(id).value='';setFieldError(id,'')});
+    $('oauthVerified').checked=true;
+    showModal($('oauthBackdrop'));
+    setTimeout(()=>$(gh?'oauthUser':'oauthName').focus(),50);
+  }
+  function closeOauth(){hideModal($('oauthBackdrop'));oauthProvider=null}
+  function oauthFailed(kind){
+    if(!oauthProvider)return;
+    const label=PROVIDER_LABEL[oauthProvider],origin=oauthOrigin;
+    closeOauth();
+    setMessage(origin+'Message',kind==='cancel'?`No se completó el acceso con ${label}.`:`No pudimos conectar con ${label}. Inténtalo de nuevo.`);
+  }
+  function completeOauth(){
+    if(!oauthProvider)return;
+    const provider=oauthProvider,origin=oauthOrigin,gh=provider==='github';
+    const username=$('oauthUser').value.trim(),name=$('oauthName').value.trim(),email=$('oauthEmail').value.trim().toLowerCase();
+    const verified=!gh||$('oauthVerified').checked;
+    let ok=true;
+    ['oauthUser','oauthName','oauthEmail'].forEach(id=>{const err=live[id]($(id).value);setFieldError(id,err);if(err)ok=false});
+    if(!ok)return;
+    closeOauth();
+    if(!verified){setMessage(origin+'Message','Tu cuenta de GitHub no tiene un correo verificado. Verifícalo en GitHub o usa otro método de acceso.');return}
+    let user=db.users.find(u=>u.email===email);
+    if(!user){user={id:uid(),name:name||username,email,providers:[provider]};db.users.push(user)}
+    else if(!providersOf(user).includes(provider))user.providers=[...providersOf(user),provider];
+    persist();activeUser=user;showApp();showToast('Sesión iniciada correctamente.');
+  }
+  document.querySelectorAll('[data-oauth]').forEach(b=>b.addEventListener('click',()=>openOauth(b.dataset.oauth,b.closest('#registerPage')?'register':'login')));
+  $('oauthForm').addEventListener('submit',e=>{e.preventDefault();completeOauth()});
+  $('cancelOauth').addEventListener('click',()=>oauthFailed('cancel'));
+  $('closeOauth').addEventListener('click',()=>oauthFailed('cancel'));
+  $('oauthFail').addEventListener('click',()=>oauthFailed('error'));
+  $('oauthBackdrop').addEventListener('click',e=>{if(e.target===$('oauthBackdrop'))oauthFailed('cancel')});
+  // Al marcar o desmarcar «correo verificado», el error del correo se recalcula al instante.
+  $('oauthVerified').addEventListener('change',()=>{const v=$('oauthEmail').value;setFieldError('oauthEmail',$('oauthVerified').checked&&!v.trim()&&!$('oauthEmail').classList.contains('invalid')?'':live.oauthEmail(v))});
+
+  // El aviso general de cada formulario se borra en cuanto el usuario vuelve a escribir.
+  [['loginForm','loginMessage'],['registerForm','registerMessage'],['recoverForm','recoverMessage'],['projectForm','projectMessage'],['editProjectForm','editProjectMessage']].forEach(([form,msg])=>$(form).addEventListener('input',()=>setMessage(msg,'')));
 
   /* ---------- Eventos: shell / usuario ---------- */
   $('brandHome').addEventListener('click',showPortfolio);
@@ -1146,27 +1425,39 @@
   $('pickProjectImage').addEventListener('click',()=>$('projectImageInput').click());
   $('projectImageInput').addEventListener('change',async e=>{
     const file=e.target.files?.[0];if(!file)return;
-    try{pendingProjectImage=await readCoverImage(file);setImageError('');renderProjectImagePreview()}
-    catch(err){pendingProjectImage='';renderProjectImagePreview();setImageError(err.message||'No se pudo usar la imagen.')}
+    try{pendingProjectImage=await readCoverImage(file);setImageError('');setWarning('projectImageWarning','')}
+    catch(err){
+      // La portada es opcional: un archivo inválido solo genera una advertencia y nunca bloquea la creación.
+      setImageError('');
+      setWarning('projectImageWarning',pendingProjectImage?COVER_KEPT_WARNING:`${err.message||'No se pudo usar la imagen.'} El proyecto se creará sin portada.`);
+    }
+    renderProjectImagePreview();
   });
-  $('removeProjectImage').addEventListener('click',()=>{pendingProjectImage='';$('projectImageInput').value='';renderProjectImagePreview()});
+  $('removeProjectImage').addEventListener('click',()=>{pendingProjectImage='';$('projectImageInput').value='';setImageError('');setWarning('projectImageWarning','');renderProjectImagePreview()});
 
   /* ---------- Eventos: editar / borrar proyecto ---------- */
   $('closeEditProject').addEventListener('click',closeEditProject);
   $('cancelEditProject').addEventListener('click',closeEditProject);
-  $('editProjectName').addEventListener('input',()=>{$('editNameCount').textContent=$('editProjectName').value.length;setFieldError('editProjectName','')});
+  $('editProjectName').addEventListener('input',()=>{$('editNameCount').textContent=$('editProjectName').value.length});
   $('editProjectDescription').addEventListener('input',()=>{$('editDescriptionCount').textContent=$('editProjectDescription').value.length;setFieldError('editProjectDescription','')});
   $('editPickCover').addEventListener('click',()=>$('editCoverInput').click());
   $('editCoverInput').addEventListener('change',async e=>{
     const file=e.target.files?.[0];e.target.value='';if(!file)return;
-    try{pendingEditImage=await readCoverImage(file);setEditCoverError('');renderEditCoverPreview()}
-    catch(err){pendingEditImage='';renderEditCoverPreview();setEditCoverError(err.message||'No se pudo usar la imagen.')}
+    try{pendingEditImage=await readCoverImage(file);setEditCoverError('');setWarning('editCoverWarning','')}
+    catch(err){
+      // La portada es opcional: un archivo inválido solo genera una advertencia y nunca bloquea el guardado.
+      setEditCoverError('');
+      setWarning('editCoverWarning',pendingEditImage?COVER_KEPT_WARNING:`${err.message||'No se pudo usar la imagen.'} El proyecto se guardará sin portada.`);
+    }
+    renderEditCoverPreview();
   });
-  $('editRemoveCover').addEventListener('click',()=>{pendingEditImage='';$('editCoverInput').value='';renderEditCoverPreview();setEditCoverError('')});
+  $('editRemoveCover').addEventListener('click',()=>{pendingEditImage='';$('editCoverInput').value='';setEditCoverError('');setWarning('editCoverWarning','');renderEditCoverPreview()});
   $('editProjectForm').addEventListener('submit',e=>{
     e.preventDefault();
     if(!editingProjectId)return;
-    if(!validateEditProject()){setMessage('editProjectMessage','Corrige los campos marcados en rojo.');$('editProjectName').focus();return}
+    const editOk=validateEditProject();
+    // El botón sigue activo: si hay errores en los campos simplemente no se guarda (la portada nunca bloquea).
+    if(!editOk)return;
     const p=db.projects.find(x=>x.id===editingProjectId&&x.userId===activeUser?.id);
     if(!p){closeEditProject();return}
     p.name=$('editProjectName').value.trim();
@@ -1180,49 +1471,64 @@
   /* ---------- Eventos: proyecto ---------- */
   $('projectName').addEventListener('input',()=>{$('nameCount').textContent=$('projectName').value.length;setFieldError('projectName','')});
   $('projectDescription').addEventListener('input',()=>{$('descriptionCount').textContent=$('projectDescription').value.length;setFieldError('projectDescription','')});
-  $('cancelProject').addEventListener('click',async()=>{
-    if($('projectName').value.trim()||$('projectDescription').value.trim()||pendingProjectImage){
-      const yes=await showDialog({title:'Descartar proyecto',message:'Los datos que ingresaste todavía no se han guardado. ¿Quieres salir sin crear el proyecto?',confirm:'Descartar',cancel:'Seguir editando',danger:true});
-      if(!yes)return;
-    }
-    showPortfolio();
-  });
+  // Cancelar vuelve al catálogo y conserva el borrador en memoria, igual que el logo.
+  $('cancelProject').addEventListener('click',showPortfolio);
   $('projectForm').addEventListener('submit',e=>{
     e.preventDefault();
-    if(!validateProject()){setMessage('projectMessage','Corrige los campos marcados en rojo.');$('projectName').focus();return}
-    setMessage('projectMessage','');
+    const projectOk=validateProject();
+    // El botón sigue activo: si hay errores en los campos simplemente no se crea (la portada nunca bloquea).
+    if(!projectOk)return;
     createProject($('projectName').value.trim(),$('projectDescription').value.trim(),pendingProjectImage);
+    resetProjectForm();
   });
 
   /* ---------- Eventos: workspace ---------- */
   ['screenCode','screenTechnical','screenBusiness'].forEach(id=>$(id).addEventListener('input',()=>onPropInput(id)));
+  ['screenWidth','screenHeight'].forEach(id=>['input','blur'].forEach(ev=>$(id).addEventListener(ev,()=>onSizeInput(id))));
   $('inlineProperties').addEventListener('submit',e=>e.preventDefault());
-  $('screenPalette').addEventListener('click',()=>addScreen());
+  $('screenPalette').addEventListener('click',()=>{addScreen();if(isPhone())setPaletteCollapsed(true)});
   $('screenPalette').addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain','screen');e.dataTransfer.effectAllowed='copy'});
   $('canvasViewport').addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='copy'});
-  $('canvasViewport').addEventListener('drop',e=>{e.preventDefault();const pt=canvasPoint(e.clientX,e.clientY);addScreen(Math.round((pt.x-130)/10)*10,Math.round((pt.y-55)/10)*10)});
+  $('canvasViewport').addEventListener('drop',e=>{e.preventDefault();const pt=canvasPoint(e.clientX,e.clientY);addScreen(Math.round((pt.x-SIZE.defW/2)/10)*10,Math.round((pt.y-SIZE.defH/2)/10)*10)});
   $('zoomIn').addEventListener('click',()=>zoomAt(zoom+.1));
   $('zoomOut').addEventListener('click',()=>zoomAt(zoom-.1));
   $('fitCanvas').addEventListener('click',fitCanvas);
   $('canvasViewport').addEventListener('pointerdown',e=>{if(e.target.closest('.screen-node')||e.button!==0)return;panState={x:e.clientX,y:e.clientY,worldX,worldY,moved:false};$('canvasViewport').classList.add('panning');window.addEventListener('pointermove',onPanMove);window.addEventListener('pointerup',onPanUp,{once:true})});
-  function setPanel(p){const b=$('workspaceBody'),close=b.dataset.panel===p&&!b.classList.contains('palette-collapsed');b.dataset.panel=p;b.classList.toggle('palette-collapsed',close);$('railTools').classList.toggle('active',!close&&p==='tools');$('railNav').classList.toggle('active',!close&&p==='nav');syncPal()}
+  // Los botones de la barra solo cambian de panel; ocultar se hace con «‹» y mostrar con la lengüeta.
+  const PANEL_META={tools:{icon:'i-tool',label:'Herramientas'},nav:{icon:'i-layers',label:'Capas'}};
+  // Tablet (≤980 px): Propiedades flota sobre el lienzo. Celular (≤760 px): los paneles izquierdos también.
+  const isTablet=()=>window.matchMedia('(max-width:980px)').matches,isPhone=()=>window.matchMedia('(max-width:760px)').matches;
+  function setPanel(p){const b=$('workspaceBody');b.dataset.panel=p;$('railTools').classList.toggle('active',p==='tools');$('railNav').classList.toggle('active',p==='nav');syncPal();syncPaletteTab()}
+  function setPaletteCollapsed(c){$('workspaceBody').classList.toggle('palette-collapsed',c);$('collapsePalette').setAttribute('aria-expanded',String(!c))}
+  // La lengüeta muestra el último panel usado (al entrar al lienzo es «Herramientas»).
+  function syncPaletteTab(){const m=PANEL_META[$('workspaceBody').dataset.panel]||PANEL_META.tools,t=$('expandPalette');t.querySelector('use').setAttribute('href','#'+m.icon);t.querySelector('span').textContent=m.label;t.setAttribute('aria-label','Mostrar panel '+m.label);t.title='Mostrar panel '+m.label}
+  $('collapsePalette').addEventListener('click',()=>setPaletteCollapsed(true));
+  $('expandPalette').addEventListener('click',()=>{if(isPhone())setPropertiesCollapsed(true);setPaletteCollapsed(false)});
+  $('closePropertiesPanel').addEventListener('click',()=>setPropertiesCollapsed(true));
+  // En pantallas pequeñas, tocar un espacio vacío del lienzo cierra los paneles flotantes.
+  $('canvasViewport').addEventListener('pointerdown',e=>{if(e.target.closest('.screen-node'))return;if(isPhone())setPaletteCollapsed(true);if(isTablet())setPropertiesCollapsed(true)});
   function syncPal(){const b=$('workspaceBody');b.style.setProperty('--pal',b.dataset.panel==='tools'?b.querySelector('.palette-inner').offsetWidth+'px':'')}
   $('railTools').addEventListener('click',()=>setPanel('tools'));
   $('railNav').addEventListener('click',()=>setPanel('nav'));
   function setPropertiesCollapsed(c){$('workspaceBody').classList.toggle('properties-collapsed',c);$('collapseProperties').setAttribute('aria-expanded',String(!c))}
   $('collapseProperties').addEventListener('click',()=>setPropertiesCollapsed(true));
-  $('expandProperties').addEventListener('click',()=>setPropertiesCollapsed(false));
+  $('expandProperties').addEventListener('click',()=>{if(isPhone())setPaletteCollapsed(true);setPropertiesCollapsed(false)});
 
   /* ---------- Validación en vivo ---------- */
   const live={
-    loginEmail:v=>!v.trim()?'Ingresa tu correo institucional.':!emailValid(v.trim())?'Usa tu correo institucional @epn.edu.ec.':'',
+    loginEmail:v=>!v.trim()?'Ingresa tu correo.':!emailValid(v.trim())?'Ingresa un correo válido.':'',
     loginPassword:v=>v?'':'Ingresa tu contraseña.',
     registerName:v=>v.trim()?'':'Escribe tu nombre completo.',
-    registerEmail:v=>{v=v.trim().toLowerCase();return !v?'Ingresa tu correo institucional.':!emailValid(v)?'Usa tu correo institucional @epn.edu.ec.':db.users.some(u=>u.email===v)?'Este correo ya tiene una cuenta.':''},
+    // El correo repetido no se revisa en vivo: solo al pulsar «Crear cuenta».
+    registerEmail:v=>{v=v.trim().toLowerCase();return !v?'Ingresa tu correo.':!emailValid(v)?'Ingresa un correo válido.':''},
+    editProjectName:v=>!v.trim()?'El nombre del proyecto es obligatorio.':v.length>30?'Usa máximo 30 caracteres.':'',
+    oauthUser:v=>oauthProvider==='github'&&!v.trim()?'Escribe el usuario de GitHub.':'',
+    oauthName:v=>oauthProvider==='google'&&!v.trim()?'Escribe el nombre de la cuenta.':'',
+    oauthEmail:v=>oauthProvider==='github'&&!$('oauthVerified').checked?'':live.loginEmail(v),
     registerPassword:v=>v.length<6?'Usa al menos 6 caracteres.':'',
     registerConfirm:v=>(!v||v!==$('registerPassword').value)?'Las contraseñas deben coincidir.':'',
     projectName:v=>!v.trim()?'El nombre del proyecto es obligatorio.':v.length>30?'Usa máximo 30 caracteres.':'',
-    recoverEmail:v=>{v=(v||'').trim();return !v?'Ingresa tu correo institucional.':!emailValid(v)?'Usa tu correo institucional @epn.edu.ec.':''},
+    recoverEmail:v=>{v=(v||'').trim();return !v?'Ingresa tu correo.':!emailValid(v)?'Ingresa un correo válido.':''},
     recoverCode:v=>/^\d{6}$/.test(v)?'':'Ingresa el código de 6 dígitos.',
     recoverPassword:v=>v.length<6?'Usa al menos 6 caracteres.':'',
     recoverConfirm:v=>(!v||v!==$('recoverPassword').value)?'Las contraseñas deben coincidir.':''
@@ -1231,12 +1537,15 @@
     setFieldError(id,live[id]($(id).value));
     if(id==='registerPassword'&&$('registerConfirm').value)setFieldError('registerConfirm',live.registerConfirm($('registerConfirm').value));
   })));
-  document.querySelectorAll('input[maxlength]:not(#recoverCode),textarea[maxlength]').forEach(el=>el.addEventListener('input',()=>{if(el.value.length>=el.maxLength&&!el.classList.contains('invalid'))setFieldError(el.id,`Alcanzaste el máximo de ${el.maxLength} caracteres.`)}));
+  document.querySelectorAll('input[maxlength]:not(#recoverCode),textarea[maxlength]').forEach(el=>{
+    if($(el.id+'Error'))el.addEventListener('input',()=>syncMaxWarning(el.id));
+  });
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){
       closeCardMenus();
       closeUserMenu();
       if(!$('editProjectBackdrop').classList.contains('hidden')){closeEditProject();return}
+      if(!$('oauthBackdrop').classList.contains('hidden')){oauthFailed('cancel');return}
       if(!$('dialogBackdrop').classList.contains('hidden'))finishDialog(false);
     }
   });
