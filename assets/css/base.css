@@ -1,0 +1,78 @@
+/* Base: reset, íconos, botones, campos de formulario y animaciones compartidas. */
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid #b5a4dc; outline-offset: 2px; }
+.hidden { display: none !important; }
+
+.ic { display: block; flex: none; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; }
+.eyebrow { font-size: 10px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: var(--primary); }
+.req { color: var(--danger); }
+.optional { color: var(--muted); font-weight: 600; }
+
+/* Marca (logo) */
+.app-mark { position: relative; overflow: hidden; width: 39px; height: 39px; display: grid; place-items: center; border-radius: 13px; background: var(--primary); color: #fff; font: 800 21px Manrope; letter-spacing: -.06em; box-shadow: 0 5px 12px #37256224; }
+.app-logo-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+
+/* Botones */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 10px 15px; border: 1px solid transparent; border-radius: 10px; font-weight: 650; line-height: 1; transition: background .16s, border-color .16s, transform .16s; }
+.btn:active { transform: scale(.985); }
+.btn > span { display: block; line-height: 1; }
+.btn-primary { background: var(--primary); color: #fff; box-shadow: 0 3px 8px #37256222; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-secondary { background: #fff; border-color: var(--line); color: var(--ink); }
+.btn-secondary:hover { background: #f8f7fa; }
+.btn-danger { background: #fff; border-color: #f1d9dc; color: var(--danger); }
+.btn-danger:hover { background: var(--danger-soft); }
+.btn-sm { padding: 8px 12px; border-radius: 9px; font-size: 12px; }
+.btn-block { width: 100%; padding: 12px; }
+.icon-btn { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 11px; background: #fff; color: var(--ink); font-size: 19px; line-height: 1; }
+.icon-btn .ic { width: 17px; height: 17px; }
+.text-button { padding: 3px; border: 0; background: none; color: var(--primary); font-weight: 750; }
+
+/* Campo de formulario: etiqueta, control, línea reservada para error/aviso y ayuda */
+.field { display: grid; gap: 6px; margin-bottom: 2px; }
+.field label { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #474351; }
+.field label .ic { width: 14px; height: 14px; color: var(--primary); }
+.field input, .field textarea { width: 100%; padding: 12px 13px; border: 1px solid #d9d6e1; border-radius: 10px; background: #fff; color: var(--ink); transition: border .15s, box-shadow .15s; }
+.field textarea { min-height: 90px; resize: vertical; }
+.field input:focus, .field textarea:focus { border-color: var(--primary); outline: 3px solid #e7e1f4; }
+.field input.invalid, .field textarea.invalid { border-color: var(--danger); background: #fffafb; outline-color: #ffe2e5; }
+.field small { font-size: 11px; color: var(--muted); }
+.hint-action { font-size: 11px; }
+
+/* Error de campo: ocupa siempre su línea, así aparecer o desaparecer no mueve nada */
+.field-error { color: var(--danger); }
+.field .field-error { order: 99; display: block; color: var(--danger); min-height: 20px; opacity: 0; transform: translateY(-3px); transition: opacity .2s ease, transform .2s ease; }
+.field .field-error.show { opacity: 1; transform: none; }
+/* Aviso de máximo de caracteres: usa la misma línea del error, en ámbar */
+.field-error.warn { color: var(--warning-ink); font-weight: 600; }
+.field-error.warn .ic { display: inline-block; width: 12px; height: 12px; margin-right: 4px; color: var(--warning-icon); vertical-align: -2px; }
+
+/* Advertencia que no bloquea: se expande suavemente */
+.field-warning .ic { width: 14px; height: 14px; margin-top: 1px; color: var(--warning-icon); }
+.field .field-warning { order: 98; display: flex; align-items: flex-start; gap: 7px; overflow: hidden; max-height: 0; opacity: 0; margin-top: -6px; padding: 0 10px; border: 0 solid var(--warning-line); border-radius: 9px; background: var(--warning-bg); color: var(--warning-ink); font-size: 11.5px; line-height: 1.45; font-weight: 600; transition: max-height .22s ease, opacity .18s ease, margin-top .22s ease, padding .22s ease, border-width .22s ease; }
+.field .field-warning.show { max-height: 110px; opacity: 1; margin-top: 2px; padding: 8px 10px; border-width: 1px; }
+
+/* Mensaje general del formulario: se despliega sin saltos */
+.form-msg { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .25s ease, opacity .2s ease, margin .25s ease; }
+.form-msg.show { grid-template-rows: 1fr; opacity: 1; margin-bottom: 14px; }
+.form-msg > div { min-height: 0; overflow: hidden; }
+.form-error { padding: 10px 12px; border-radius: 9px; background: var(--danger-soft); color: var(--danger); font-size: 12px; }
+
+/* Mostrar u ocultar contraseña */
+.pw-wrap { position: relative; display: grid; }
+.pw-wrap input { padding-right: 42px; }
+.pw-toggle { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: var(--muted); }
+.pw-toggle:hover { background: var(--primary-soft); color: var(--primary); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pop { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeOut { to { opacity: 0; } }
+@keyframes fadeDown { to { opacity: 0; transform: translateY(8px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

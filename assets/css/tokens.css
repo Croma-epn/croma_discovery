@@ -1,0 +1,18 @@
+/* Variables de diseño. Cambiar un color aquí lo cambia en toda la app. */
+:root {
+  --bg: #f6f5f7;
+  --ink: #23202b;
+  --muted: #767180;
+  --line: #e4e2e9;
+  --primary: #6d4fc2;
+  --primary-dark: #5a3fa8;
+  --primary-soft: #ece7fa;
+  --primary-pale: #f6f3fd;
+  --danger: #c43d4b;
+  --danger-soft: #fff0f1;
+  --warning-ink: #6b4700;
+  --warning-icon: #a86a00;
+  --warning-bg: #fff8e1;
+  --warning-line: #ecc96b;
+  --shadow: 0 12px 34px rgba(60, 40, 110, .10);
+}
