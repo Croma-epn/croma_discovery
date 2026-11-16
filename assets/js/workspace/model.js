@@ -1,6 +1,44 @@
-// Reglas de las pantallas de un proyecto (sin interfaz): tamaño, código, pantalla inicial, ubicación y alineación.
+import { uid } from '../util.js';
+// Reglas de las pantallas de un proyecto (sin interfaz): tamaño, código, componentes, pantalla inicial, ubicación y alineación.
 export const SIZE = { defW: 260, defH: 80, minW: 200, maxW: 800, minH: 80, maxH: 600 };
-export const sizeOf = s => ({ w: s.w || SIZE.defW, h: s.h || SIZE.defH });
+
+/* ---------- Componentes (HU14) ----------
+   Nombres conocidos en la paleta; por debajo, el elemento IFML que representan (Spec IFML 1.0 §7.4, §8.1.4, §8.1.10).
+   La caja de texto y la lista de selección son Fields: en IFML solo existen dentro de un Form, que la pantalla tendría
+   implícito. El botón no es un componente sino el evento que dispara (Spec §7.2). La etiqueta no tiene clase propia:
+   es un ViewComponent cuyo significado da su nombre (Libro §5.1). */
+export const COMPONENTS = {
+  button: { label: 'Botón', icon: 'i-button', prefix: 'btn', ifml: 'ViewElementEvent' },
+  textbox: { label: 'Caja de texto', icon: 'i-textbox', prefix: 'txt', ifml: 'SimpleField (dentro de un Form)' },
+  select: { label: 'Lista de selección', icon: 'i-select', prefix: 'sel', ifml: 'SelectionField (dentro de un Form)' },
+  label: { label: 'Etiqueta', icon: 'i-label', prefix: 'lbl', ifml: 'ViewComponent' },
+};
+// ¿Otro componente de la pantalla ya usa ese nombre técnico? (sin distinguir mayúsculas)
+export const nameTaken = (screen, name, self) => (screen.components ?? []).some(c => c !== self && c.name.toLowerCase() === name.toLowerCase());
+const freeName = (screen, base, self) => { let n = 1; while (nameTaken(screen, `${base}${n}`, self)) n++; return `${base}${n}` };
+
+// Nuevo componente al final de la lista de la pantalla, con el primer nombre técnico libre (btn1, btn2…).
+export function addComponent(screen, kind) {
+  const { label, prefix } = COMPONENTS[kind];
+  const component = { id: uid(), kind, name: freeName(screen, prefix), text: label };
+  (screen.components ??= []).push(component);
+  return component;
+}
+/* Cambiar el tipo conserva el texto visible y la posición (como Balsamiq). Si el nombre técnico empieza con el prefijo
+   del tipo anterior, se cambia el prefijo: btnGuardar → txtGuardar; btn1 → primer txtN libre. Otro nombre no se toca. */
+export function changeKind(screen, component, kind) {
+  const old = COMPONENTS[component.kind].prefix, { prefix } = COMPONENTS[kind];
+  component.kind = kind;
+  if (!component.name.toLowerCase().startsWith(old)) return;
+  const rest = component.name.slice(old.length), base = /^\d*$/.test(rest) ? prefix : prefix + rest; // solo número → numeración nueva
+  component.name = base !== prefix && !nameTaken(screen, base, component) ? base : freeName(screen, base, component);
+}
+
+/* La pantalla crece sola para mostrar todos sus componentes; el alto elegido por el usuario es el mínimo.
+   Medidas en px del nodo (deben coincidir con .node-head y .comp-row de workspace.css). */
+const NODE = { head: 43, row: 30, foot: 40 };
+const contentHeight = s => (s.components?.length ? NODE.head + s.components.length * NODE.row + NODE.foot : 0);
+export const sizeOf = s => ({ w: s.w || SIZE.defW, h: Math.max(s.h || SIZE.defH, contentHeight(s)) });
 
 export const screenCode = n => `VC-${String(n).padStart(2, '0')}`;
 // Primer número libre entre los códigos «VC-n» existentes.

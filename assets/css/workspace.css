@@ -23,9 +23,12 @@
 .palette { overflow: hidden; min-width: 0; background: #fff; border-right: 1px solid var(--line); }
 .workspace-body.palette-collapsed .palette { border-right-width: 0; visibility: hidden; transition: visibility 0s linear .28s; }
 .palette-inner { width: 218px; height: 100%; display: flex; flex-direction: column; padding: 22px 15px; }
-[data-panel=tools] .palette-inner { width: max-content; }
+[data-panel=tools] .palette-inner { width: max-content; overflow-y: auto; }
 [data-panel=tools] .tree-block, [data-panel=nav] .panel-tools { display: none; }
-.palette-hint { margin: 0 0 19px; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.palette-hint { max-width: 190px; margin: 0 0 19px; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.palette-title { margin: 28px 0 4px; color: var(--ink); font-size: 12px; font-weight: 750; }
+.palette-title + .palette-hint { margin-bottom: 12px; }
+.palette-list { display: flex; flex-direction: column; gap: 8px; }
 .palette-item { width: 100%; display: flex; align-items: center; gap: 11px; padding: 12px; border: 1px solid #ded9e9; border-radius: 12px; background: #f9f7fc; color: var(--ink); text-align: left; transition: .15s; }
 .palette-item:hover { border-color: #9781c9; background: var(--primary-pale); transform: translateY(-1px); }
 .palette-item strong { display: block; font-size: 12px; }
@@ -88,6 +91,23 @@
 .node-head .node-business:hover { border-color: var(--primary); cursor: text; } /* un clic lo edita */
 .node-head .inline-edit { flex: 1; margin-left: -6px; padding: 1px 5px; font: 700 12.5px Inter, system-ui, sans-serif; }
 /* Pantalla inicial: contorno y etiqueta permanentes, sin animación (HU13) */
+/* Componentes de la pantalla (HU14): filas de alto fijo, una debajo de otra, en el orden en que se agregaron.
+   Si cambian estas medidas o las de .node-head, actualizar NODE en model.js (la pantalla crece con su contenido). */
+.comp-list { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.comp-list:empty::before { content: 'Arrastra componentes aquí'; color: var(--muted); font-size: 10.5px; }
+.comp-row { position: relative; height: 26px; display: flex; align-items: center; gap: 7px; padding: 0 30px 0 8px; border: 1px solid #e6e3ec; border-radius: 7px; background: #fbfafd; font-size: 11.5px; transition: border-color .15s; }
+.comp-row:hover { border-color: #a08ecb; }
+.comp-row.selected { border-color: var(--primary); background: var(--primary-soft); }
+.comp-row > .ic { width: 14px; height: 14px; color: var(--primary); }
+.comp-text { flex: 1; min-width: 0; overflow: hidden; color: var(--ink); font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.comp-kind { color: var(--muted); font-size: 10px; white-space: nowrap; }
+.comp-del { position: absolute; top: 2px; right: 3px; width: 20px; height: 20px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 5px; background: none; color: var(--muted); cursor: pointer; opacity: 0; transition: opacity .15s; }
+.comp-del .ic { width: 12px; height: 12px; }
+.comp-row:hover .comp-del, .comp-row.selected .comp-del { opacity: 1; }
+.comp-del:hover { background: var(--danger-soft); color: var(--danger); }
+.comp-del:focus-visible { outline: 2px solid var(--danger); opacity: 1; }
+.screen-node.drop-target { border: 2px dashed var(--primary); background: var(--primary-pale); } /* al arrastrar un componente encima */
+
 .screen-node.is-start { border-color: var(--primary); }
 .start-badge { position: absolute; left: -1px; bottom: 100%; display: flex; align-items: center; gap: 4px; margin-bottom: 6px; padding: 2px 8px 2px 6px; border-radius: 6px; background: var(--primary); color: #fff; font: 700 10.5px Inter, system-ui, sans-serif; white-space: nowrap; pointer-events: none; transform: scale(calc(1 / var(--z, 1))); transform-origin: left bottom; } /* legible con cualquier zoom */
 .start-badge .ic { width: 12px; height: 12px; }
@@ -124,8 +144,19 @@
    Dentro de un campo 4 px · título del bloque → su contenido 10 px · entre campos 16 px · entre bloques 24 px + línea. */
 /* Ocupa todo el ancho del panel (anula su padding de 18 px) y lo repone por dentro: así el contorno de foco
    de los campos no se corta al desplazar, y las líneas de los bloques llegan de lado a lado. */
-.properties-form { min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 12px; margin: 20px -18px 0; padding: 0 18px 4px; }
+.properties-form { min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 12px; margin: 16px -18px 0; padding: 4px 18px; } /* 4 px arriba: el contorno de foco del primer control no se corta */
 .prop-stack { display: flex; flex-direction: column; gap: 12px; }
+.prop-type-group { display: flex; flex-direction: column; gap: 6px; }
+/* Tipo del componente: se cambia ahí mismo con un menú (patrón de Balsamiq) */
+.kind-picker { position: relative; }
+.kind-btn { display: inline-flex; align-items: center; gap: 5px; padding: 3px 6px; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; transition: border-color .15s; }
+.kind-btn:hover, .kind-btn[aria-expanded="true"] { border-color: var(--primary); }
+.kind-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.kind-btn .kind-chev { width: 11px; height: 11px; color: var(--muted); transition: transform .18s; }
+.kind-btn[aria-expanded="true"] .kind-chev { transform: rotate(180deg); }
+.kind-menu { top: calc(100% + 6px); left: 0; right: auto; }
+.kind-menu .kind-option { display: flex; align-items: center; gap: 8px; }
+.kind-menu .kind-option .ic { visibility: visible; color: var(--primary); }
 .prop-type { display: flex; align-items: center; gap: 6px; color: #474351; font-size: 12px; }
 /* Bloques del panel (como Figma): título visible, siempre abiertos, separados por una línea */
 .prop-section { display: flex; flex-direction: column; gap: 16px; margin-inline: -18px; padding: 12px 18px 0; border-top: 1.5px solid var(--line); }

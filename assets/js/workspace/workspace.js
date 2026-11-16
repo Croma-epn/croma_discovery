@@ -15,6 +15,10 @@ import { initPanels, resetPanels, collapsePalette, collapseFloatingPanels, isPho
 // Pantallas seleccionadas. session.screenId es la última elegida (la que muestran las propiedades).
 const selection = new Set();
 const selectedScreens = () => currentProject().screens.filter(s => selection.has(s.id));
+// Componente seleccionado: pertenece a la pantalla session.screenId, que queda seleccionada sola.
+let componentId = null;
+const findScreen = id => currentProject().screens.find(s => s.id === id);
+const pickedComponent = () => (componentId && findScreen(session.screenId)?.components?.find(c => c.id === componentId)) || null;
 
 export function openWorkspace(id) {
   const project = findProject(id);
@@ -30,12 +34,13 @@ export function openWorkspace(id) {
 
 /* ---------- Selección ---------- */
 function renderSelection() {
-  canvas.highlight(selection);
+  canvas.highlight(selection, componentId);
   layers.render(selection);
-  properties.render(selectedScreens());
+  properties.render(selectedScreens(), pickedComponent());
 }
 // toggle: agrega o quita la pantalla de la selección (Ctrl/Cmd + clic).
 function select(id, { toggle = false } = {}) {
+  componentId = null;
   if (!toggle) selection.clear();
   if (id && toggle && selection.has(id)) selection.delete(id);
   else if (id) selection.add(id);
@@ -43,6 +48,7 @@ function select(id, { toggle = false } = {}) {
   renderSelection();
 }
 function setSelection(ids) {
+  componentId = null;
   selection.clear();
   ids.forEach(id => selection.add(id));
   session.screenId = ids.at(-1) ?? null;
@@ -55,6 +61,7 @@ function refresh() {
   canvas.markStart(model.startScreenId(project));
   [...selection].forEach(id => { if (!project.screens.some(s => s.id === id)) selection.delete(id) });
   session.screenId = [...selection].at(-1) ?? null;
+  if (!pickedComponent()) componentId = null;
   renderSelection();
 }
 
@@ -126,6 +133,45 @@ function restoreScreens(project, removed, previousStart) {
   showToast(removed.length === 1 ? 'Elemento restaurado.' : `${plural(removed.length, 'elemento', 'elementos')} restaurados.`);
 }
 
+/* ---------- Componentes (HU14) ---------- */
+function pick(screenId, id) {
+  selection.clear();
+  selection.add(screenId);
+  session.screenId = screenId;
+  componentId = id;
+  renderSelection();
+}
+function addComponent(screenId, kind) {
+  const project = currentProject(), screen = findScreen(screenId);
+  const component = model.addComponent(screen, kind);
+  saveProject(project);
+  canvas.updateComponents(screen);
+  pick(screenId, component.id);
+}
+// Clic en la paleta (alternativa al arrastre): se agrega a la pantalla seleccionada.
+function addComponentToSelection(kind) {
+  if (selection.size === 1) return addComponent(session.screenId, kind);
+  showToast(selection.size ? 'Selecciona una sola pantalla para agregarle el componente.' : 'Selecciona una pantalla para agregarle el componente, o arrástralo sobre ella.');
+}
+function deleteComponent(screenId, id) {
+  const project = currentProject(), screen = findScreen(screenId), index = screen.components.findIndex(c => c.id === id);
+  const [removed] = screen.components.splice(index, 1);
+  saveProject(project);
+  canvas.updateComponents(screen);
+  if (componentId === id) componentId = null;
+  renderSelection();
+  showToast('Componente eliminado.', { action: { label: 'Deshacer', onClick: () => restoreComponent(project, screen, removed, index) } });
+}
+function restoreComponent(project, screen, component, index) {
+  if (session.user?.id !== project.userId || !findProject(project.id) || !project.screens.includes(screen)) return;
+  screen.components.splice(Math.min(index, screen.components.length), 0, component);
+  saveProject(project);
+  if (currentProject() === project) { canvas.updateComponents(screen); pick(screen.id, component.id) }
+  showToast('Componente restaurado.');
+}
+const paletteItem = ([kind, { label, icon }]) =>
+  `<button class="palette-item" type="button" draggable="true" data-component="${kind}" aria-label="Agregar ${label.toLowerCase()}"><span class="palette-icon"><svg class="ic"><use href="#${icon}"/></svg></span><span><strong>${label}</strong></span></button>`;
+
 const startRename = id => { select(id); canvas.rename(id, name => renameScreen(id, name)) };
 
 // Clic en el nombre del proyecto (barra superior) para cambiarlo ahí mismo.
@@ -151,7 +197,7 @@ export function initWorkspace() {
       else if (!selection.has(id)) select(id);
       return selection.has(id) ? [...selection] : [];
     },
-    release(id, additive) { if (!additive && selection.size > 1) select(id) },
+    release(id, additive) { if (!additive && (selection.size > 1 || componentId)) select(id) },
     marqueeStart: additive => { marqueeBase = additive ? [...selection] : [] },
     marqueeMove: ids => setSelection([...new Set([...marqueeBase, ...ids])]),
     clear: () => select(null),
@@ -160,12 +206,16 @@ export function initWorkspace() {
     resize: s => { if (s.id === session.screenId) properties.fillSize(s) },
     drop: addScreen,
     background: collapseFloatingPanels,
+    pick,
+    dropComponent: addComponent,
+    removeComponent: deleteComponent,
   });
   properties.initProperties({
     rename: s => { canvas.updateNode(s); layers.render(selection) },
     resize: canvas.applySize,
     start: setStart,
     align,
+    component: s => { canvas.updateComponents(s); canvas.highlight(selection, componentId) },
   });
   layers.initLayers((id, additive) => {
     const screen = currentProject()?.screens.find(s => s.id === id);
@@ -178,14 +228,20 @@ export function initWorkspace() {
   $('screenPalette').addEventListener('click', () => { addScreen(); if (isPhone()) collapsePalette() });
   $('screenPalette').addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', 'screen'); e.dataTransfer.effectAllowed = 'copy' });
 
+  const palette = $('componentPalette'), kindOf = e => e.target.closest('[data-component]')?.dataset.component;
+  palette.innerHTML = Object.entries(model.COMPONENTS).map(paletteItem).join('');
+  palette.addEventListener('click', e => { const kind = kindOf(e); if (kind) { addComponentToSelection(kind); if (isPhone()) collapsePalette() } });
+  palette.addEventListener('dragstart', e => { e.dataTransfer.setData(canvas.COMPONENT_MIME, kindOf(e)); e.dataTransfer.effectAllowed = 'copy' });
+  palette.addEventListener('dragend', e => { if (e.dataTransfer.dropEffect === 'none') showToast('Suelta el componente dentro de una pantalla.') });
+
   const title = $('breadcrumbCurrent');
   title.addEventListener('click', () => { if (title.classList.contains('editable')) renameProject() });
   title.addEventListener('keydown', e => { if (e.key === 'Enter' && title.classList.contains('editable')) { e.preventDefault(); renameProject() } });
 
-  // Teclado: Supr o Retroceso borran la selección y F2 renombra la pantalla seleccionada (salvo mientras se escribe).
+  // Teclado: Supr o Retroceso borran el componente o las pantallas seleccionadas; F2 renombra la pantalla (salvo mientras se escribe).
   document.addEventListener('keydown', e => {
     if (!inWorkspace() || isTyping(e.target) || !selection.size) return;
-    if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); deleteScreens([...selection]) }
-    if (e.key === 'F2' && selection.size === 1) { e.preventDefault(); startRename(session.screenId) }
+    if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); componentId ? deleteComponent(session.screenId, componentId) : deleteScreens([...selection]) }
+    if (e.key === 'F2' && selection.size === 1 && !componentId) { e.preventDefault(); startRename(session.screenId) }
   });
 }

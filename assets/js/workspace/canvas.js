@@ -2,7 +2,7 @@
 import { $, esc, clamp, plural } from '../util.js';
 import { currentProject, saveProject } from '../store.js';
 import { editInline } from '../ui/inline-edit.js';
-import { SIZE, sizeOf } from './model.js';
+import { SIZE, sizeOf, COMPONENTS } from './model.js';
 
 const ZOOM = { min: .5, max: 1.6, step: .1, fitMax: 1.15 };
 const RESIZE_DIRS = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
@@ -16,12 +16,22 @@ const viewport = () => $('canvasViewport');
 const screens = () => currentProject()?.screens ?? [];
 const save = () => { const p = currentProject(); if (p) saveProject(p) };
 
+export const COMPONENT_MIME = 'application/x-croma-component'; // arrastre de un componente desde la paleta
+
 /* ---------- Dibujo ---------- */
+// Componentes uno debajo del otro, en el orden en que se agregaron (el orden comunica qué es la pantalla).
+const componentHtml = c => {
+  const { label, icon } = COMPONENTS[c.kind];
+  return `<li class="comp-row" data-comp="${esc(c.id)}"><svg class="ic"><use href="#${icon}"/></svg><span class="comp-text">${esc(c.text)}</span><span class="comp-kind">${label}</span>`
+    + `<button class="comp-del" type="button" title="Eliminar componente" aria-label="Eliminar ${esc(c.text)}"><svg class="ic"><use href="#i-trash"/></svg></button></li>`;
+};
+const componentsHtml = s => (s.components ?? []).map(componentHtml).join('');
 const nodeHtml = s => {
   const { w, h } = sizeOf(s);
   return `<article class="screen-node" data-screen="${esc(s.id)}" style="left:${s.x}px;top:${s.y}px;width:${w}px;height:${h}px">`
     + `<div class="node-head"><svg class="ic"><use href="#i-phone"/></svg><span class="node-business">${esc(s.businessName)}</span><span class="node-code">${esc(s.code)}</span>`
     + `<button class="node-del" type="button" title="Eliminar elemento" aria-label="Eliminar ${esc(s.businessName)}"><svg class="ic"><use href="#i-trash"/></svg></button></div>`
+    + `<ol class="comp-list">${componentsHtml(s)}</ol>`
     + RESIZE_DIRS.map(d => `<span class="rz rz-${d}" data-rz="${d}" aria-hidden="true"></span>`).join('')
     + '<span class="rz-size" aria-hidden="true"></span></article>';
 };
@@ -37,10 +47,11 @@ export function render() { world().innerHTML = screens().map(nodeHtml).join('');
 // Solo añade el nodo nuevo, así los demás no repiten su animación de entrada.
 export function add(s) { world().insertAdjacentHTML('beforeend', nodeHtml(s)); syncCount() }
 
-// ids: Set de pantallas seleccionadas. Con varias, se ocultan las asas de tamaño.
-export function highlight(ids) {
+// ids: Set de pantallas seleccionadas (con varias, se ocultan las asas de tamaño). componentId: componente seleccionado.
+export function highlight(ids, componentId) {
   world().classList.toggle('is-multi', ids.size > 1);
   nodes().forEach(n => n.classList.toggle('selected', ids.has(n.dataset.screen)));
+  world().querySelectorAll('.comp-row').forEach(r => r.classList.toggle('selected', r.dataset.comp === componentId));
 }
 // Marca permanente (contorno + «Inicio») en la pantalla inicial.
 export function markStart(id) {
@@ -56,6 +67,10 @@ export function updateNode(s) {
   node.querySelector('.node-code').textContent = s.code;
   node.querySelector('.node-business').textContent = s.businessName;
   node.querySelector('.node-del').setAttribute('aria-label', `Eliminar ${s.businessName}`);
+}
+export function updateComponents(s) {
+  nodeEl(s.id).querySelector('.comp-list').innerHTML = componentsHtml(s);
+  applySize(s);
 }
 export function applySize(s) {
   const node = nodeEl(s.id), { w, h } = sizeOf(s);
@@ -225,6 +240,7 @@ function trackSpace(e) {
      release(id, additive)                   (clic sin arrastrar)
      marqueeStart(additive), marqueeMove(ids)
      clear(), edit(id), remove(id), resize(screen), drop(x, y), background()
+     pick(screenId, componentId), dropComponent(screenId, kind), removeComponent(screenId, componentId)
    } */
 export function initCanvas(callbacks) {
   on = callbacks;
@@ -240,28 +256,42 @@ export function initCanvas(callbacks) {
     if (!node) on.background();
     // Mover el lienzo: rueda presionada, Espacio + arrastrar, o arrastrar con el dedo sobre el fondo.
     if (e.button === 1 || (e.button === 0 && spaceHeld)) return startPan(e, { clearOnTap: false });
-    if (e.button !== 0 || e.target.closest('.node-del')) return;
+    if (e.button !== 0 || e.target.closest('.node-del, .comp-del')) return;
     if (!node) return e.pointerType === 'touch' ? startPan(e, { clearOnTap: true }) : startMarquee(e, e.ctrlKey || e.metaKey);
     const handle = e.target.closest('[data-rz]');
     if (handle) return startResize(e, handle);
     const id = node.dataset.screen, additive = e.ctrlKey || e.metaKey, onName = Boolean(e.target.closest('.node-business'));
+    const row = !additive && e.target.closest('.comp-row');
     const ids = on.press(id, additive);
-    // Un clic (sin arrastrar) sobre el nombre lo edita ahí mismo.
-    if (ids.length) startDrag(e, node, ids, () => (onName && !additive ? on.edit(id) : on.release(id, additive)));
+    // Un clic (sin arrastrar) sobre el nombre lo edita ahí mismo; sobre un componente, lo selecciona.
+    const click = () => (row ? on.pick(id, row.dataset.comp) : onName && !additive ? on.edit(id) : on.release(id, additive));
+    if (ids.length) startDrag(e, node, ids, click);
   });
   world().addEventListener('click', e => {
-    const del = e.target.closest('.node-del');
-    if (del) on.remove(del.closest('.screen-node').dataset.screen);
+    const del = e.target.closest('.node-del, .comp-del'), screenId = del?.closest('.screen-node').dataset.screen;
+    if (del?.matches('.comp-del')) on.removeComponent(screenId, del.closest('.comp-row').dataset.comp);
+    else if (del) on.remove(screenId);
   });
   world().addEventListener('dblclick', e => {
     const node = e.target.closest('.screen-node');
-    if (node && !e.target.closest('.node-del, .inline-edit')) on.edit(node.dataset.screen);
+    if (node && !e.target.closest('.node-del, .inline-edit, .comp-row')) on.edit(node.dataset.screen);
   });
 
-  // Soltar «Pantalla» desde la paleta: se centra en el punto donde se suelta.
-  viewport().addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy' });
+  /* Soltar desde la paleta. «Pantalla» se centra en el punto donde se suelta; un componente va al final de la
+     pantalla sobre la que se suelta, que se resalta mientras se arrastra. */
+  const markTarget = node => nodes().forEach(n => n.classList.toggle('drop-target', n === node));
+  viewport().addEventListener('dragover', e => {
+    e.preventDefault();
+    const isComponent = e.dataTransfer.types.includes(COMPONENT_MIME), node = e.target.closest('.screen-node');
+    e.dataTransfer.dropEffect = isComponent && !node ? 'none' : 'copy';
+    markTarget(isComponent && node);
+  });
+  viewport().addEventListener('dragleave', e => { if (!viewport().contains(e.relatedTarget)) markTarget(null) });
   viewport().addEventListener('drop', e => {
     e.preventDefault();
+    markTarget(null);
+    const kind = e.dataTransfer.getData(COMPONENT_MIME), node = e.target.closest('.screen-node');
+    if (kind) return node && on.dropComponent(node.dataset.screen, kind); // fuera de una pantalla no se permite (cursor de prohibido)
     const pt = toCanvas(e.clientX, e.clientY);
     on.drop(snap(pt.x - SIZE.defW / 2), snap(pt.y - SIZE.defH / 2));
   });

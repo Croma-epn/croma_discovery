@@ -38,7 +38,7 @@ export function duplicateProject(source) {
   const now = Date.now(), newIds = new Map(source.screens.map(s => [s.id, uid()]));
   const copy = {
     ...source, id: uid(), name: copyName(source.name), createdAt: now, updatedAt: now,
-    screens: source.screens.map(s => ({ ...s, id: newIds.get(s.id) })),
+    screens: source.screens.map(s => ({ ...structuredClone(s), id: newIds.get(s.id) })), // copia profunda: incluye sus componentes
     flows: source.flows?.map(f => ({ ...f, startScreenId: newIds.get(f.startScreenId) ?? null })), // la copia conserva su pantalla inicial
   };
   db.projects.push(copy);

@@ -1,17 +1,22 @@
 /* Panel «Propiedades», en bloques como Figma.
-   Una pantalla: Identificación, Flujo, Tamaño y Alinear (deshabilitado). Varias: Alinear. Ninguna: ayuda. */
+   Una pantalla: Identificación, Flujo, Tamaño y Alinear (deshabilitado). Varias: Alinear.
+   Un componente: su tipo, el elemento IFML que representa e Identificación. Ninguna: ayuda. */
 import { $ } from '../util.js';
 import { currentProject, selectedScreen, saveProject } from '../store.js';
 import { check, setFieldError } from '../ui/forms.js';
-import { SIZE, sizeOf, startScreenId } from './model.js';
+import { initSelectMenu } from '../ui/menus.js';
+import { SIZE, sizeOf, startScreenId, COMPONENTS, nameTaken, changeKind } from './model.js';
 
 const TEXT_FIELDS = { screenBusiness: 'businessName', screenCode: 'code', screenTechnical: 'technicalName' };
+const COMPONENT_FIELDS = { componentText: 'text', componentName: 'name' };
 const SIZE_FIELDS = {
   screenWidth: { key: 'w', other: 'h', min: SIZE.minW, max: SIZE.maxW, empty: 'Escribe el ancho.' },
   screenHeight: { key: 'h', other: 'w', min: SIZE.minH, max: SIZE.maxH, empty: 'Escribe el alto.' },
 };
 const DEFAULT_SIZE = { w: SIZE.defW, h: SIZE.defH };
-let on; // { rename(screen), resize(screen), start(id), align(kind) }
+let on; // { rename(screen), resize(screen), start(id), align(kind), component(screen) }
+let component = null; // componente mostrado
+let setKindLabel; // marca el tipo elegido en el menú «Tipo»
 
 export function fillSize(s) {
   const { w, h } = sizeOf(s);
@@ -40,21 +45,36 @@ function renderAlign(count) {
     : 'Selecciona 2 o más pantallas (Ctrl + clic o arrastrando sobre el fondo) para alinearlas.';
 }
 
-// screens: pantallas seleccionadas.
-export function render(screens) {
+function fillText(fields, target) {
+  Object.entries(fields).forEach(([id, key]) => {
+    $(id).value = target[key];
+    setFieldError(id, '');
+    $(`${id}Count`).textContent = target[key].length;
+  });
+}
+function renderComponent(c) {
+  const { icon, ifml } = COMPONENTS[c.kind];
+  $('componentIcon').setAttribute('href', `#${icon}`);
+  setKindLabel(c.kind);
+  $('componentIfml').textContent = ifml;
+  fillText(COMPONENT_FIELDS, c);
+}
+
+// screens: pantallas seleccionadas. picked: componente seleccionado (su pantalla es la única seleccionada).
+export function render(screens, picked) {
   const [s] = screens, count = screens.length;
+  component = picked;
   $('propertiesEmpty').classList.toggle('hidden', count > 0);
   $('propertiesBody').classList.toggle('hidden', count === 0);
-  $('inlineProperties').classList.toggle('hidden', count !== 1);
+  $('inlineProperties').classList.toggle('hidden', count !== 1 || Boolean(component));
+  $('componentProperties').classList.toggle('hidden', !component);
+  $('alignSection').classList.toggle('hidden', Boolean(component));
   $('groupHeader').classList.toggle('hidden', count < 2);
   $('groupCount').textContent = `${count} pantallas seleccionadas`;
   renderAlign(count);
+  if (component) return renderComponent(component);
   if (count !== 1) return;
-  Object.entries(TEXT_FIELDS).forEach(([id, key]) => {
-    $(id).value = s[key];
-    setFieldError(id, '');
-    $(`${id}Count`).textContent = s[key].length;
-  });
+  fillText(TEXT_FIELDS, s);
   renderStart(s);
   fillSize(s);
 }
@@ -64,15 +84,37 @@ function textError(id, value, screen, project) {
   const duplicated = id === 'screenCode' && project.screens.some(x => x.id !== screen.id && x.code.toLowerCase() === value.toLowerCase());
   return duplicated ? 'Este código ya está en uso.' : '';
 }
-function onTextInput(id) {
-  const project = currentProject(), s = selectedScreen();
-  if (!s) return;
+const componentError = (id, value, screen) => !value ? 'Este campo es obligatorio.'
+  : id === 'componentName' && nameTaken(screen, value, component)
+    ? 'Ya hay un componente con este nombre técnico en la pantalla.' : '';
+
+// Valida el campo de texto `id` y, si es válido, lo guarda en target[key] y avisa con notify().
+function applyText(id, target, key, error, notify) {
   const raw = $(id).value, value = raw.trim();
   $(`${id}Count`).textContent = raw.length;
-  if (!check(id, textError(id, value, s, project))) return;
-  s[TEXT_FIELDS[id]] = value;
-  saveProject(project, { debounce: true });
-  on.rename(s);
+  if (!check(id, error(value))) return;
+  target[key] = value;
+  saveProject(currentProject(), { debounce: true });
+  notify();
+}
+function onTextInput(id) {
+  const s = selectedScreen();
+  if (s) applyText(id, s, TEXT_FIELDS[id], value => textError(id, value, s, currentProject()), () => on.rename(s));
+}
+function onKindChange(kind) {
+  const s = selectedScreen();
+  if (!s || !component || component.kind === kind) return;
+  changeKind(s, component, kind);
+  saveProject(currentProject());
+  renderComponent(component);
+  on.component(s);
+}
+const kindOption = ([kind, { label, icon }]) =>
+  `<button type="button" role="menuitemradio" aria-checked="false" data-value="${kind}"><span class="kind-option"><svg class="ic"><use href="#${icon}"/></svg>${label}</span><svg class="ic"><use href="#i-check"/></svg></button>`;
+
+function onComponentInput(id) {
+  const s = selectedScreen();
+  if (s && component) applyText(id, component, COMPONENT_FIELDS[id], value => componentError(id, value, s), () => on.component(s));
 }
 
 // Alternativa al arrastre (WCAG 2.5.7). Un valor inválido no se aplica y se conserva el último válido.
@@ -91,11 +133,14 @@ function onSizeInput(id) {
 export function initProperties(callbacks) {
   on = callbacks;
   Object.keys(TEXT_FIELDS).forEach(id => $(id).addEventListener('input', () => onTextInput(id)));
+  Object.keys(COMPONENT_FIELDS).forEach(id => $(id).addEventListener('input', () => onComponentInput(id)));
+  $('componentKindMenu').insertAdjacentHTML('beforeend', Object.entries(COMPONENTS).map(kindOption).join(''));
+  setKindLabel = initSelectMenu($('componentKind'), onKindChange);
   Object.keys(SIZE_FIELDS).forEach(id => ['input', 'blur'].forEach(ev => $(id).addEventListener(ev, () => onSizeInput(id))));
   $('screenStart').addEventListener('change', () => on.start($('screenStart').checked ? selectedScreen().id : null));
   $('alignSection').addEventListener('click', e => {
     const button = e.target.closest('[data-align]');
     if (button) on.align(button.dataset.align);
   });
-  $('inlineProperties').addEventListener('submit', e => e.preventDefault());
+  ['inlineProperties', 'componentProperties'].forEach(id => $(id).addEventListener('submit', e => e.preventDefault()));
 }
