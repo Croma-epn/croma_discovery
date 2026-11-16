@@ -55,6 +55,14 @@
 <symbol id="i-canvas" viewBox="0 0 24 24"><path d="M22 6H2M22 18H2M6 2v20M18 2v20"/></symbol>
 <symbol id="i-google" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A11.9 11.9 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></symbol>
 <symbol id="i-github" viewBox="0 0 16 16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5M5 9v11h5v-6h4v6h5V9"/></symbol>
+<symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h11l3 3v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M7 3v5h8V3M7 21v-7h10v7"/></symbol>
+<symbol id="i-align-left" viewBox="0 0 24 24"><path d="M4 3v18"/><rect x="8" y="6" width="12" height="4" rx="1"/><rect x="8" y="14" width="7" height="4" rx="1"/></symbol>
+<symbol id="i-align-hcenter" viewBox="0 0 24 24"><path d="M12 3v18"/><rect x="5" y="6" width="14" height="4" rx="1"/><rect x="8" y="14" width="8" height="4" rx="1"/></symbol>
+<symbol id="i-align-right" viewBox="0 0 24 24"><path d="M20 3v18"/><rect x="4" y="6" width="12" height="4" rx="1"/><rect x="9" y="14" width="7" height="4" rx="1"/></symbol>
+<symbol id="i-align-top" viewBox="0 0 24 24"><path d="M3 4h18"/><rect x="6" y="8" width="4" height="12" rx="1"/><rect x="14" y="8" width="4" height="7" rx="1"/></symbol>
+<symbol id="i-align-vcenter" viewBox="0 0 24 24"><path d="M3 12h18"/><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="8" width="4" height="8" rx="1"/></symbol>
+<symbol id="i-align-bottom" viewBox="0 0 24 24"><path d="M3 20h18"/><rect x="6" y="4" width="4" height="12" rx="1"/><rect x="14" y="9" width="4" height="7" rx="1"/></symbol>
 <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
 <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6A16.6 16.6 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 4.4-1M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
 </svg>
@@ -182,7 +190,7 @@
       <div class="topbar-current"><strong id="breadcrumbCurrent">Mis proyectos</strong></div>
     </div>
     <div class="topbar-right">
-      <span id="savedState" class="saved-state hidden"><svg class="ic"><use href="#i-check"/></svg> Guardado automáticamente</span>
+      <button id="saveButton" class="save-state hidden" type="button" data-state="saved" title="Guardar ahora (Ctrl+S)" aria-label="Guardar ahora (Ctrl+S)"><svg class="ic"><use href="#i-check"/></svg><span>Guardado</span></button>
       <div class="user-menu-wrap">
         <button id="userMenuBtn" class="user-avatar-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="userMenu" title="Mi cuenta"><span id="accountAvatar">ES</span></button>
         <div id="userMenu" class="menu user-menu hidden" role="menu" aria-label="Cuenta">
@@ -253,20 +261,54 @@
       </section>
       <aside class="properties"><div class="properties-inner">
         <div class="panel-head"><h2 class="panel-title">Propiedades de elemento</h2><button id="closePropertiesPanel" class="mini-collapse props-close" type="button" aria-label="Ocultar propiedades" title="Ocultar propiedades"><svg class="ic"><use href="#i-close"/></svg></button></div>
-        <div id="propertiesEmpty" class="properties-empty"><div class="empty-icon"><svg class="ic"><use href="#i-phone"/></svg></div><h3>Sin selección</h3><p>Selecciona un elemento en el lienzo o en el panel «Capas» para ver y editar sus propiedades.</p></div>
+        <div id="propertiesEmpty" class="properties-empty"><div class="empty-icon"><svg class="ic"><use href="#i-phone"/></svg></div><h3>Sin selección</h3><p>Selecciona un elemento en el lienzo o en el panel «Capas» para ver y editar sus propiedades. Para alinear varios, selecciónalos con Ctrl + clic o arrastrando sobre el fondo. Espacio + arrastrar mueve el lienzo.</p></div>
+        <!-- Una pantalla seleccionada: bloques Identificación, Flujo y Tamaño -->
         <form id="inlineProperties" class="properties-form hidden" novalidate>
           <div class="prop-type">Tipo: <b><svg class="ic"><use href="#i-phone"/></svg>Pantalla</b></div>
-          <div class="prop-field"><label for="screenCode"><svg class="ic"><use href="#i-hash"/></svg> Código <span class="req">*</span></label><input id="screenCode" maxlength="20" placeholder="VC-01" required autocomplete="off"><small id="screenCodeError" class="field-error"></small><small class="prop-hint"><span id="screenCodeCount">0</span>/20 · Identificador único del modelo.</small></div>
-          <div class="prop-field"><label for="screenTechnical"><svg class="ic"><use href="#i-code"/></svg> Nombre técnico <span class="req">*</span></label><input id="screenTechnical" maxlength="20" placeholder="PantallaInicio" required autocomplete="off"><small id="screenTechnicalError" class="field-error"></small><small class="prop-hint"><span id="screenTechnicalCount">0</span>/20 · Nombre en el código, sin espacios.</small></div>
-          <div class="prop-field"><label for="screenBusiness"><svg class="ic"><use href="#i-briefcase"/></svg> Nombre de negocio <span class="req">*</span></label><input id="screenBusiness" maxlength="20" placeholder="Inicio de sesión" required autocomplete="off"><small id="screenBusinessError" class="field-error"></small><small class="prop-hint"><span id="screenBusinessCount">0</span>/20 · Nombre funcional para usuarios y negocio.</small></div>
-          <div class="prop-size"><span class="prop-size-title"><svg class="ic"><use href="#i-fit"/></svg> Tamaño</span>
+          <section class="prop-section">
+            <h3 class="prop-section-title">Identificación</h3>
+            <div class="prop-field"><label for="screenBusiness"><svg class="ic"><use href="#i-briefcase"/></svg> Nombre de negocio <span class="req">*</span></label><input id="screenBusiness" maxlength="20" placeholder="Inicio de sesión" required autocomplete="off"><small id="screenBusinessError" class="field-error"></small><small class="prop-hint"><span id="screenBusinessCount">0</span>/20 · Lo que se ve en el lienzo.</small></div>
+            <div class="prop-field"><label for="screenCode"><svg class="ic"><use href="#i-hash"/></svg> Código <span class="req">*</span></label><input id="screenCode" maxlength="20" placeholder="VC-01" required autocomplete="off"><small id="screenCodeError" class="field-error"></small><small class="prop-hint"><span id="screenCodeCount">0</span>/20 · Identificador único del modelo.</small></div>
+            <div class="prop-field"><label for="screenTechnical"><svg class="ic"><use href="#i-code"/></svg> Nombre técnico <span class="req">*</span></label><input id="screenTechnical" maxlength="20" placeholder="PantallaInicio" required autocomplete="off"><small id="screenTechnicalError" class="field-error"></small><small class="prop-hint"><span id="screenTechnicalCount">0</span>/20 · Nombre en el código, sin espacios.</small></div>
+          </section>
+          <section class="prop-section">
+            <h3 class="prop-section-title">Flujo</h3>
+            <label class="prop-check"><input id="screenStart" type="checkbox"><svg class="ic"><use href="#i-home"/></svg> Pantalla inicial</label>
+            <small id="screenStartHint" class="prop-hint"></small>
+          </section>
+          <section class="prop-section">
+            <h3 class="prop-section-title">Tamaño</h3>
             <div class="prop-size-row">
               <div class="prop-field"><label for="screenWidth">Ancho</label><div class="px-input"><input id="screenWidth" type="number" inputmode="numeric" min="200" max="800" step="10" autocomplete="off"><span aria-hidden="true">px</span></div><small id="screenWidthError" class="field-error"></small><small class="prop-hint">De 200 a 800 px.</small></div>
               <div class="prop-field"><label for="screenHeight">Alto</label><div class="px-input"><input id="screenHeight" type="number" inputmode="numeric" min="80" max="600" step="10" autocomplete="off"><span aria-hidden="true">px</span></div><small id="screenHeightError" class="field-error"></small><small class="prop-hint">De 80 a 600 px.</small></div>
             </div>
             <small class="prop-hint">También puedes arrastrar los bordes del elemento. Mantén Shift en una esquina para conservar la proporción.</small>
-          </div>
+          </section>
         </form>
+        <!-- Varias pantallas seleccionadas: alinear -->
+        <div id="groupProperties" class="properties-form hidden">
+          <div class="prop-type"><b><svg class="ic"><use href="#i-layers"/></svg><span id="groupCount"></span></b></div>
+          <section class="prop-section">
+            <h3 class="prop-section-title">Alinear</h3>
+            <div class="align-group" role="group" aria-labelledby="alignHTitle">
+              <span id="alignHTitle" class="align-group-title">Horizontal</span>
+              <div class="align-row">
+                <button class="align-btn" type="button" data-align="left" aria-label="Alinear a la izquierda"><svg class="ic"><use href="#i-align-left"/></svg>Izquierda</button>
+                <button class="align-btn" type="button" data-align="hcenter" aria-label="Centrar en horizontal"><svg class="ic"><use href="#i-align-hcenter"/></svg>Centro</button>
+                <button class="align-btn" type="button" data-align="right" aria-label="Alinear a la derecha"><svg class="ic"><use href="#i-align-right"/></svg>Derecha</button>
+              </div>
+            </div>
+            <div class="align-group" role="group" aria-labelledby="alignVTitle">
+              <span id="alignVTitle" class="align-group-title">Vertical</span>
+              <div class="align-row">
+                <button class="align-btn" type="button" data-align="top" aria-label="Alinear arriba"><svg class="ic"><use href="#i-align-top"/></svg>Arriba</button>
+                <button class="align-btn" type="button" data-align="vcenter" aria-label="Centrar en vertical"><svg class="ic"><use href="#i-align-vcenter"/></svg>Centro</button>
+                <button class="align-btn" type="button" data-align="bottom" aria-label="Alinear abajo"><svg class="ic"><use href="#i-align-bottom"/></svg>Abajo</button>
+              </div>
+            </div>
+          </section>
+          <small class="prop-hint">Ctrl + clic agrega o quita pantallas de la selección. Arrastra una para mover todo el grupo.</small>
+        </div>
       </div></aside>
     </div>
   </main>

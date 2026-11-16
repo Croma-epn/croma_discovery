@@ -50,8 +50,10 @@
 
 /* Lienzo */
 .canvas-wrap { position: relative; min-width: 0; min-height: 0; background-color: #f8f7f9; background-image: radial-gradient(#cdc9d7 1px, transparent 1px); background-size: 22px 22px; }
-.canvas-viewport { position: absolute; inset: 0; overflow: hidden; touch-action: none; cursor: grab; }
-.canvas-viewport.panning { cursor: grabbing; }
+.canvas-viewport { position: absolute; inset: 0; overflow: hidden; touch-action: none; cursor: default; }
+.canvas-viewport.pan-ready, .canvas-viewport.pan-ready .screen-node { cursor: grab; } /* Espacio mantenido */
+.canvas-viewport.panning, .canvas-viewport.panning .screen-node { cursor: grabbing; }
+.marquee { position: absolute; z-index: 2; border: 1px solid var(--primary); border-radius: 2px; background: rgba(109, 79, 194, .08); pointer-events: none; }
 .canvas-world { position: absolute; inset: 0; transform-origin: 0 0; }
 .canvas-empty { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(340px, 80%); text-align: center; pointer-events: none; transition: opacity .25s ease; }
 .canvas-empty.is-off { opacity: 0; }
@@ -81,12 +83,21 @@
 .screen-node:hover .node-del, .screen-node.selected .node-del { opacity: 1; }
 .node-del:hover { background: var(--danger-soft); color: var(--danger); }
 .node-del:focus-visible { outline: 2px solid var(--danger); outline-offset: 2px; opacity: 1; }
+/* Nombre editable: al pasar el mouse muestra el mismo contorno que al editar (como NotebookLM) */
+.node-head .node-business { flex: 1; margin: 0 0 0 -6px; padding: 1px 5px; border: 1px solid transparent; border-radius: 6px; transition: border-color .15s; }
+.node-head .node-business:hover { border-color: var(--primary); cursor: text; } /* un clic lo edita */
+.node-head .inline-edit { flex: 1; margin-left: -6px; padding: 1px 5px; font: 700 12.5px Inter, system-ui, sans-serif; }
+/* Pantalla inicial: contorno y etiqueta permanentes, sin animación (HU13) */
+.screen-node.is-start { border-color: var(--primary); }
+.start-badge { position: absolute; left: -1px; bottom: 100%; display: flex; align-items: center; gap: 4px; margin-bottom: 6px; padding: 2px 8px 2px 6px; border-radius: 6px; background: var(--primary); color: #fff; font: 700 10.5px Inter, system-ui, sans-serif; white-space: nowrap; pointer-events: none; transform: scale(calc(1 / var(--z, 1))); transform-origin: left bottom; } /* legible con cualquier zoom */
+.start-badge .ic { width: 12px; height: 12px; }
 @keyframes nodeIn { from { opacity: 0; transform: scale(.92); } to { opacity: 1; transform: scale(1); } }
 
 /* Asas para redimensionar: se dividen entre el zoom (--z) para verse siempre del mismo tamaño */
 .rz { display: none; position: absolute; z-index: 3; width: calc(10px / var(--z, 1)); height: calc(10px / var(--z, 1)); background: #fff; border: calc(1.5px / var(--z, 1)) solid var(--primary); border-radius: calc(2px / var(--z, 1)); transform: translate(-50%, -50%); touch-action: none; }
 .rz::before { content: ""; position: absolute; inset: calc(-7px / var(--z, 1)); } /* área táctil de 24 px */
 .screen-node.selected .rz { display: block; }
+.is-multi .screen-node.selected .rz { display: none; } /* con varias seleccionadas no se redimensiona */
 .rz-nw { left: 0; top: 0; cursor: nwse-resize; }
 .rz-n { left: 50%; top: 0; cursor: ns-resize; }
 .rz-ne { left: 100%; top: 0; cursor: nesw-resize; }
@@ -110,25 +121,35 @@
 .properties-empty h3 { margin: 0 0 5px; color: var(--ink); font: 800 14px Manrope; }
 .properties-empty p { max-width: 215px; margin: 0; font-size: 11px; line-height: 1.7; }
 .properties-form { min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 15px; margin-top: 20px; padding-right: 2px; }
-.prop-type { display: flex; align-items: center; gap: 6px; padding-bottom: 14px; border-bottom: 1px solid var(--line); color: #474351; font-size: 12px; }
+.prop-type { display: flex; align-items: center; gap: 6px; color: #474351; font-size: 12px; }
+/* Bloques del panel (como Figma): título visible, siempre abiertos, separados por una línea */
+.prop-section { display: flex; flex-direction: column; gap: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.prop-section-title { margin: 0; color: var(--ink); font-size: 11.5px; font-weight: 750; }
+.prop-section > :not(.prop-section-title) { margin-left: 3px; } /* sangría: lo que pertenece a cada bloque */
+.prop-check { display: flex; align-items: center; gap: 7px; color: var(--ink); font-size: 12px; font-weight: 650; cursor: pointer; }
+.prop-check input { width: 16px; height: 16px; margin: 0; accent-color: var(--primary); }
+.prop-check .ic { width: 14px; height: 14px; color: var(--primary); }
+/* Alinear: dos grupos (horizontal y vertical) de tres botones con ícono y texto visibles */
+.align-group { display: flex; flex-direction: column; gap: 6px; }
+.align-group-title { color: #474351; font-size: 11px; font-weight: 650; }
+.align-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.align-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 4px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: #5c5668; font-size: 11px; font-weight: 650; }
+.align-btn:hover { border-color: #d9cee9; background: var(--primary-soft); color: var(--primary); }
+.align-btn .ic { width: 16px; height: 16px; }
 .prop-type .ic { width: 12px; height: 12px; color: var(--primary); }
 .prop-type b { display: flex; align-items: center; gap: 5px; color: var(--ink); font-weight: 600; }
-.prop-field { display: flex; flex-direction: column; gap: 6px; }
+.prop-field { display: flex; flex-direction: column; gap: 3px; }
 .prop-field label { display: flex; align-items: center; gap: 6px; color: #474351; font-size: 11px; font-weight: 750; }
-.prop-field label .ic, .prop-size-title .ic { width: 12px; height: 12px; }
-.prop-field label .ic { color: #8f83a8; }
+.prop-field label .ic { width: 12px; height: 12px; color: #8f83a8; }
 .prop-field input { width: 100%; padding: 9px 10px; border: 1px solid #d9d6e1; border-radius: 9px; background: #fff; color: var(--ink); font-size: 12px; transition: border .15s, box-shadow .15s; }
 .prop-field input:focus { border-color: var(--primary); outline: 3px solid #e7e1f4; }
 .prop-field input.invalid { border-color: var(--danger); background: #fffafb; outline-color: #ffe2e5; }
-/* Espacio reservado para el mensaje: aparecer o desaparecer no mueve los campos de abajo */
-.prop-field .field-error { display: block; min-height: 15px; margin: 0; font-size: 10.5px; line-height: 15px; opacity: 0; transition: opacity .2s ease; }
-.prop-field .field-error.show { opacity: 1; }
+/* El error (o el aviso de máximo) ocupa el lugar de la ayuda, justo debajo del campo, sin reservar una línea vacía */
+.prop-field .field-error { display: none; margin: 0; font-size: 10.5px; line-height: 1.5; animation: pop .18s ease; }
+.prop-field .field-error.show { display: block; }
+.prop-field .field-error.show + .prop-hint { display: none; }
 .prop-hint { color: var(--muted); font-size: 10px; line-height: 1.5; }
-.prop-size { display: flex; flex-direction: column; gap: 8px; padding-top: 14px; border-top: 1px solid var(--line); }
-.prop-size-title { display: flex; align-items: center; gap: 6px; color: var(--ink); font-size: 11.5px; font-weight: 750; }
 .prop-size-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-/* Ancho y Alto van en media columna: sus mensajes ocupan hasta dos líneas, así que se reservan dos. */
-.prop-size-row .field-error { min-height: 30px; }
 .px-input { position: relative; }
 .px-input input { padding-right: 30px; }
 .px-input span { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 11px; pointer-events: none; }

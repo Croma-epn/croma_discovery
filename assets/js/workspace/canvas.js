@@ -1,19 +1,19 @@
-// Lienzo: dibuja las pantallas y gestiona arrastrar, redimensionar, desplazar y hacer zoom.
+// Lienzo: dibuja las pantallas y gestiona seleccionar, arrastrar, redimensionar, desplazar y hacer zoom.
 import { $, esc, clamp, plural } from '../util.js';
 import { currentProject, saveProject } from '../store.js';
+import { editInline } from '../ui/inline-edit.js';
+import { SIZE, sizeOf } from './model.js';
 
-export const SIZE = { defW: 260, defH: 80, minW: 200, maxW: 800, minH: 80, maxH: 600 };
 const ZOOM = { min: .5, max: 1.6, step: .1, fitMax: 1.15 };
 const RESIZE_DIRS = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
+const START_BADGE = '<span class="start-badge"><svg class="ic"><use href="#i-home"/></svg>Inicio</span>';
 const snap = v => Math.round(v / 10) * 10; // cuadrícula de 10 px
-export const sizeOf = s => ({ w: s.w || SIZE.defW, h: s.h || SIZE.defH });
 
 let view = { zoom: 1, x: 110, y: 80 };
 let on; // callbacks del coordinador (ver initCanvas)
 const world = () => $('canvasWorld');
 const viewport = () => $('canvasViewport');
 const screens = () => currentProject()?.screens ?? [];
-const screenOf = node => screens().find(s => s.id === node.dataset.screen);
 const save = () => { const p = currentProject(); if (p) saveProject(p) };
 
 /* ---------- Dibujo ---------- */
@@ -26,6 +26,7 @@ const nodeHtml = s => {
     + '<span class="rz-size" aria-hidden="true"></span></article>';
 };
 const nodeEl = id => world().querySelector(`[data-screen="${CSS.escape(id)}"]`);
+const nodes = () => world().querySelectorAll('.screen-node');
 
 function syncCount() {
   const n = screens().length;
@@ -35,17 +36,34 @@ function syncCount() {
 export function render() { world().innerHTML = screens().map(nodeHtml).join(''); syncCount() }
 // Solo añade el nodo nuevo, así los demás no repiten su animación de entrada.
 export function add(s) { world().insertAdjacentHTML('beforeend', nodeHtml(s)); syncCount() }
-export const highlight = id => world().querySelectorAll('.screen-node').forEach(n => n.classList.toggle('selected', n.dataset.screen === id));
+
+// ids: Set de pantallas seleccionadas. Con varias, se ocultan las asas de tamaño.
+export function highlight(ids) {
+  world().classList.toggle('is-multi', ids.size > 1);
+  nodes().forEach(n => n.classList.toggle('selected', ids.has(n.dataset.screen)));
+}
+// Marca permanente (contorno + «Inicio») en la pantalla inicial.
+export function markStart(id) {
+  nodes().forEach(n => {
+    const isStart = n.dataset.screen === id;
+    n.classList.toggle('is-start', isStart);
+    n.querySelector('.start-badge')?.remove();
+    if (isStart) n.insertAdjacentHTML('afterbegin', START_BADGE);
+  });
+}
 export function updateNode(s) {
   const node = nodeEl(s.id);
   node.querySelector('.node-code').textContent = s.code;
   node.querySelector('.node-business').textContent = s.businessName;
+  node.querySelector('.node-del').setAttribute('aria-label', `Eliminar ${s.businessName}`);
 }
 export function applySize(s) {
   const node = nodeEl(s.id), { w, h } = sizeOf(s);
   Object.assign(node.style, { left: `${s.x}px`, top: `${s.y}px`, width: `${w}px`, height: `${h}px` });
   node.querySelector('.rz-size').textContent = `${w} × ${h}`;
 }
+export const rename = (id, onCommit) =>
+  editInline(nodeEl(id).querySelector('.node-business'), { label: 'Nombre de la pantalla', maxLength: 20, onCommit });
 
 /* ---------- Vista: desplazamiento y zoom ---------- */
 function applyView() {
@@ -100,29 +118,35 @@ function trackPointer(down, onMove, onEnd) {
 }
 const capture = (el, e) => { try { el.setPointerCapture(e.pointerId) } catch { /* el puntero ya se soltó */ } };
 
-function startDrag(down, node) {
-  const s = screenOf(node);
-  if (!s) return;
-  const start = toCanvas(down.clientX, down.clientY), offsetX = start.x - s.x, offsetY = start.y - s.y;
+/* Arrastra juntas las pantallas `ids`. Se ajusta el desplazamiento (no cada posición) a la cuadrícula,
+   así las pantallas alineadas siguen alineadas. Si no hubo movimiento, fue un clic: onClick(). */
+function startDrag(down, node, ids, onClick) {
+  const start = toCanvas(down.clientX, down.clientY);
+  const items = screens().filter(s => ids.includes(s.id)).map(s => ({ s, node: nodeEl(s.id), x: s.x, y: s.y }));
   let moved = false;
   capture(node, down);
   trackPointer(down, e => {
     if (!moved) {
       if (Math.abs(e.clientX - down.clientX) < 3 && Math.abs(e.clientY - down.clientY) < 3) return; // aún es un clic
       moved = true;
-      node.classList.add('dragging');
+      items.forEach(item => item.node.classList.add('dragging'));
     }
-    const pt = toCanvas(e.clientX, e.clientY);
-    s.x = snap(pt.x - offsetX);
-    s.y = snap(pt.y - offsetY);
-    node.style.left = `${s.x}px`;
-    node.style.top = `${s.y}px`;
-  }, () => { node.classList.remove('dragging'); if (moved) save() });
+    const pt = toCanvas(e.clientX, e.clientY), dx = snap(pt.x - start.x), dy = snap(pt.y - start.y);
+    items.forEach(item => {
+      item.s.x = item.x + dx;
+      item.s.y = item.y + dy;
+      item.node.style.left = `${item.s.x}px`;
+      item.node.style.top = `${item.s.y}px`;
+    });
+  }, () => {
+    items.forEach(item => item.node.classList.remove('dragging'));
+    moved ? save() : onClick();
+  });
 }
 
 function startResize(down, handle) {
   down.preventDefault();
-  const node = handle.closest('.screen-node'), s = screenOf(node);
+  const node = handle.closest('.screen-node'), s = screens().find(x => x.id === node.dataset.screen);
   if (!s) return;
   const dir = handle.dataset.rz, start = toCanvas(down.clientX, down.clientY);
   const { w: w0, h: h0 } = sizeOf(s), x0 = s.x, y0 = s.y;
@@ -153,7 +177,8 @@ function startResize(down, handle) {
   }, () => { node.classList.remove('resizing'); if (changed) save() });
 }
 
-function startPan(down) {
+// Mover el lienzo. clearOnTap: un toque sin arrastrar quita la selección (pantallas táctiles).
+function startPan(down, { clearOnTap }) {
   const start = { x: down.clientX, y: down.clientY, viewX: view.x, viewY: view.y };
   let moved = false;
   viewport().classList.add('panning');
@@ -162,24 +187,67 @@ function startPan(down) {
     view.x = start.viewX + e.clientX - start.x;
     view.y = start.viewY + e.clientY - start.y;
     applyView();
-  }, () => { viewport().classList.remove('panning'); if (!moved) on.select(null) }); // un clic en el vacío quita la selección
+  }, () => { viewport().classList.remove('panning'); if (!moved && clearOnTap) on.clear() });
 }
 
-/* on: { select(id), edit(id), remove(id), resize(screen), drop(x, y), background() } */
+// Rectángulo de selección: selecciona las pantallas que toca. Con Ctrl/Cmd se suma a la selección actual.
+function startMarquee(down, additive) {
+  const area = viewport().getBoundingClientRect(), box = document.createElement('div');
+  const x0 = down.clientX - area.left, y0 = down.clientY - area.top;
+  let moved = false;
+  box.className = 'marquee';
+  on.marqueeStart(additive);
+  trackPointer(down, e => {
+    const x1 = e.clientX - area.left, y1 = e.clientY - area.top;
+    if (!moved && Math.abs(x1 - x0) < 3 && Math.abs(y1 - y0) < 3) return; // aún es un clic
+    if (!moved) viewport().append(box);
+    moved = true;
+    const left = Math.min(x0, x1), top = Math.min(y0, y1), width = Math.abs(x1 - x0), height = Math.abs(y1 - y0);
+    Object.assign(box.style, { left: `${left}px`, top: `${top}px`, width: `${width}px`, height: `${height}px` });
+    const a = toCanvas(area.left + left, area.top + top), b = toCanvas(area.left + left + width, area.top + top + height);
+    on.marqueeMove(screens().filter(s => { const { w, h } = sizeOf(s); return s.x < b.x && s.x + w > a.x && s.y < b.y && s.y + h > a.y }).map(s => s.id));
+  }, () => { box.remove(); if (!moved && !additive) on.clear() }); // un clic en el vacío quita la selección
+}
+
+/* Espacio mantenido = modo mano (como en Figma o draw.io). No aplica mientras se escribe ni sobre un control
+   enfocado con teclado (ahí Espacio debe seguir activándolo). */
+let spaceHeld = false;
+function trackSpace(e) {
+  const keyboardControl = e.target.matches('button, [role=button], a, select, input[type=checkbox]') && e.target.matches(':focus-visible');
+  if (e.code !== 'Space' || e.target.matches('input:not([type=checkbox]), textarea') || keyboardControl || $('workspacePage').classList.contains('hidden')) return;
+  e.preventDefault(); // evita desplazar la página o pulsar el botón enfocado
+  spaceHeld = e.type === 'keydown';
+  viewport().classList.toggle('pan-ready', spaceHeld);
+}
+
+/* on: {
+     press(id, additive) → ids a arrastrar   (additive: Ctrl/Cmd agrega o quita de la selección)
+     release(id, additive)                   (clic sin arrastrar)
+     marqueeStart(additive), marqueeMove(ids)
+     clear(), edit(id), remove(id), resize(screen), drop(x, y), background()
+   } */
 export function initCanvas(callbacks) {
   on = callbacks;
   $('zoomIn').addEventListener('click', () => zoomBy(ZOOM.step));
   $('zoomOut').addEventListener('click', () => zoomBy(-ZOOM.step));
   $('fitCanvas').addEventListener('click', fit);
 
+  ['keydown', 'keyup'].forEach(type => document.addEventListener(type, trackSpace));
+  viewport().addEventListener('mousedown', e => { if (e.button === 1) e.preventDefault() }); // sin autodesplazamiento del navegador
   viewport().addEventListener('pointerdown', e => {
+    if (e.target.closest('.inline-edit')) return;
     const node = e.target.closest('.screen-node');
     if (!node) on.background();
+    // Mover el lienzo: rueda presionada, Espacio + arrastrar, o arrastrar con el dedo sobre el fondo.
+    if (e.button === 1 || (e.button === 0 && spaceHeld)) return startPan(e, { clearOnTap: false });
     if (e.button !== 0 || e.target.closest('.node-del')) return;
+    if (!node) return e.pointerType === 'touch' ? startPan(e, { clearOnTap: true }) : startMarquee(e, e.ctrlKey || e.metaKey);
     const handle = e.target.closest('[data-rz]');
-    if (handle) startResize(e, handle);
-    else if (node) { on.select(node.dataset.screen); startDrag(e, node) }
-    else startPan(e);
+    if (handle) return startResize(e, handle);
+    const id = node.dataset.screen, additive = e.ctrlKey || e.metaKey, onName = Boolean(e.target.closest('.node-business'));
+    const ids = on.press(id, additive);
+    // Un clic (sin arrastrar) sobre el nombre lo edita ahí mismo.
+    if (ids.length) startDrag(e, node, ids, () => (onName && !additive ? on.edit(id) : on.release(id, additive)));
   });
   world().addEventListener('click', e => {
     const del = e.target.closest('.node-del');
@@ -187,7 +255,7 @@ export function initCanvas(callbacks) {
   });
   world().addEventListener('dblclick', e => {
     const node = e.target.closest('.screen-node');
-    if (node && !e.target.closest('.node-del')) on.edit(node.dataset.screen);
+    if (node && !e.target.closest('.node-del, .inline-edit')) on.edit(node.dataset.screen);
   });
 
   // Soltar «Pantalla» desde la paleta: se centra en el punto donde se suelta.

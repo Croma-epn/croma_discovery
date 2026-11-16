@@ -29,6 +29,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
 .btn-block { width: 100%; padding: 12px; }
 .icon-btn { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 11px; background: #fff; color: var(--ink); font-size: 19px; line-height: 1; }
 .icon-btn .ic { width: 17px; height: 17px; }
+.inline-edit { min-width: 0; padding: 2px 6px; border: 1px solid var(--primary); border-radius: 6px; outline: 3px solid #e7e1f4; background: #fff; color: var(--ink); }
 .text-button { padding: 3px; border: 0; background: none; color: var(--primary); font-weight: 750; }
 
 /* Campo de formulario: etiqueta, control, línea reservada para error/aviso y ayuda */

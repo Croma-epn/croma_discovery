@@ -11,9 +11,23 @@
 .crumb-sep { color: #c1bdc9; }
 .topbar-current { display: flex; align-items: center; min-width: 0; }
 .topbar-current strong { max-width: 46vw; overflow: hidden; color: var(--ink); font-size: 12.5px; font-weight: 700; white-space: nowrap; text-overflow: ellipsis; }
+/* Nombre del proyecto editable con un clic (en el lienzo) */
+/* Al pasar el mouse aparece el mismo contorno que al editar (como NotebookLM); mismas medidas para que el texto no salte */
+.topbar-current strong.editable, .topbar-current .inline-edit { width: min(46vw, 420px); margin: -4px -7px; padding: 3px 6px; border: 1px solid transparent; border-radius: 6px; }
+.topbar-current strong.editable { cursor: text; transition: border-color .15s; }
+.topbar-current strong.editable:hover { border-color: var(--primary); }
+.topbar-current .inline-edit { border-color: var(--primary); font-size: 12.5px; font-weight: 700; }
 .topbar-right { display: flex; align-items: center; gap: 13px; }
-.saved-state { display: flex; align-items: center; gap: 6px; color: var(--primary); font-size: 11px; white-space: nowrap; }
-.saved-state .ic { width: 12px; height: 12px; }
+/* Indicador de guardado: muestra el estado real y al pulsarlo guarda (Ctrl+S) */
+/* Ancho fijo (el del texto más largo, «No se pudo guardar»): al cambiar de estado el ícono no se mueve */
+.save-state { min-width: 136px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 5px 9px; border: 1px solid transparent; border-radius: 8px; background: none; color: var(--primary); font-size: 11px; white-space: nowrap; transition: background .15s, border-color .15s; }
+.save-state:hover { background: var(--primary-pale); border-color: #e2dcef; }
+.save-state .ic { width: 13px; height: 13px; }
+.save-state[data-state="saving"] { color: var(--muted); }
+.save-state[data-state="error"] { color: var(--danger); }
+/* Guardar a mano (clic o Ctrl+S): destello breve de fondo; la hora del texto confirma qué se guardó */
+.save-state.flash { animation: saveFlash .7s ease; }
+@keyframes saveFlash { from { background: var(--primary-soft); border-color: #d9cee9; } }
 
 /* Menú de cuenta */
 .user-menu-wrap { position: relative; }
@@ -159,7 +173,8 @@
 }
 @media (max-width: 760px) {
   .app-topbar { height: 60px; padding: 0 16px; }
-  .saved-state { display: none; }
+  .save-state { min-width: 0; }
+  .save-state span { display: none; } /* en celular queda solo el ícono */
   .page { padding: 27px 16px 42px; }
   .page-heading { flex-direction: column; align-items: flex-start; }
   .heading-tools { width: 100%; justify-content: flex-start; }

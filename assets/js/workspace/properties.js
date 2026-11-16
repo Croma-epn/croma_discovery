@@ -1,16 +1,17 @@
-// Panel «Propiedades» de la pantalla seleccionada: código, nombres y tamaño.
-import { $, focusLater } from '../util.js';
+/* Panel «Propiedades», en bloques como Figma.
+   Una pantalla: Identificación, Flujo y Tamaño. Varias: Alinear. Ninguna: ayuda. */
+import { $ } from '../util.js';
 import { currentProject, selectedScreen, saveProject } from '../store.js';
 import { check, setFieldError } from '../ui/forms.js';
-import { SIZE, sizeOf } from './canvas.js';
+import { SIZE, sizeOf, startScreenId } from './model.js';
 
-const TEXT_FIELDS = { screenCode: 'code', screenTechnical: 'technicalName', screenBusiness: 'businessName' };
+const TEXT_FIELDS = { screenBusiness: 'businessName', screenCode: 'code', screenTechnical: 'technicalName' };
 const SIZE_FIELDS = {
   screenWidth: { key: 'w', other: 'h', min: SIZE.minW, max: SIZE.maxW, empty: 'Escribe el ancho.' },
   screenHeight: { key: 'h', other: 'w', min: SIZE.minH, max: SIZE.maxH, empty: 'Escribe el alto.' },
 };
 const DEFAULT_SIZE = { w: SIZE.defW, h: SIZE.defH };
-let on; // { rename(screen), resize(screen) }
+let on; // { rename(screen), resize(screen), start(id), align(kind) }
 
 export function fillSize(s) {
   const { w, h } = sizeOf(s);
@@ -19,20 +20,33 @@ export function fillSize(s) {
   Object.keys(SIZE_FIELDS).forEach(id => setFieldError(id, ''));
 }
 
-export function render() {
-  const s = selectedScreen();
-  $('propertiesEmpty').classList.toggle('hidden', Boolean(s));
-  $('inlineProperties').classList.toggle('hidden', !s);
-  if (!s) return;
+const START_HINTS = {
+  this: 'Es la primera pantalla que verá el usuario.',
+  none: 'Aún no hay pantalla inicial: márcala para definir dónde empieza el flujo.',
+  other: 'Márcala para que el flujo empiece aquí en lugar de la pantalla inicial actual.',
+};
+function renderStart(s) {
+  const start = startScreenId(currentProject());
+  $('screenStart').checked = start === s.id;
+  $('screenStartHint').textContent = START_HINTS[start === s.id ? 'this' : start ? 'other' : 'none'];
+}
+
+// screens: pantallas seleccionadas.
+export function render(screens) {
+  const [s] = screens;
+  $('propertiesEmpty').classList.toggle('hidden', screens.length > 0);
+  $('inlineProperties').classList.toggle('hidden', screens.length !== 1);
+  $('groupProperties').classList.toggle('hidden', screens.length < 2);
+  if (screens.length > 1) $('groupCount').textContent = `${screens.length} pantallas seleccionadas`;
+  if (screens.length !== 1) return;
   Object.entries(TEXT_FIELDS).forEach(([id, key]) => {
     $(id).value = s[key];
     setFieldError(id, '');
     $(`${id}Count`).textContent = s[key].length;
   });
+  renderStart(s);
   fillSize(s);
 }
-
-export const focus = () => focusLater('screenCode');
 
 function textError(id, value, screen, project) {
   if (!value) return id === 'screenCode' ? 'El código es obligatorio.' : 'Este campo es obligatorio.';
@@ -67,5 +81,10 @@ export function initProperties(callbacks) {
   on = callbacks;
   Object.keys(TEXT_FIELDS).forEach(id => $(id).addEventListener('input', () => onTextInput(id)));
   Object.keys(SIZE_FIELDS).forEach(id => ['input', 'blur'].forEach(ev => $(id).addEventListener(ev, () => onSizeInput(id))));
+  $('screenStart').addEventListener('change', () => on.start($('screenStart').checked ? selectedScreen().id : null));
+  $('groupProperties').addEventListener('click', e => {
+    const button = e.target.closest('[data-align]');
+    if (button) on.align(button.dataset.align);
+  });
   $('inlineProperties').addEventListener('submit', e => e.preventDefault());
 }

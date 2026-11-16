@@ -1,16 +1,26 @@
 // Datos del prototipo (usuarios y proyectos) en localStorage, y la sesión en memoria.
 const PREFIX = 'croma-';
 const read = key => { try { return localStorage.getItem(PREFIX + key) } catch { return null } };
-const write = (key, value) => { try { localStorage.setItem(PREFIX + key, value) } catch { /* sin almacenamiento: se trabaja en memoria */ } };
+// Devuelve false si no se pudo guardar (almacenamiento lleno o bloqueado).
+const write = (key, value) => { try { localStorage.setItem(PREFIX + key, value); return true } catch { return false } };
 
 const emptyDb = () => ({ users: [], projects: [] });
 export const db = (() => { try { return JSON.parse(read('data')) || emptyDb() } catch { return emptyDb() } })();
 export const session = { user: null, projectId: null, screenId: null };
 
-export const persist = () => write('data', JSON.stringify(db));
-let saveTimer;
+/* Guardado. El estado real ('saving' | 'saved' | 'error') se avisa a quien se suscriba (el indicador de la barra). */
+let notifySave = () => {}, saveTimer;
+export const onSaveStatus = listener => { notifySave = listener };
+export function persist() {
+  clearTimeout(saveTimer);
+  notifySave(write('data', JSON.stringify(db)) ? 'saved' : 'error');
+}
 // Para cambios continuos (escribir en un campo): guarda una sola vez al terminar.
-export function schedulePersist() { clearTimeout(saveTimer); saveTimer = setTimeout(persist, 300) }
+export function schedulePersist() {
+  clearTimeout(saveTimer);
+  notifySave('saving');
+  saveTimer = setTimeout(persist, 300);
+}
 
 // Marca el proyecto como modificado y lo guarda.
 export function saveProject(project, { debounce = false } = {}) {
