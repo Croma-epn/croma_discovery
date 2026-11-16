@@ -6,13 +6,17 @@ export const SIZE = { defW: 260, defH: 80, minW: 200, maxW: 800, minH: 80, maxH:
    Nombres conocidos en la paleta; por debajo, el elemento IFML que representan (Spec IFML 1.0 §7.4, §8.1.4, §8.1.10).
    La caja de texto y la lista de selección son Fields: en IFML solo existen dentro de un Form, que la pantalla tendría
    implícito. El botón no es un componente sino el evento que dispara (Spec §7.2). La etiqueta no tiene clase propia:
-   es un ViewComponent cuyo significado da su nombre (Libro §5.1). */
+   es un ViewComponent cuyo significado da su nombre (Libro §5.1).
+   family agrupa los tipos que son la misma clase IFML: solo se puede cambiar el tipo dentro de su familia
+   (un Field guarda un valor; un evento dispara flujos; Spec §8.3.25, §8.4.3). */
 export const COMPONENTS = {
-  button: { label: 'Botón', icon: 'i-button', prefix: 'btn', ifml: 'ViewElementEvent' },
-  textbox: { label: 'Caja de texto', icon: 'i-textbox', prefix: 'txt', ifml: 'SimpleField (dentro de un Form)' },
-  select: { label: 'Lista de selección', icon: 'i-select', prefix: 'sel', ifml: 'SelectionField (dentro de un Form)' },
-  label: { label: 'Etiqueta', icon: 'i-label', prefix: 'lbl', ifml: 'ViewComponent' },
+  button: { label: 'Botón', icon: 'i-button', prefix: 'btn', family: 'event', ifml: 'ViewElementEvent' },
+  textbox: { label: 'Caja de texto', icon: 'i-textbox', prefix: 'txt', family: 'field', ifml: 'SimpleField (dentro de un Form)' },
+  select: { label: 'Lista de selección', icon: 'i-select', prefix: 'sel', family: 'field', ifml: 'SelectionField (dentro de un Form)' },
+  label: { label: 'Etiqueta', icon: 'i-label', prefix: 'lbl', family: 'content', ifml: 'ViewComponent' },
 };
+// Tipos a los que puede cambiar un componente (incluye el suyo).
+export const kindsLike = kind => Object.keys(COMPONENTS).filter(k => COMPONENTS[k].family === COMPONENTS[kind].family);
 // ¿Otro componente de la pantalla ya usa ese nombre técnico? (sin distinguir mayúsculas)
 export const nameTaken = (screen, name, self) => (screen.components ?? []).some(c => c !== self && c.name.toLowerCase() === name.toLowerCase());
 const freeName = (screen, base, self) => { let n = 1; while (nameTaken(screen, `${base}${n}`, self)) n++; return `${base}${n}` };
@@ -24,7 +28,7 @@ export function addComponent(screen, kind) {
   (screen.components ??= []).push(component);
   return component;
 }
-/* Cambiar el tipo conserva el texto visible y la posición (como Balsamiq). Si el nombre técnico empieza con el prefijo
+/* Cambiar el tipo (dentro de la familia, ver kindsLike) conserva el texto visible y la posición. Si el nombre técnico empieza con el prefijo
    del tipo anterior, se cambia el prefijo: btnGuardar → txtGuardar; btn1 → primer txtN libre. Otro nombre no se toca. */
 export function changeKind(screen, component, kind) {
   const old = COMPONENTS[component.kind].prefix, { prefix } = COMPONENTS[kind];

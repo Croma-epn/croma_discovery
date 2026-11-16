@@ -5,7 +5,7 @@ import { $ } from '../util.js';
 import { currentProject, selectedScreen, saveProject } from '../store.js';
 import { check, setFieldError } from '../ui/forms.js';
 import { initSelectMenu } from '../ui/menus.js';
-import { SIZE, sizeOf, startScreenId, COMPONENTS, nameTaken, changeKind } from './model.js';
+import { SIZE, sizeOf, startScreenId, COMPONENTS, nameTaken, changeKind, kindsLike } from './model.js';
 
 const TEXT_FIELDS = { screenBusiness: 'businessName', screenCode: 'code', screenTechnical: 'technicalName' };
 const COMPONENT_FIELDS = { componentText: 'text', componentName: 'name' };
@@ -52,10 +52,23 @@ function fillText(fields, target) {
     $(`${id}Count`).textContent = target[key].length;
   });
 }
+// Por qué se puede o no cambiar el tipo (el menú solo ofrece tipos de la misma familia IFML).
+const KIND_HINTS = {
+  field: 'Puedes cambiarlo por otro campo; se conserva el texto visible.',
+  event: 'Un botón no cambia a otro tipo: dispara una acción y no guarda datos como un campo.',
+  content: 'Una etiqueta no cambia a otro tipo: solo muestra un texto fijo.',
+};
+function renderKind(kind) {
+  const options = kindsLike(kind);
+  $('componentKindMenu').querySelectorAll('[data-value]').forEach(item => item.classList.toggle('hidden', !options.includes(item.dataset.value)));
+  $('componentKind').disabled = options.length < 2;
+  $('componentKindHint').textContent = KIND_HINTS[COMPONENTS[kind].family];
+  setKindLabel(kind);
+}
 function renderComponent(c) {
   const { icon, ifml } = COMPONENTS[c.kind];
   $('componentIcon').setAttribute('href', `#${icon}`);
-  setKindLabel(c.kind);
+  renderKind(c.kind);
   $('componentIfml').textContent = ifml;
   fillText(COMPONENT_FIELDS, c);
 }

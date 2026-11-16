@@ -295,11 +295,12 @@
         <!-- Un componente seleccionado: su tipo con el elemento IFML que representa, e Identificación -->
         <form id="componentProperties" class="prop-stack hidden" novalidate>
           <div class="prop-type-group">
-            <!-- Cambiar el tipo desde donde se lee, como Balsamiq: conserva el texto visible -->
+            <!-- Cambiar el tipo desde donde se lee (como Balsamiq), solo a tipos de la misma familia IFML; conserva el texto visible -->
             <div class="prop-type kind-picker">Tipo:
-              <button id="componentKind" class="kind-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="componentKindMenu" title="Cambiar el tipo (se conserva el texto visible)"><svg class="ic"><use id="componentIcon" href="#i-button"/></svg><span class="dropdown-label"></span><svg class="ic kind-chev" aria-hidden="true"><use href="#i-chev-down"/></svg></button>
+              <button id="componentKind" class="kind-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="componentKindMenu" aria-describedby="componentKindHint"><svg class="ic"><use id="componentIcon" href="#i-button"/></svg><span class="dropdown-label"></span><svg class="ic kind-chev" aria-hidden="true"><use href="#i-chev-down"/></svg></button>
               <div id="componentKindMenu" class="menu toolbar-menu kind-menu hidden" role="menu" aria-label="Cambiar el tipo del componente"><div class="toolbar-menu-title" aria-hidden="true">Cambiar a</div></div>
             </div>
+            <small id="componentKindHint" class="prop-hint"></small>
             <div class="prop-type">Elemento IFML: <b id="componentIfml"></b></div>
           </div>
           <section class="prop-section">

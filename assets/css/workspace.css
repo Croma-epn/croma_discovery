@@ -150,7 +150,8 @@
 /* Tipo del componente: se cambia ahí mismo con un menú (patrón de Balsamiq) */
 .kind-picker { position: relative; }
 .kind-btn { display: inline-flex; align-items: center; gap: 5px; padding: 3px 6px; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; transition: border-color .15s; }
-.kind-btn:hover, .kind-btn[aria-expanded="true"] { border-color: var(--primary); }
+.kind-btn:hover:not(:disabled), .kind-btn[aria-expanded="true"] { border-color: var(--primary); }
+.kind-btn:disabled { opacity: .45; cursor: not-allowed; }
 .kind-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .kind-btn .kind-chev { width: 11px; height: 11px; color: var(--muted); transition: transform .18s; }
 .kind-btn[aria-expanded="true"] .kind-chev { transform: rotate(180deg); }

@@ -21,11 +21,12 @@ document.addEventListener('keydown', e => {
   owner?.focus();
 });
 
-/* Menú de opción única (role=menuitemradio) navegable con flechas, Inicio y Fin.
+/* Menú de opción única (role=menuitemradio) navegable con flechas, Inicio y Fin; salta las opciones ocultas (.hidden).
    Devuelve una función para marcar la opción elegida. */
 export function initSelectMenu(trigger, onSelect) {
   const items = [...$(trigger.getAttribute('aria-controls')).querySelectorAll('[data-value]')];
-  const focusChecked = () => (items.find(item => item.getAttribute('aria-checked') === 'true') || items[0]).focus();
+  const visible = () => items.filter(item => !item.classList.contains('hidden'));
+  const focusChecked = () => { const shown = visible(); (shown.find(item => item.getAttribute('aria-checked') === 'true') || shown[0]).focus() };
   trigger.addEventListener('click', () => toggleMenu(trigger));
   trigger.addEventListener('keydown', e => {
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
@@ -34,13 +35,14 @@ export function initSelectMenu(trigger, onSelect) {
     focusChecked();
   });
   trigger.parentElement.addEventListener('keydown', e => { if (e.key === 'Tab') setMenu(trigger, false) });
-  items.forEach((item, i) => {
+  items.forEach(item => {
     item.addEventListener('click', () => { onSelect(item.dataset.value); setMenu(trigger, false); trigger.focus() });
     item.addEventListener('keydown', e => {
-      const next = { ArrowDown: (i + 1) % items.length, ArrowUp: (i + items.length - 1) % items.length, Home: 0, End: items.length - 1 }[e.key];
+      const shown = visible(), i = shown.indexOf(item), n = shown.length;
+      const next = { ArrowDown: (i + 1) % n, ArrowUp: (i + n - 1) % n, Home: 0, End: n - 1 }[e.key];
       if (next === undefined) return;
       e.preventDefault();
-      items[next].focus();
+      shown[next].focus();
     });
   });
   return value => {
