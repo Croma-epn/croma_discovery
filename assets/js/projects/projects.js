@@ -39,6 +39,7 @@ export function duplicateProject(source) {
   const copy = {
     ...source, id: uid(), name: copyName(source.name), createdAt: now, updatedAt: now,
     screens: source.screens.map(s => ({ ...structuredClone(s), id: newIds.get(s.id) })), // copia profunda: incluye sus componentes
+    domain: structuredClone(source.domain ?? []), // la copia no comparte entidades con el original
     flows: source.flows?.map(f => ({ ...f, startScreenId: newIds.get(f.startScreenId) ?? null })), // la copia conserva su pantalla inicial
   };
   db.projects.push(copy);

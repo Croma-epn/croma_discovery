@@ -2,7 +2,7 @@
 import { $, esc, clamp, plural } from '../util.js';
 import { currentProject, saveProject } from '../store.js';
 import { editInline } from '../ui/inline-edit.js';
-import { SIZE, sizeOf, COMPONENTS } from './model.js';
+import { SIZE, sizeOf, COMPONENTS, BUTTON_ROLES, entityOf, findComponent, placementError } from './model.js';
 
 const ZOOM = { min: .5, max: 1.6, step: .1, fitMax: 1.15 };
 const RESIZE_DIRS = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
@@ -16,15 +16,36 @@ const viewport = () => $('canvasViewport');
 const screens = () => currentProject()?.screens ?? [];
 const save = () => { const p = currentProject(); if (p) saveProject(p) };
 
-export const COMPONENT_MIME = 'application/x-croma-component'; // arrastre de un componente desde la paleta
+/* Arrastre de un componente desde la paleta: el tipo va en el nombre del formato (application/x-croma-component-boton…)
+   porque durante el arrastre el navegador solo deja leer los formatos, no los datos. */
+export const COMPONENT_MIME = 'application/x-croma-component';
+const draggedKind = types => types.find(t => t.startsWith(`${COMPONENT_MIME}-`))?.slice(COMPONENT_MIME.length + 1);
 
 /* ---------- Dibujo ---------- */
-// Componentes uno debajo del otro, en el orden en que se agregaron (el orden comunica qué es la pantalla).
-const componentHtml = c => {
-  const { label, icon } = COMPONENTS[c.kind];
-  return `<li class="comp-row" data-comp="${esc(c.id)}"><svg class="ic"><use href="#${icon}"/></svg><span class="comp-text">${esc(c.text)}</span><span class="comp-kind">${label}</span>`
-    + `<button class="comp-del" type="button" title="Eliminar componente" aria-label="Eliminar ${esc(c.text)}"><svg class="ic"><use href="#i-trash"/></svg></button></li>`;
+/* Componentes uno debajo del otro, en el orden en que se agregaron (el orden comunica qué es la pantalla).
+   Un bloque (formulario, lista o ficha) es una caja con su fila de título y, debajo, lo que contiene. */
+// Lo que se lee junto al tipo: qué hace el botón, la entidad del bloque o el dato del campo.
+function detail(c, parent) {
+  if (c.kind === 'button') return BUTTON_ROLES[parent?.kind ?? 'screen'].role;
+  if (c.parts) return entityOf(currentProject(), c.entityId)?.name ?? '';
+  return (parent && entityOf(currentProject(), parent.entityId)?.attributes.find(a => a.id === c.attributeId)?.name) ?? '';
+}
+const rowHtml = (c, parent, tag = 'li') => {
+  const { label, icon } = COMPONENTS[c.kind], extra = detail(c, parent);
+  return `<${tag} class="comp-row" data-comp="${esc(c.id)}"><svg class="ic"><use href="#${icon}"/></svg><span class="comp-text">${esc(c.text)}</span>`
+    + `<span class="comp-kind">${label}${extra ? ` · ${esc(extra)}` : ''}</span>`
+    + `<button class="comp-del" type="button" title="Eliminar" aria-label="Eliminar ${esc(c.text)}"><svg class="ic"><use href="#i-trash"/></svg></button></${tag}>`;
 };
+// Lista o ficha: qué atributos de su entidad muestra.
+function shownHtml(c) {
+  const entity = entityOf(currentProject(), c.entityId);
+  if (!entity) return '<p class="comp-shown is-missing">Elige su entidad en Propiedades</p>';
+  const names = entity.attributes.filter(a => c.shown.includes(a.id)).map(a => a.name);
+  return `<p class="comp-shown">Muestra: ${names.length ? esc(names.join(', ')) : 'nada aún'}</p>`;
+}
+const EMPTY_BLOCK = { form: 'Arrastra campos y botones aquí', data: 'Arrastra botones aquí' };
+const componentHtml = c => (!c.parts ? rowHtml(c) : `<li class="comp-block" data-block="${esc(c.id)}">${rowHtml(c, null, 'div')}`
+  + `${c.shown ? shownHtml(c) : ''}<ol class="comp-parts" data-empty="${EMPTY_BLOCK[COMPONENTS[c.kind].block]}">${c.parts.map(p => rowHtml(p, c)).join('')}</ol></li>`);
 const componentsHtml = s => (s.components ?? []).map(componentHtml).join('');
 const nodeHtml = s => {
   const { w, h } = sizeOf(s);
@@ -240,8 +261,12 @@ function trackSpace(e) {
      release(id, additive)                   (clic sin arrastrar)
      marqueeStart(additive), marqueeMove(ids)
      clear(), edit(id), remove(id), resize(screen), drop(x, y), background()
-     pick(screenId, componentId), dropComponent(screenId, kind), removeComponent(screenId, componentId)
+     pick(screenId, componentId), dropComponent(screenId, kind, blockId), removeComponent(screenId, componentId)
    } */
+const OUTSIDE = 'Suelta el componente dentro de una pantalla.';
+let refusal = OUTSIDE; // por qué no se pudo soltar el último componente arrastrado
+export const dropRefusal = () => refusal;
+
 export function initCanvas(callbacks) {
   on = callbacks;
   $('zoomIn').addEventListener('click', () => zoomBy(ZOOM.step));
@@ -274,24 +299,39 @@ export function initCanvas(callbacks) {
   });
   world().addEventListener('dblclick', e => {
     const node = e.target.closest('.screen-node');
-    if (node && !e.target.closest('.node-del, .inline-edit, .comp-row')) on.edit(node.dataset.screen);
+    if (node && !e.target.closest('.node-del, .inline-edit, .comp-row, .comp-block')) on.edit(node.dataset.screen);
   });
 
-  /* Soltar desde la paleta. «Pantalla» se centra en el punto donde se suelta; un componente va al final de la
-     pantalla sobre la que se suelta, que se resalta mientras se arrastra. */
-  const markTarget = node => nodes().forEach(n => n.classList.toggle('drop-target', n === node));
+  /* Soltar desde la paleta. «Pantalla» se centra en el punto donde se suelta; un componente va al final del bloque o de la
+     pantalla sobre la que se suelta, que se resalta mientras se arrastra. Donde no puede ir, el cursor muestra prohibido
+     y dropRefusal() explica por qué. */
+  const markTarget = el => world().querySelectorAll('.screen-node, .comp-block').forEach(n => n.classList.toggle('drop-target', n === el));
+  const target = e => {
+    const node = e.target.closest('.screen-node'), blockEl = node && e.target.closest('.comp-block');
+    const block = blockEl && findComponent(screens().find(s => s.id === node.dataset.screen), blockEl.dataset.block).component;
+    return { node, blockEl, block };
+  };
   viewport().addEventListener('dragover', e => {
     e.preventDefault();
-    const isComponent = e.dataTransfer.types.includes(COMPONENT_MIME), node = e.target.closest('.screen-node');
-    e.dataTransfer.dropEffect = isComponent && !node ? 'none' : 'copy';
-    markTarget(isComponent && node);
+    const kind = draggedKind([...e.dataTransfer.types]);
+    if (!kind) return markTarget(null); // «Pantalla» se puede soltar en cualquier lugar
+    const { node, blockEl, block } = target(e);
+    refusal = node ? placementError(kind, block) : OUTSIDE;
+    e.dataTransfer.dropEffect = refusal ? 'none' : 'copy';
+    markTarget(!refusal && (blockEl || node));
   });
-  viewport().addEventListener('dragleave', e => { if (!viewport().contains(e.relatedTarget)) markTarget(null) });
+  // Al cancelar el arrastre el navegador también avisa dragleave: el motivo solo se reinicia si el puntero salió del lienzo.
+  viewport().addEventListener('dragleave', e => {
+    if (viewport().contains(e.relatedTarget)) return;
+    markTarget(null);
+    const r = viewport().getBoundingClientRect();
+    if (e.clientX <= r.left || e.clientX >= r.right || e.clientY <= r.top || e.clientY >= r.bottom) refusal = OUTSIDE;
+  });
   viewport().addEventListener('drop', e => {
     e.preventDefault();
     markTarget(null);
-    const kind = e.dataTransfer.getData(COMPONENT_MIME), node = e.target.closest('.screen-node');
-    if (kind) return node && on.dropComponent(node.dataset.screen, kind); // fuera de una pantalla no se permite (cursor de prohibido)
+    const kind = draggedKind([...e.dataTransfer.types]), { node, block } = target(e);
+    if (kind) return node && on.dropComponent(node.dataset.screen, kind, block?.id ?? null);
     const pt = toCanvas(e.clientX, e.clientY);
     on.drop(snap(pt.x - SIZE.defW / 2), snap(pt.y - SIZE.defH / 2));
   });

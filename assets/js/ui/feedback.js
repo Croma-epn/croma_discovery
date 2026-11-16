@@ -2,11 +2,12 @@
 import { $, esc, focusLater } from '../util.js';
 
 /* ---------- Notificaciones ---------- */
-// action: { label, onClick } añade un botón (p. ej. «Deshacer»). La notificación no se cierra mientras se apunta o enfoca.
-export function showToast(message, { action, ms } = {}) {
+// action: { label, onClick } añade un botón (p. ej. «Deshacer»). icon: 'i-info' para avisos que no confirman un éxito.
+// La notificación no se cierra mientras se apunta o enfoca.
+export function showToast(message, { action, ms, icon = 'i-check' } = {}) {
   const toast = document.createElement('div');
   toast.className = 'toast';
-  toast.innerHTML = `<svg class="ic"><use href="#i-check"/></svg><span>${esc(message)}</span>`;
+  toast.innerHTML = `<svg class="ic"><use href="#${icon}"/></svg><span>${esc(message)}</span>`;
   let timer;
   const dismiss = () => { clearTimeout(timer); toast.remove() };
   const pause = () => clearTimeout(timer);

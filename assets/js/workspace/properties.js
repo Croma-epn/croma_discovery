@@ -1,11 +1,12 @@
 /* Panel «Propiedades», en bloques como Figma.
    Una pantalla: Identificación, Flujo, Tamaño y Alinear (deshabilitado). Varias: Alinear.
-   Un componente: su tipo, el elemento IFML que representa e Identificación. Ninguna: ayuda. */
+   Un componente: su tipo, el elemento IFML que representa, Identificación y Datos (properties-data.js). Ninguna: ayuda. */
 import { $ } from '../util.js';
 import { currentProject, selectedScreen, saveProject } from '../store.js';
 import { check, setFieldError } from '../ui/forms.js';
 import { initSelectMenu } from '../ui/menus.js';
-import { SIZE, sizeOf, startScreenId, COMPONENTS, nameTaken, changeKind, kindsLike } from './model.js';
+import { SIZE, sizeOf, startScreenId, COMPONENTS, nameTaken, changeKind, kindsLike, findComponent, ifmlOf } from './model.js';
+import { renderData, initData } from './properties-data.js';
 
 const TEXT_FIELDS = { screenBusiness: 'businessName', screenCode: 'code', screenTechnical: 'technicalName' };
 const COMPONENT_FIELDS = { componentText: 'text', componentName: 'name' };
@@ -14,7 +15,7 @@ const SIZE_FIELDS = {
   screenHeight: { key: 'h', other: 'w', min: SIZE.minH, max: SIZE.maxH, empty: 'Escribe el alto.' },
 };
 const DEFAULT_SIZE = { w: SIZE.defW, h: SIZE.defH };
-let on; // { rename(screen), resize(screen), start(id), align(kind), component(screen) }
+let on; // { rename(screen), resize(screen), start(id), align(kind), component(screen), openData() }
 let component = null; // componente mostrado
 let setKindLabel; // marca el tipo elegido en el menú «Tipo»
 
@@ -56,7 +57,9 @@ function fillText(fields, target) {
 const KIND_HINTS = {
   field: 'Puedes cambiarlo por otro campo; se conserva el texto visible.',
   event: 'Un botón no cambia a otro tipo: dispara una acción y no guarda datos como un campo.',
-  content: 'Una etiqueta no cambia a otro tipo: solo muestra un texto fijo.',
+  content: 'Un texto fijo no cambia a otro tipo: solo muestra contenido, como un título o una instrucción.',
+  form: 'Un formulario no cambia a otro tipo: agrupa los campos y los botones que envían sus datos.',
+  data: 'Puedes cambiarla entre lista y ficha de datos; se conservan la entidad y los botones.',
 };
 function renderKind(kind) {
   const options = kindsLike(kind);
@@ -66,11 +69,12 @@ function renderKind(kind) {
   setKindLabel(kind);
 }
 function renderComponent(c) {
-  const { icon, ifml } = COMPONENTS[c.kind];
-  $('componentIcon').setAttribute('href', `#${icon}`);
+  const { parent } = findComponent(selectedScreen(), c.id);
+  $('componentIcon').setAttribute('href', `#${COMPONENTS[c.kind].icon}`);
   renderKind(c.kind);
-  $('componentIfml').textContent = ifml;
+  $('componentIfml').textContent = ifmlOf(c, parent);
   fillText(COMPONENT_FIELDS, c);
+  renderData(c, parent);
 }
 
 // screens: pantallas seleccionadas. picked: componente seleccionado (su pantalla es la única seleccionada).
@@ -149,6 +153,7 @@ export function initProperties(callbacks) {
   Object.keys(COMPONENT_FIELDS).forEach(id => $(id).addEventListener('input', () => onComponentInput(id)));
   $('componentKindMenu').insertAdjacentHTML('beforeend', Object.entries(COMPONENTS).map(kindOption).join(''));
   setKindLabel = initSelectMenu($('componentKind'), onKindChange);
+  initData({ changed: () => on.component(selectedScreen()), openData: () => on.openData() });
   Object.keys(SIZE_FIELDS).forEach(id => ['input', 'blur'].forEach(ev => $(id).addEventListener(ev, () => onSizeInput(id))));
   $('screenStart').addEventListener('change', () => on.start($('screenStart').checked ? selectedScreen().id : null));
   $('alignSection').addEventListener('click', e => {

@@ -10,25 +10,28 @@ import * as model from './model.js';
 import * as canvas from './canvas.js';
 import * as layers from './layers.js';
 import * as properties from './properties.js';
-import { initPanels, resetPanels, collapsePalette, collapseFloatingPanels, isPhone } from './panels.js';
+import * as dataPanel from './data-panel.js';
+import { initPanels, resetPanels, collapsePalette, collapseFloatingPanels, isPhone, showPanel } from './panels.js';
 
 // Pantallas seleccionadas. session.screenId es la última elegida (la que muestran las propiedades).
 const selection = new Set();
 const selectedScreens = () => currentProject().screens.filter(s => selection.has(s.id));
-// Componente seleccionado: pertenece a la pantalla session.screenId, que queda seleccionada sola.
+// Componente seleccionado (suelto o dentro de un bloque): pertenece a la pantalla session.screenId, que queda seleccionada sola.
 let componentId = null;
 const findScreen = id => currentProject().screens.find(s => s.id === id);
-const pickedComponent = () => (componentId && findScreen(session.screenId)?.components?.find(c => c.id === componentId)) || null;
+const pickedComponent = () => (componentId && model.findComponent(findScreen(session.screenId) ?? {}, componentId)?.component) || null;
 
 export function openWorkspace(id) {
   const project = findProject(id);
   if (!project) return;
   session.projectId = id;
+  if (project.screens.map(model.nestLooseFields).some(Boolean)) saveProject(project); // campos sueltos de versiones anteriores
   showAppPage('workspace', { title: project.name, saved: true, editable: true });
   resetPanels();
   selection.clear();
   if (project.screens[0]) selection.add(project.screens[0].id);
   refresh();
+  dataPanel.render();
   canvas.fit();
 }
 
@@ -141,34 +144,46 @@ function pick(screenId, id) {
   componentId = id;
   renderSelection();
 }
-function addComponent(screenId, kind) {
-  const project = currentProject(), screen = findScreen(screenId);
-  const component = model.addComponent(screen, kind);
+// blockId: bloque donde se soltó (null = la pantalla). Si el tipo no puede ir ahí, se avisa por qué.
+function addComponent(screenId, kind, blockId = null) {
+  const project = currentProject(), screen = findScreen(screenId), block = blockId && model.findComponent(screen, blockId).component;
+  const error = model.placementError(kind, block);
+  if (error) return showToast(error, { icon: 'i-info' });
+  const component = model.addComponent(screen, kind, block || null);
   saveProject(project);
   canvas.updateComponents(screen);
   pick(screenId, component.id);
 }
-// Clic en la paleta (alternativa al arrastre): se agrega a la pantalla seleccionada.
+/* Clic en la paleta (alternativa al arrastre): va al bloque seleccionado (o al del elemento seleccionado) si puede ir ahí;
+   si no, a la pantalla seleccionada. */
 function addComponentToSelection(kind) {
-  if (selection.size === 1) return addComponent(session.screenId, kind);
-  showToast(selection.size ? 'Selecciona una sola pantalla para agregarle el componente.' : 'Selecciona una pantalla para agregarle el componente, o arrástralo sobre ella.');
+  if (selection.size === 1) {
+    const found = componentId && model.findComponent(findScreen(session.screenId), componentId);
+    const block = found && (found.component.parts ? found.component : found.parent);
+    return addComponent(session.screenId, kind, block && !model.placementError(kind, block) ? block.id : null);
+  }
+  showToast(selection.size ? 'Selecciona una sola pantalla para agregarle el componente.' : 'Selecciona una pantalla para agregarle el componente, o arrástralo sobre ella.', { icon: 'i-info' });
 }
+// Borrar un bloque borra también lo que contiene; «Deshacer» lo devuelve completo.
 function deleteComponent(screenId, id) {
-  const project = currentProject(), screen = findScreen(screenId), index = screen.components.findIndex(c => c.id === id);
-  const [removed] = screen.components.splice(index, 1);
+  const project = currentProject(), screen = findScreen(screenId), { list } = model.findComponent(screen, id);
+  const index = list.findIndex(c => c.id === id), [removed] = list.splice(index, 1);
   saveProject(project);
   canvas.updateComponents(screen);
-  if (componentId === id) componentId = null;
+  if (!pickedComponent()) componentId = null;
   renderSelection();
-  showToast('Componente eliminado.', { action: { label: 'Deshacer', onClick: () => restoreComponent(project, screen, removed, index) } });
+  const message = removed.parts?.length ? 'Bloque eliminado con su contenido.' : 'Componente eliminado.';
+  showToast(message, { action: { label: 'Deshacer', onClick: () => restoreComponent(project, screen, list, removed, index) } });
 }
-function restoreComponent(project, screen, component, index) {
-  if (session.user?.id !== project.userId || !findProject(project.id) || !project.screens.includes(screen)) return;
-  screen.components.splice(Math.min(index, screen.components.length), 0, component);
+function restoreComponent(project, screen, list, component, index) {
+  const listAlive = list === screen.components || model.allComponents(screen).some(c => c.parts === list);
+  if (session.user?.id !== project.userId || !findProject(project.id) || !project.screens.includes(screen) || !listAlive) return;
+  list.splice(Math.min(index, list.length), 0, component);
   saveProject(project);
   if (currentProject() === project) { canvas.updateComponents(screen); pick(screen.id, component.id) }
-  showToast('Componente restaurado.');
+  showToast(component.parts ? 'Bloque restaurado.' : 'Componente restaurado.');
 }
+const PALETTE_GROUPS = [['Elementos', ({ block }) => !block], ['Bloques', ({ block }) => block]];
 const paletteItem = ([kind, { label, icon }]) =>
   `<button class="palette-item" type="button" draggable="true" data-component="${kind}" aria-label="Agregar ${label.toLowerCase()}"><span class="palette-icon"><svg class="ic"><use href="#${icon}"/></svg></span><span><strong>${label}</strong></span></button>`;
 
@@ -186,7 +201,7 @@ function renameProject() {
   });
 }
 
-const isTyping = target => target.matches('input, textarea') || target.isContentEditable;
+const isTyping = target => target.matches('input, textarea, select') || target.isContentEditable;
 const inWorkspace = () => !$('workspacePage').classList.contains('hidden') && !isOpen($('dialogBackdrop'));
 
 export function initWorkspace() {
@@ -216,7 +231,10 @@ export function initWorkspace() {
     start: setStart,
     align,
     component: s => { canvas.updateComponents(s); canvas.highlight(selection, componentId) },
+    openData: () => showPanel('data'),
   });
+  // Cambiar el modelo de dominio actualiza los nombres de entidades y datos que muestran las pantallas.
+  dataPanel.initDataPanel(() => { currentProject().screens.forEach(canvas.updateComponents); renderSelection() });
   layers.initLayers((id, additive) => {
     const screen = currentProject()?.screens.find(s => s.id === id);
     if (!screen) return;
@@ -229,10 +247,11 @@ export function initWorkspace() {
   $('screenPalette').addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', 'screen'); e.dataTransfer.effectAllowed = 'copy' });
 
   const palette = $('componentPalette'), kindOf = e => e.target.closest('[data-component]')?.dataset.component;
-  palette.innerHTML = Object.entries(model.COMPONENTS).map(paletteItem).join('');
+  palette.innerHTML = PALETTE_GROUPS.map(([title, inGroup]) => `<p class="palette-group">${title}</p>`
+    + Object.entries(model.COMPONENTS).filter(([, c]) => inGroup(c)).map(paletteItem).join('')).join('');
   palette.addEventListener('click', e => { const kind = kindOf(e); if (kind) { addComponentToSelection(kind); if (isPhone()) collapsePalette() } });
-  palette.addEventListener('dragstart', e => { e.dataTransfer.setData(canvas.COMPONENT_MIME, kindOf(e)); e.dataTransfer.effectAllowed = 'copy' });
-  palette.addEventListener('dragend', e => { if (e.dataTransfer.dropEffect === 'none') showToast('Suelta el componente dentro de una pantalla.') });
+  palette.addEventListener('dragstart', e => { e.dataTransfer.setData(`${canvas.COMPONENT_MIME}-${kindOf(e)}`, kindOf(e)); e.dataTransfer.effectAllowed = 'copy' });
+  palette.addEventListener('dragend', e => { if (e.dataTransfer.dropEffect === 'none') showToast(canvas.dropRefusal(), { icon: 'i-info' }) });
 
   const title = $('breadcrumbCurrent');
   title.addEventListener('click', () => { if (title.classList.contains('editable')) renameProject() });

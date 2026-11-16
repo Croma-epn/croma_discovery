@@ -35,6 +35,10 @@
 <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
 <symbol id="i-fit" viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5"/></symbol>
 <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+<symbol id="i-form" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8 10h8M8 14h8M8 18h4"/></symbol>
+<symbol id="i-details" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M6 16c.6-1.4 1.6-2 2.5-2s1.9.6 2.5 2M14 10h4M14 14h4"/></symbol>
+<symbol id="i-entity" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 13h6M7 16h4"/></symbol>
 <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol>
 <symbol id="i-chev-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
 <symbol id="i-chev-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
@@ -245,14 +249,22 @@
       <nav class="rail" aria-label="Paneles">
         <button id="railTools" class="rail-btn active" type="button" title="Panel de herramientas" aria-label="Panel de herramientas"><svg class="ic"><use href="#i-tool"/></svg><span>Herramientas</span></button>
         <button id="railNav" class="rail-btn" type="button" title="Panel de capas" aria-label="Panel de capas"><svg class="ic"><use href="#i-layers"/></svg><span>Capas</span></button>
+        <button id="railData" class="rail-btn" type="button" title="Panel de datos" aria-label="Panel de datos"><svg class="ic"><use href="#i-database"/></svg><span>Datos</span></button>
       </nav>
       <aside class="palette"><div class="palette-inner">
         <p class="palette-hint panel-tools">Clic o arrastrar al lienzo</p>
         <button id="screenPalette" class="palette-item panel-tools" type="button" draggable="true" aria-label="Agregar pantalla"><span class="palette-icon"><svg class="ic"><use href="#i-phone"/></svg></span><span><strong>Pantalla</strong></span></button>
         <h3 class="palette-title panel-tools">Componentes</h3>
-        <p class="palette-hint panel-tools">Arrastra a una pantalla o haz clic para agregarlo a la seleccionada</p>
+        <p class="palette-hint panel-tools">Arrastra a una pantalla o a un bloque, o haz clic para agregarlo a lo seleccionado</p>
         <div id="componentPalette" class="palette-list panel-tools"></div>
-        <div class="tree-block"><div class="tree-title"><svg class="ic"><use href="#i-folder"/></svg> <span id="treeProject"></span> <span id="treeCount" class="tree-count">0</span></div><div id="screenTree" class="screen-tree"></div></div>
+        <div class="tree-block panel-nav"><div class="tree-title"><svg class="ic"><use href="#i-folder"/></svg> <span id="treeProject"></span> <span id="treeCount" class="tree-count">0</span></div><div id="screenTree" class="screen-tree"></div></div>
+        <!-- Modelo de dominio: entidades con atributos, sin relaciones (Libro cap. 3: basta el nivel entidad-relación) -->
+        <div class="data-block panel-data">
+          <div class="tree-title"><svg class="ic"><use href="#i-database"/></svg> <span>Datos</span> <span id="dataCount" class="tree-count">0</span></div>
+          <p class="palette-hint">Las entidades y atributos con los que trabajan tus pantallas, como «Usuario» con «correo» y «clave».</p>
+          <button id="addEntity" class="data-add" type="button"><svg class="ic"><use href="#i-plus"/></svg> Nueva entidad</button>
+          <div id="dataList" class="data-list"></div>
+        </div>
       </div></aside>
       <section class="canvas-wrap" aria-label="Lienzo del modelo">
         <button id="collapsePalette" class="mini-collapse collapse-left" type="button" aria-expanded="true" aria-label="Ocultar paneles laterales" title="Ocultar paneles laterales"><svg class="ic"><use href="#i-chev-left"/></svg></button>
@@ -305,8 +317,16 @@
           </div>
           <section class="prop-section">
             <h3 class="prop-section-title">Identificación</h3>
-            <div class="prop-field"><label for="componentText"><svg class="ic"><use href="#i-label"/></svg> Texto visible <span class="req">*</span></label><input id="componentText" maxlength="30" placeholder="Guardar" required autocomplete="off"><small id="componentTextError" class="field-error"></small><small class="prop-hint"><span id="componentTextCount">0</span>/30 · Lo que lee el usuario: el texto del botón o la etiqueta del campo.</small></div>
+            <div class="prop-field"><label for="componentText"><svg class="ic"><use href="#i-label"/></svg> Texto visible <span class="req">*</span></label><input id="componentText" maxlength="30" placeholder="Guardar" required autocomplete="off"><small id="componentTextError" class="field-error"></small><small class="prop-hint"><span id="componentTextCount">0</span>/30 · Lo que lee el usuario: el texto del botón, el rótulo del campo o el título del bloque.</small></div>
             <div class="prop-field"><label for="componentName"><svg class="ic"><use href="#i-code"/></svg> Nombre técnico <span class="req">*</span></label><input id="componentName" maxlength="30" placeholder="btnGuardar" required autocomplete="off"><small id="componentNameError" class="field-error"></small><small class="prop-hint"><span id="componentNameCount">0</span>/30 · Nombre en el código, único en la pantalla.</small></div>
+          </section>
+          <!-- Datos (propuesta sin HU): entidad del bloque, dato del campo y atributos que muestra una lista o ficha -->
+          <section id="componentData" class="prop-section hidden">
+            <h3 class="prop-section-title">Datos</h3>
+            <div id="entityField" class="prop-field"><label for="componentEntity"><svg class="ic"><use href="#i-entity"/></svg> <span id="componentEntityLabel">Entidad</span></label><select id="componentEntity" class="prop-select"></select><small id="componentEntityHint" class="prop-hint"></small></div>
+            <div id="attributeField" class="prop-field"><label for="componentAttribute"><svg class="ic"><use href="#i-database"/></svg> Dato</label><select id="componentAttribute" class="prop-select"></select><small id="componentAttributeHint" class="prop-hint"></small></div>
+            <div id="shownField" class="prop-field"><div class="shown-head"><span id="shownTitle" class="shown-title">Muestra</span><button id="toggleShown" class="prop-link" type="button"></button></div><div id="shownList" class="shown-list" role="group" aria-labelledby="shownTitle"></div></div>
+            <button id="goToData" class="prop-link" type="button"><svg class="ic"><use href="#i-database"/></svg> Ir al panel «Datos»</button>
           </section>
         </form>
         <!-- Varias pantallas seleccionadas -->
