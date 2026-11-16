@@ -183,6 +183,14 @@ function restoreComponent(project, screen, list, component, index) {
   if (currentProject() === project) { canvas.updateComponents(screen); pick(screen.id, component.id) }
   showToast(component.parts ? 'Bloque restaurado.' : 'Componente restaurado.');
 }
+// Mover (HU16) a otro bloque o posición de la misma pantalla, desde el lienzo o desde Propiedades.
+function moveComponent(screenId, id, blockId, index) {
+  const screen = findScreen(screenId), block = blockId && model.findComponent(screen, blockId).component;
+  model.moveComponent(screen, id, block || null, index);
+  saveProject(currentProject());
+  canvas.updateComponents(screen);
+  pick(screenId, id);
+}
 const PALETTE_GROUPS = [['Elementos', ({ block }) => !block], ['Bloques', ({ block }) => block]];
 const paletteItem = ([kind, { label, icon }]) =>
   `<button class="palette-item" type="button" draggable="true" data-component="${kind}" aria-label="Agregar ${label.toLowerCase()}"><span class="palette-icon"><svg class="ic"><use href="#${icon}"/></svg></span><span><strong>${label}</strong></span></button>`;
@@ -224,6 +232,8 @@ export function initWorkspace() {
     pick,
     dropComponent: addComponent,
     removeComponent: deleteComponent,
+    moveComponent,
+    refuse: message => showToast(message, { icon: 'i-info' }),
   });
   properties.initProperties({
     rename: s => { canvas.updateNode(s); layers.render(selection) },
@@ -232,6 +242,7 @@ export function initWorkspace() {
     align,
     component: s => { canvas.updateComponents(s); canvas.highlight(selection, componentId) },
     openData: () => showPanel('data'),
+    move: (id, blockId, index) => moveComponent(session.screenId, id, blockId, index),
   });
   // Cambiar el modelo de dominio actualiza los nombres de entidades y datos que muestran las pantallas.
   dataPanel.initDataPanel(() => { currentProject().screens.forEach(canvas.updateComponents); renderSelection() });

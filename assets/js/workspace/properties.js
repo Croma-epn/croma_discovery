@@ -1,11 +1,11 @@
 /* Panel «Propiedades», en bloques como Figma.
    Una pantalla: Identificación, Flujo, Tamaño y Alinear (deshabilitado). Varias: Alinear.
    Un componente: su tipo, el elemento IFML que representa, Identificación y Datos (properties-data.js). Ninguna: ayuda. */
-import { $ } from '../util.js';
+import { $, esc } from '../util.js';
 import { currentProject, selectedScreen, saveProject } from '../store.js';
 import { check, setFieldError } from '../ui/forms.js';
 import { initSelectMenu } from '../ui/menus.js';
-import { SIZE, sizeOf, startScreenId, COMPONENTS, nameTaken, changeKind, kindsLike, findComponent, ifmlOf } from './model.js';
+import { SIZE, sizeOf, startScreenId, COMPONENTS, nameTaken, changeKind, kindsLike, findComponent, ifmlOf, placementError } from './model.js';
 import { renderData, initData } from './properties-data.js';
 
 const TEXT_FIELDS = { screenBusiness: 'businessName', screenCode: 'code', screenTechnical: 'technicalName' };
@@ -15,7 +15,7 @@ const SIZE_FIELDS = {
   screenHeight: { key: 'h', other: 'w', min: SIZE.minH, max: SIZE.maxH, empty: 'Escribe el alto.' },
 };
 const DEFAULT_SIZE = { w: SIZE.defW, h: SIZE.defH };
-let on; // { rename(screen), resize(screen), start(id), align(kind), component(screen), openData() }
+let on; // { rename(screen), resize(screen), start(id), align(kind), component(screen), openData(), move(id, blockId, index) }
 let component = null; // componente mostrado
 let setKindLabel; // marca el tipo elegido en el menú «Tipo»
 
@@ -68,8 +68,25 @@ function renderKind(kind) {
   $('componentKindHint').textContent = KIND_HINTS[COMPONENTS[kind].family];
   setKindLabel(kind);
 }
+// Ubicación: alternativa al arrastre (WCAG 2.5.7) para cambiar de bloque y de posición dentro de la pantalla.
+function renderPlace(c, parent, list) {
+  const blocks = selectedScreen().components.filter(b => b.parts && b !== c && !placementError(c.kind, b));
+  const screenOption = COMPONENTS[c.kind].family === 'field' ? 'Un formulario nuevo' : 'La pantalla';
+  $('componentParent').innerHTML = `<option value="">${screenOption}</option>`
+    + blocks.map(b => `<option value="${esc(b.id)}"${b === parent ? ' selected' : ''}>${esc(b.text)} · ${COMPONENTS[b.kind].label}</option>`).join('');
+  $('componentParent').disabled = !blocks.length && !parent;
+  const i = list.indexOf(c);
+  $('moveUp').disabled = i === 0;
+  $('moveDown').disabled = i === list.length - 1;
+}
+// Subir (-1) o bajar (+1) un lugar en su lista; moveComponent cuenta la posición con el componente aún en su lugar.
+function step(delta) {
+  const { parent, list } = findComponent(selectedScreen(), component.id), i = list.indexOf(component);
+  on.move(component.id, parent?.id ?? null, delta < 0 ? i - 1 : i + 2);
+}
 function renderComponent(c) {
-  const { parent } = findComponent(selectedScreen(), c.id);
+  const { parent, list } = findComponent(selectedScreen(), c.id);
+  renderPlace(c, parent, list);
   $('componentIcon').setAttribute('href', `#${COMPONENTS[c.kind].icon}`);
   renderKind(c.kind);
   $('componentIfml').textContent = ifmlOf(c, parent);
@@ -154,6 +171,9 @@ export function initProperties(callbacks) {
   $('componentKindMenu').insertAdjacentHTML('beforeend', Object.entries(COMPONENTS).map(kindOption).join(''));
   setKindLabel = initSelectMenu($('componentKind'), onKindChange);
   initData({ changed: () => on.component(selectedScreen()), openData: () => on.openData() });
+  $('componentParent').addEventListener('change', e => on.move(component.id, e.target.value || null, Infinity));
+  $('moveUp').addEventListener('click', () => step(-1));
+  $('moveDown').addEventListener('click', () => step(1));
   Object.keys(SIZE_FIELDS).forEach(id => ['input', 'blur'].forEach(ev => $(id).addEventListener(ev, () => onSizeInput(id))));
   $('screenStart').addEventListener('change', () => on.start($('screenStart').checked ? selectedScreen().id : null));
   $('alignSection').addEventListener('click', e => {

@@ -213,6 +213,51 @@ function startResize(down, handle) {
   }, () => { node.classList.remove('resizing'); if (changed) save() });
 }
 
+/* Dónde caería un componente arrastrado con el puntero en (x, y): bloque destino (null = la pantalla), posición y la línea
+   que lo indica. Sobre un bloque que no lo acepta, va a la pantalla antes o después de ese bloque. Fuera de la pantalla: null. */
+function dropSpot(node, screen, component, x, y) {
+  const rect = node.getBoundingClientRect();
+  if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) return null;
+  const hit = document.elementFromPoint(x, y)?.closest('.comp-block'), block = hit && node.contains(hit) && findComponent(screen, hit.dataset.block).component;
+  const inBlock = block && block !== component && !placementError(component.kind, block);
+  const listEl = inBlock ? hit.querySelector('.comp-parts') : node.querySelector('.comp-list'), items = [...listEl.children];
+  const found = items.findIndex(el => { const r = el.getBoundingClientRect(); return y < r.top + r.height / 2 });
+  const index = found < 0 ? items.length : found, list = listEl.getBoundingClientRect();
+  const top = items[index] ? items[index].getBoundingClientRect().top - 3 : items.length ? items.at(-1).getBoundingClientRect().bottom + 1 : list.top + list.height / 2;
+  const local = (v, origin, border) => `${(v - origin) / view.zoom - border}px`;
+  return {
+    blockId: inBlock ? block.id : null, index,
+    style: { left: local(list.left, rect.left, node.clientLeft), top: local(top, rect.top, node.clientTop), width: `${list.width / view.zoom}px` },
+  };
+}
+// Arrastrar un componente lo mueve dentro de su pantalla (HU16); sin movimiento fue un clic y lo selecciona.
+function startComponentDrag(down, node, row) {
+  const screen = screens().find(s => s.id === node.dataset.screen), id = row.dataset.comp, { component } = findComponent(screen, id);
+  const dimmed = row.matches('.comp-block > .comp-row') ? row.parentElement : row, line = document.createElement('div');
+  let moved = false, spot = null;
+  line.className = 'drop-line';
+  capture(row, down);
+  trackPointer(down, e => {
+    if (!moved) {
+      if (Math.abs(e.clientX - down.clientX) < 3 && Math.abs(e.clientY - down.clientY) < 3) return; // aún es un clic
+      moved = true;
+      dimmed.classList.add('moving');
+      node.append(line);
+    }
+    spot = dropSpot(node, screen, component, e.clientX, e.clientY);
+    viewport().classList.toggle('no-drop', !spot);
+    line.hidden = !spot;
+    if (spot) Object.assign(line.style, spot.style);
+  }, () => {
+    line.remove();
+    dimmed.classList.remove('moving');
+    viewport().classList.remove('no-drop');
+    if (!moved) on.pick(screen.id, id);
+    else if (spot) on.moveComponent(screen.id, id, spot.blockId, spot.index);
+    else on.refuse('Solo puedes mover un componente dentro de su pantalla.');
+  });
+}
+
 // Mover el lienzo. clearOnTap: un toque sin arrastrar quita la selección (pantallas táctiles).
 function startPan(down, { clearOnTap }) {
   const start = { x: down.clientX, y: down.clientY, viewX: view.x, viewY: view.y };
@@ -262,6 +307,7 @@ function trackSpace(e) {
      marqueeStart(additive), marqueeMove(ids)
      clear(), edit(id), remove(id), resize(screen), drop(x, y), background()
      pick(screenId, componentId), dropComponent(screenId, kind, blockId), removeComponent(screenId, componentId)
+     moveComponent(screenId, componentId, blockId, index), refuse(message)
    } */
 const OUTSIDE = 'Suelta el componente dentro de una pantalla.';
 let refusal = OUTSIDE; // por qué no se pudo soltar el último componente arrastrado
@@ -287,9 +333,10 @@ export function initCanvas(callbacks) {
     if (handle) return startResize(e, handle);
     const id = node.dataset.screen, additive = e.ctrlKey || e.metaKey, onName = Boolean(e.target.closest('.node-business'));
     const row = !additive && e.target.closest('.comp-row');
+    if (row) return startComponentDrag(e, node, row);
     const ids = on.press(id, additive);
-    // Un clic (sin arrastrar) sobre el nombre lo edita ahí mismo; sobre un componente, lo selecciona.
-    const click = () => (row ? on.pick(id, row.dataset.comp) : onName && !additive ? on.edit(id) : on.release(id, additive));
+    // Un clic (sin arrastrar) sobre el nombre lo edita ahí mismo.
+    const click = () => (onName && !additive ? on.edit(id) : on.release(id, additive));
     if (ids.length) startDrag(e, node, ids, click);
   });
   world().addEventListener('click', e => {

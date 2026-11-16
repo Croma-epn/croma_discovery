@@ -69,6 +69,17 @@ export function addComponent(screen, kind, block = null) {
   list.push(component);
   return component;
 }
+/* Mover (HU16) dentro de la pantalla: a `block` (null = la pantalla) en la posición index, contada con el componente aún en
+   su lugar. Validar antes con placementError. Un campo llevado a la pantalla queda en un formulario nuevo. */
+export function moveComponent(screen, id, block, index) {
+  const { component, list } = findComponent(screen, id), target = block ? block.parts : screen.components;
+  const from = list.indexOf(component);
+  list.splice(from, 1);
+  if (list === target && from < index) index--;
+  let item = component;
+  if (!block && isField(component.kind)) { item = create('form', allComponents(screen)); item.parts.push(component) }
+  target.splice(Math.min(index, target.length), 0, item);
+}
 // Proyectos anteriores a los bloques: cada grupo seguido de campos sueltos pasa a un formulario. Devuelve si cambió algo.
 export function nestLooseFields(screen) {
   if (!(screen.components ?? []).some(c => isField(c.kind))) return false;

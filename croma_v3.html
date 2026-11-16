@@ -320,6 +320,12 @@
             <div class="prop-field"><label for="componentText"><svg class="ic"><use href="#i-label"/></svg> Texto visible <span class="req">*</span></label><input id="componentText" maxlength="30" placeholder="Guardar" required autocomplete="off"><small id="componentTextError" class="field-error"></small><small class="prop-hint"><span id="componentTextCount">0</span>/30 · Lo que lee el usuario: el texto del botón, el rótulo del campo o el título del bloque.</small></div>
             <div class="prop-field"><label for="componentName"><svg class="ic"><use href="#i-code"/></svg> Nombre técnico <span class="req">*</span></label><input id="componentName" maxlength="30" placeholder="btnGuardar" required autocomplete="off"><small id="componentNameError" class="field-error"></small><small class="prop-hint"><span id="componentNameCount">0</span>/30 · Nombre en el código, único en la pantalla.</small></div>
           </section>
+          <!-- Ubicación (HU16): alternativa al arrastre para cambiar de bloque o de posición -->
+          <section class="prop-section">
+            <h3 class="prop-section-title">Ubicación</h3>
+            <div class="prop-field"><label for="componentParent"><svg class="ic"><use href="#i-layers"/></svg> Está en</label><select id="componentParent" class="prop-select"></select><small class="prop-hint">También puedes arrastrarlo en el lienzo dentro de su pantalla.</small></div>
+            <div class="place-row"><button id="moveUp" class="align-btn" type="button"><svg class="ic flip"><use href="#i-chev-down"/></svg>Subir</button><button id="moveDown" class="align-btn" type="button"><svg class="ic"><use href="#i-chev-down"/></svg>Bajar</button></div>
+          </section>
           <!-- Datos (propuesta sin HU): entidad del bloque, dato del campo y atributos que muestra una lista o ficha -->
           <section id="componentData" class="prop-section hidden">
             <h3 class="prop-section-title">Datos</h3>
