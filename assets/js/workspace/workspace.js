@@ -182,10 +182,10 @@ export function initWorkspace() {
   title.addEventListener('click', () => { if (title.classList.contains('editable')) renameProject() });
   title.addEventListener('keydown', e => { if (e.key === 'Enter' && title.classList.contains('editable')) { e.preventDefault(); renameProject() } });
 
-  // Teclado: Supr borra la selección y F2 renombra la pantalla seleccionada (salvo mientras se escribe).
+  // Teclado: Supr o Retroceso borran la selección y F2 renombra la pantalla seleccionada (salvo mientras se escribe).
   document.addEventListener('keydown', e => {
     if (!inWorkspace() || isTyping(e.target) || !selection.size) return;
-    if (e.key === 'Delete') { e.preventDefault(); deleteScreens([...selection]) }
+    if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); deleteScreens([...selection]) }
     if (e.key === 'F2' && selection.size === 1) { e.preventDefault(); startRename(session.screenId) }
   });
 }

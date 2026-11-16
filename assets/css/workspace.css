@@ -120,25 +120,32 @@
 .properties-empty .empty-icon .ic { width: 22px; height: 22px; }
 .properties-empty h3 { margin: 0 0 5px; color: var(--ink); font: 800 14px Manrope; }
 .properties-empty p { max-width: 215px; margin: 0; font-size: 11px; line-height: 1.7; }
-.properties-form { min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 15px; margin-top: 20px; padding-right: 2px; }
+/* Agrupación por proximidad (escala de 4/8 px): cuanto más relacionados, más cerca.
+   Dentro de un campo 4 px · título del bloque → su contenido 10 px · entre campos 16 px · entre bloques 24 px + línea. */
+/* Ocupa todo el ancho del panel (anula su padding de 18 px) y lo repone por dentro: así el contorno de foco
+   de los campos no se corta al desplazar, y las líneas de los bloques llegan de lado a lado. */
+.properties-form { min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 12px; margin: 20px -18px 0; padding: 0 18px 4px; }
+.prop-stack { display: flex; flex-direction: column; gap: 12px; }
 .prop-type { display: flex; align-items: center; gap: 6px; color: #474351; font-size: 12px; }
 /* Bloques del panel (como Figma): título visible, siempre abiertos, separados por una línea */
-.prop-section { display: flex; flex-direction: column; gap: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
-.prop-section-title { margin: 0; color: var(--ink); font-size: 11.5px; font-weight: 750; }
-.prop-section > :not(.prop-section-title) { margin-left: 3px; } /* sangría: lo que pertenece a cada bloque */
-.prop-check { display: flex; align-items: center; gap: 7px; color: var(--ink); font-size: 12px; font-weight: 650; cursor: pointer; }
-.prop-check input { width: 16px; height: 16px; margin: 0; accent-color: var(--primary); }
+.prop-section { display: flex; flex-direction: column; gap: 16px; margin-inline: -18px; padding: 12px 18px 0; border-top: 1.5px solid var(--line); }
+.prop-section-title { margin: 0 0 -6px; color: var(--ink); font-size: 14px; font-weight: 750; } /* 16 − 6 = 10 px hasta su contenido */
+.prop-section > .prop-hint { margin-top: -8px; } /* nota general del bloque, junto a lo que explica */
+/* Casilla dentro de un campo: anula los estilos de los cuadros de texto (.prop-field input) */
+.prop-field .prop-check { display: flex; align-items: center; gap: 7px; color: var(--ink); font-size: 12px; font-weight: 650; cursor: pointer; }
+.prop-field .prop-check input { width: 16px; height: 16px; margin: 0; padding: 0; accent-color: var(--primary); }
 .prop-check .ic { width: 14px; height: 14px; color: var(--primary); }
 /* Alinear: dos grupos (horizontal y vertical) de tres botones con ícono y texto visibles */
 .align-group { display: flex; flex-direction: column; gap: 6px; }
 .align-group-title { color: #474351; font-size: 11px; font-weight: 650; }
 .align-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 .align-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 4px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: #5c5668; font-size: 11px; font-weight: 650; }
-.align-btn:hover { border-color: #d9cee9; background: var(--primary-soft); color: var(--primary); }
+.align-btn:hover:not(:disabled) { border-color: #d9cee9; background: var(--primary-soft); color: var(--primary); }
+.align-btn:disabled { opacity: .45; cursor: not-allowed; }
 .align-btn .ic { width: 16px; height: 16px; }
 .prop-type .ic { width: 12px; height: 12px; color: var(--primary); }
 .prop-type b { display: flex; align-items: center; gap: 5px; color: var(--ink); font-weight: 600; }
-.prop-field { display: flex; flex-direction: column; gap: 3px; }
+.prop-field { display: flex; flex-direction: column; gap: 4px; }
 .prop-field label { display: flex; align-items: center; gap: 6px; color: #474351; font-size: 11px; font-weight: 750; }
 .prop-field label .ic { width: 12px; height: 12px; color: #8f83a8; }
 .prop-field input { width: 100%; padding: 9px 10px; border: 1px solid #d9d6e1; border-radius: 9px; background: #fff; color: var(--ink); font-size: 12px; transition: border .15s, box-shadow .15s; }

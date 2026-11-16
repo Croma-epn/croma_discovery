@@ -1,5 +1,5 @@
 /* Panel «Propiedades», en bloques como Figma.
-   Una pantalla: Identificación, Flujo y Tamaño. Varias: Alinear. Ninguna: ayuda. */
+   Una pantalla: Identificación, Flujo, Tamaño y Alinear (deshabilitado). Varias: Alinear. Ninguna: ayuda. */
 import { $ } from '../util.js';
 import { currentProject, selectedScreen, saveProject } from '../store.js';
 import { check, setFieldError } from '../ui/forms.js';
@@ -31,14 +31,25 @@ function renderStart(s) {
   $('screenStartHint').textContent = START_HINTS[start === s.id ? 'this' : start ? 'other' : 'none'];
 }
 
+// Alinear siempre está a la vista; con menos de 2 pantallas se ve deshabilitado y explica cómo activarlo.
+function renderAlign(count) {
+  const enabled = count > 1;
+  document.querySelectorAll('[data-align]').forEach(button => { button.disabled = !enabled });
+  $('alignHint').textContent = enabled
+    ? 'Ctrl + clic agrega o quita pantallas de la selección. Arrastra una para mover todo el grupo.'
+    : 'Selecciona 2 o más pantallas (Ctrl + clic o arrastrando sobre el fondo) para alinearlas.';
+}
+
 // screens: pantallas seleccionadas.
 export function render(screens) {
-  const [s] = screens;
-  $('propertiesEmpty').classList.toggle('hidden', screens.length > 0);
-  $('inlineProperties').classList.toggle('hidden', screens.length !== 1);
-  $('groupProperties').classList.toggle('hidden', screens.length < 2);
-  if (screens.length > 1) $('groupCount').textContent = `${screens.length} pantallas seleccionadas`;
-  if (screens.length !== 1) return;
+  const [s] = screens, count = screens.length;
+  $('propertiesEmpty').classList.toggle('hidden', count > 0);
+  $('propertiesBody').classList.toggle('hidden', count === 0);
+  $('inlineProperties').classList.toggle('hidden', count !== 1);
+  $('groupHeader').classList.toggle('hidden', count < 2);
+  $('groupCount').textContent = `${count} pantallas seleccionadas`;
+  renderAlign(count);
+  if (count !== 1) return;
   Object.entries(TEXT_FIELDS).forEach(([id, key]) => {
     $(id).value = s[key];
     setFieldError(id, '');
@@ -82,7 +93,7 @@ export function initProperties(callbacks) {
   Object.keys(TEXT_FIELDS).forEach(id => $(id).addEventListener('input', () => onTextInput(id)));
   Object.keys(SIZE_FIELDS).forEach(id => ['input', 'blur'].forEach(ev => $(id).addEventListener(ev, () => onSizeInput(id))));
   $('screenStart').addEventListener('change', () => on.start($('screenStart').checked ? selectedScreen().id : null));
-  $('groupProperties').addEventListener('click', e => {
+  $('alignSection').addEventListener('click', e => {
     const button = e.target.closest('[data-align]');
     if (button) on.align(button.dataset.align);
   });

@@ -262,8 +262,9 @@
       <aside class="properties"><div class="properties-inner">
         <div class="panel-head"><h2 class="panel-title">Propiedades de elemento</h2><button id="closePropertiesPanel" class="mini-collapse props-close" type="button" aria-label="Ocultar propiedades" title="Ocultar propiedades"><svg class="ic"><use href="#i-close"/></svg></button></div>
         <div id="propertiesEmpty" class="properties-empty"><div class="empty-icon"><svg class="ic"><use href="#i-phone"/></svg></div><h3>Sin selección</h3><p>Selecciona un elemento en el lienzo o en el panel «Capas» para ver y editar sus propiedades. Para alinear varios, selecciónalos con Ctrl + clic o arrastrando sobre el fondo. Espacio + arrastrar mueve el lienzo.</p></div>
+        <div id="propertiesBody" class="properties-form hidden">
         <!-- Una pantalla seleccionada: bloques Identificación, Flujo y Tamaño -->
-        <form id="inlineProperties" class="properties-form hidden" novalidate>
+        <form id="inlineProperties" class="prop-stack" novalidate>
           <div class="prop-type">Tipo: <b><svg class="ic"><use href="#i-phone"/></svg>Pantalla</b></div>
           <section class="prop-section">
             <h3 class="prop-section-title">Identificación</h3>
@@ -273,8 +274,7 @@
           </section>
           <section class="prop-section">
             <h3 class="prop-section-title">Flujo</h3>
-            <label class="prop-check"><input id="screenStart" type="checkbox"><svg class="ic"><use href="#i-home"/></svg> Pantalla inicial</label>
-            <small id="screenStartHint" class="prop-hint"></small>
+            <div class="prop-field"><label class="prop-check"><input id="screenStart" type="checkbox"><svg class="ic"><use href="#i-home"/></svg> Pantalla inicial</label><small id="screenStartHint" class="prop-hint"></small></div>
           </section>
           <section class="prop-section">
             <h3 class="prop-section-title">Tamaño</h3>
@@ -285,10 +285,10 @@
             <small class="prop-hint">También puedes arrastrar los bordes del elemento. Mantén Shift en una esquina para conservar la proporción.</small>
           </section>
         </form>
-        <!-- Varias pantallas seleccionadas: alinear -->
-        <div id="groupProperties" class="properties-form hidden">
-          <div class="prop-type"><b><svg class="ic"><use href="#i-layers"/></svg><span id="groupCount"></span></b></div>
-          <section class="prop-section">
+        <!-- Varias pantallas seleccionadas -->
+        <div id="groupHeader" class="prop-type hidden"><b><svg class="ic"><use href="#i-layers"/></svg><span id="groupCount"></span></b></div>
+        <!-- Alinear: siempre visible para que se descubra; se habilita con 2 o más pantallas -->
+          <section id="alignSection" class="prop-section">
             <h3 class="prop-section-title">Alinear</h3>
             <div class="align-group" role="group" aria-labelledby="alignHTitle">
               <span id="alignHTitle" class="align-group-title">Horizontal</span>
@@ -306,8 +306,8 @@
                 <button class="align-btn" type="button" data-align="bottom" aria-label="Alinear abajo"><svg class="ic"><use href="#i-align-bottom"/></svg>Abajo</button>
               </div>
             </div>
+            <small id="alignHint" class="prop-hint"></small>
           </section>
-          <small class="prop-hint">Ctrl + clic agrega o quita pantallas de la selección. Arrastra una para mover todo el grupo.</small>
         </div>
       </div></aside>
     </div>
