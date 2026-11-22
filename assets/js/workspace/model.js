@@ -55,7 +55,9 @@ export function placementError(kind, block) {
 }
 function create(kind, all) {
   const { label, prefix, block } = COMPONENTS[kind];
-  const c = { id: uid(), kind, name: freeName(all, prefix), text: label };
+  const name = freeName(all, prefix);
+  // Un bloque nace con número para distinguirlo de su tipo («Formulario 1», no «Formulario · Formulario»).
+  const c = { id: uid(), kind, name, text: block ? `${label} ${name.slice(prefix.length)}` : label };
   if (block) Object.assign(c, { entityId: null, parts: [] }, block === 'data' && { shown: [] });
   all.push(c);
   return c;
@@ -122,13 +124,15 @@ export function addAttribute(entity) {
 }
 
 /* La pantalla crece sola para mostrar todo su contenido; el alto elegido por el usuario es el mínimo.
-   Medidas en px (deben coincidir con workspace.css): .node-head, .comp-row (26 + 4 de separación), y en un bloque
-   .comp-block (borde y relleno: 8), su línea «Muestra» (.comp-shown: 20) y su lista vacía (.comp-parts:empty: 22). */
-const NODE = { head: 43, row: 26, gap: 4, foot: 40, block: 8, shown: 20, empty: 22 };
+   Medidas en px (deben coincidir con workspace.css): .node-head (37 + 12 de margen), .comp-row (26), separación entre lo que
+   no comparte bloque (.comp-list: 20) y dentro de un bloque (4), .comp-block (borde 1 + 1 y relleno 3 + 8: 13), su línea
+   «Muestra» (.comp-shown: 20) y su lista vacía (.comp-parts:empty: 22). */
+const NODE = { head: 49, row: 26, top: 20, gap: 4, foot: 44, block: 13, shown: 20, empty: 22 };
 const partsHeight = n => (n ? n * (NODE.row + NODE.gap) - NODE.gap : NODE.empty);
 const itemHeight = c => (!c.parts ? NODE.row
   : NODE.block + NODE.row + NODE.gap + (COMPONENTS[c.kind].block === 'data' ? NODE.shown + NODE.gap : 0) + partsHeight(c.parts.length));
-const contentHeight = s => (s.components?.length ? NODE.head + s.components.reduce((h, c) => h + itemHeight(c) + NODE.gap, 0) + NODE.foot : 0);
+const contentHeight = s => (s.components?.length
+  ? NODE.head + s.components.reduce((h, c) => h + itemHeight(c), 0) + (s.components.length - 1) * NODE.top + NODE.foot : 0);
 export const sizeOf = s => ({ w: s.w || SIZE.defW, h: Math.max(s.h || SIZE.defH, contentHeight(s)) });
 
 export const screenCode = n => `VC-${String(n).padStart(2, '0')}`;

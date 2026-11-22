@@ -5,9 +5,18 @@ import { $ } from '../util.js';
 const openTriggers = () => [...document.querySelectorAll('[aria-haspopup="menu"][aria-expanded="true"]')];
 const isExpanded = trigger => trigger.getAttribute('aria-expanded') === 'true';
 
+// Borde inferior visible: el del primer contenedor que recorta (con scroll u overflow oculto) o el de la ventana.
+function clipBottom(el) {
+  for (let p = el.parentElement; p; p = p.parentElement) if (getComputedStyle(p).overflowY !== 'visible') return Math.min(innerHeight, p.getBoundingClientRect().bottom);
+  return innerHeight;
+}
+// Si el panel no cabe debajo del botón, se abre hacia arriba.
 function setMenu(trigger, open) {
+  const panel = $(trigger.getAttribute('aria-controls'));
   trigger.setAttribute('aria-expanded', String(open));
-  $(trigger.getAttribute('aria-controls')).classList.toggle('hidden', !open);
+  panel.classList.toggle('hidden', !open);
+  panel.classList.remove('menu-up');
+  if (open && panel.getBoundingClientRect().bottom > clipBottom(panel)) panel.classList.add('menu-up');
 }
 export const closeMenus = () => openTriggers().forEach(t => setMenu(t, false));
 export function openMenu(trigger) { closeMenus(); setMenu(trigger, true) }

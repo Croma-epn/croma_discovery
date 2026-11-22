@@ -36,9 +36,10 @@ export function openWorkspace(id) {
 }
 
 /* ---------- Selección ---------- */
+const renderLayers = () => layers.render(selection, componentId);
 function renderSelection() {
   canvas.highlight(selection, componentId);
-  layers.render(selection);
+  renderLayers();
   properties.render(selectedScreens(), pickedComponent());
 }
 // toggle: agrega o quita la pantalla de la selección (Ctrl/Cmd + clic).
@@ -191,7 +192,8 @@ function moveComponent(screenId, id, blockId, index) {
   canvas.updateComponents(screen);
   pick(screenId, id);
 }
-const PALETTE_GROUPS = [['Elementos', ({ block }) => !block], ['Bloques', ({ block }) => block]];
+// Grupos de la paleta bajo «Pantallas» (que está en el HTML): de lo que agrupa a lo que va dentro.
+const PALETTE_GROUPS = [['Bloques', ({ block }) => block], ['Contenido', ({ block }) => !block]];
 const paletteItem = ([kind, { label, icon }]) =>
   `<button class="palette-item" type="button" draggable="true" data-component="${kind}" aria-label="Agregar ${label.toLowerCase()}"><span class="palette-icon"><svg class="ic"><use href="#${icon}"/></svg></span><span><strong>${label}</strong></span></button>`;
 
@@ -204,7 +206,7 @@ function renameProject() {
     onCommit: name => {
       updateProject(currentProject(), { name });
       $('breadcrumbCurrent').textContent = name;
-      layers.render(selection);
+      renderLayers();
     },
   });
 }
@@ -236,11 +238,11 @@ export function initWorkspace() {
     refuse: message => showToast(message, { icon: 'i-info' }),
   });
   properties.initProperties({
-    rename: s => { canvas.updateNode(s); layers.render(selection) },
+    rename: s => { canvas.updateNode(s); renderLayers() },
     resize: canvas.applySize,
     start: setStart,
     align,
-    component: s => { canvas.updateComponents(s); canvas.highlight(selection, componentId) },
+    component: s => { canvas.updateComponents(s); canvas.highlight(selection, componentId); renderLayers() },
     openData: () => showPanel('data'),
     move: (id, blockId, index) => moveComponent(session.screenId, id, blockId, index),
   });
@@ -252,6 +254,10 @@ export function initWorkspace() {
     select(id, { toggle: additive });
     canvas.reveal(screen);
     if (isPhone() && !additive) collapsePalette(); // en celular el panel tapa el lienzo: se cierra para ver la pantalla elegida
+  }, (screenId, id) => {
+    pick(screenId, id);
+    canvas.reveal(findScreen(screenId));
+    if (isPhone()) collapsePalette();
   });
 
   $('screenPalette').addEventListener('click', () => { addScreen(); if (isPhone()) collapsePalette() });
@@ -270,7 +276,8 @@ export function initWorkspace() {
 
   // Teclado: Supr o Retroceso borran el componente o las pantallas seleccionadas; F2 renombra la pantalla (salvo mientras se escribe).
   document.addEventListener('keydown', e => {
-    if (!inWorkspace() || isTyping(e.target) || !selection.size) return;
+    // En el panel «Datos» el foco está en entidades y atributos: Supr o Retroceso no deben borrar lo seleccionado en el lienzo.
+    if (!inWorkspace() || isTyping(e.target) || e.target.closest('.data-block') || !selection.size) return;
     if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); componentId ? deleteComponent(session.screenId, componentId) : deleteScreens([...selection]) }
     if (e.key === 'F2' && selection.size === 1 && !componentId) { e.preventDefault(); startRename(session.screenId) }
   });

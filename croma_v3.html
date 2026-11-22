@@ -252,10 +252,9 @@
         <button id="railData" class="rail-btn" type="button" title="Panel de datos" aria-label="Panel de datos"><svg class="ic"><use href="#i-database"/></svg><span>Datos</span></button>
       </nav>
       <aside class="palette"><div class="palette-inner">
-        <p class="palette-hint panel-tools">Clic o arrastrar al lienzo</p>
+        <p class="palette-hint panel-tools">Arrastra al lienzo o haz clic para agregar a lo seleccionado</p>
+        <p class="palette-group panel-tools">Pantallas</p>
         <button id="screenPalette" class="palette-item panel-tools" type="button" draggable="true" aria-label="Agregar pantalla"><span class="palette-icon"><svg class="ic"><use href="#i-phone"/></svg></span><span><strong>Pantalla</strong></span></button>
-        <h3 class="palette-title panel-tools">Componentes</h3>
-        <p class="palette-hint panel-tools">Arrastra a una pantalla o a un bloque, o haz clic para agregarlo a lo seleccionado</p>
         <div id="componentPalette" class="palette-list panel-tools"></div>
         <div class="tree-block panel-nav"><div class="tree-title"><svg class="ic"><use href="#i-folder"/></svg> <span id="treeProject"></span> <span id="treeCount" class="tree-count">0</span></div><div id="screenTree" class="screen-tree"></div></div>
         <!-- Modelo de dominio: entidades con atributos, sin relaciones (Libro cap. 3: basta el nivel entidad-relación) -->
@@ -320,12 +319,6 @@
             <div class="prop-field"><label for="componentText"><svg class="ic"><use href="#i-label"/></svg> Texto visible <span class="req">*</span></label><input id="componentText" maxlength="30" placeholder="Guardar" required autocomplete="off"><small id="componentTextError" class="field-error"></small><small class="prop-hint"><span id="componentTextCount">0</span>/30 · Lo que lee el usuario: el texto del botón, el rótulo del campo o el título del bloque.</small></div>
             <div class="prop-field"><label for="componentName"><svg class="ic"><use href="#i-code"/></svg> Nombre técnico <span class="req">*</span></label><input id="componentName" maxlength="30" placeholder="btnGuardar" required autocomplete="off"><small id="componentNameError" class="field-error"></small><small class="prop-hint"><span id="componentNameCount">0</span>/30 · Nombre en el código, único en la pantalla.</small></div>
           </section>
-          <!-- Ubicación (HU16): alternativa al arrastre para cambiar de bloque o de posición -->
-          <section class="prop-section">
-            <h3 class="prop-section-title">Ubicación</h3>
-            <div class="prop-field"><label for="componentParent"><svg class="ic"><use href="#i-layers"/></svg> Está en</label><select id="componentParent" class="prop-select"></select><small class="prop-hint">También puedes arrastrarlo en el lienzo dentro de su pantalla.</small></div>
-            <div class="place-row"><button id="moveUp" class="align-btn" type="button"><svg class="ic flip"><use href="#i-chev-down"/></svg>Subir</button><button id="moveDown" class="align-btn" type="button"><svg class="ic"><use href="#i-chev-down"/></svg>Bajar</button></div>
-          </section>
           <!-- Datos (propuesta sin HU): entidad del bloque, dato del campo y atributos que muestra una lista o ficha -->
           <section id="componentData" class="prop-section hidden">
             <h3 class="prop-section-title">Datos</h3>
@@ -333,6 +326,12 @@
             <div id="attributeField" class="prop-field"><label for="componentAttribute"><svg class="ic"><use href="#i-database"/></svg> Dato</label><select id="componentAttribute" class="prop-select"></select><small id="componentAttributeHint" class="prop-hint"></small></div>
             <div id="shownField" class="prop-field"><div class="shown-head"><span id="shownTitle" class="shown-title">Muestra</span><button id="toggleShown" class="prop-link" type="button"></button></div><div id="shownList" class="shown-list" role="group" aria-labelledby="shownTitle"></div></div>
             <button id="goToData" class="prop-link" type="button"><svg class="ic"><use href="#i-database"/></svg> Ir al panel «Datos»</button>
+          </section>
+          <!-- Ubicación (HU16): alternativa al arrastre para cambiar de bloque o de posición -->
+          <section class="prop-section">
+            <h3 class="prop-section-title">Ubicación</h3>
+            <div class="prop-field"><label for="componentParent"><svg class="ic"><use href="#i-layers"/></svg> Está en</label><select id="componentParent" class="prop-select"></select><small class="prop-hint">También puedes arrastrarlo en el lienzo dentro de su pantalla.</small></div>
+            <div class="place-row"><button id="moveUp" class="align-btn" type="button"><svg class="ic flip"><use href="#i-chev-down"/></svg>Subir</button><button id="moveDown" class="align-btn" type="button"><svg class="ic"><use href="#i-chev-down"/></svg>Bajar</button></div>
           </section>
         </form>
         <!-- Varias pantallas seleccionadas -->

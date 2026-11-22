@@ -108,6 +108,14 @@ function applyView() {
   $('zoomLabel').textContent = `${Math.round(view.zoom * 100)}%`;
 }
 const zoomBy = delta => { view.zoom = clamp(view.zoom + delta, ZOOM.min, ZOOM.max); applyView() };
+// Zoom que deja fijo el punto del lienzo bajo el puntero (clientX, clientY), como en Figma.
+function zoomAt(zoom, clientX, clientY) {
+  const r = viewport().getBoundingClientRect(), pt = toCanvas(clientX, clientY);
+  view.zoom = clamp(zoom, ZOOM.min, ZOOM.max);
+  view.x = clientX - r.left - pt.x * view.zoom;
+  view.y = clientY - r.top - pt.y * view.zoom;
+  applyView();
+}
 
 export function fit() {
   const list = screens();
@@ -320,6 +328,16 @@ export function initCanvas(callbacks) {
   $('fitCanvas').addEventListener('click', fit);
 
   ['keydown', 'keyup'].forEach(type => document.addEventListener(type, trackSpace));
+  /* Rueda o trackpad, como en Figma: desplaza el lienzo (Shift = horizontal). Ctrl/Cmd + rueda, o pellizcar en el trackpad
+     (el navegador lo envía como Ctrl + rueda), hace zoom hacia el puntero. */
+  viewport().addEventListener('wheel', e => {
+    e.preventDefault();
+    const unit = e.deltaMode === 1 ? 16 : 1; // algunas ruedas informan líneas en vez de píxeles
+    if (e.ctrlKey || e.metaKey) return zoomAt(view.zoom * Math.exp(-e.deltaY * unit * .002), e.clientX, e.clientY);
+    view.x -= (e.shiftKey ? e.deltaY : e.deltaX) * unit;
+    view.y -= (e.shiftKey ? 0 : e.deltaY) * unit;
+    applyView();
+  }, { passive: false });
   viewport().addEventListener('mousedown', e => { if (e.button === 1) e.preventDefault() }); // sin autodesplazamiento del navegador
   viewport().addEventListener('pointerdown', e => {
     if (e.target.closest('.inline-edit')) return;
@@ -332,7 +350,8 @@ export function initCanvas(callbacks) {
     const handle = e.target.closest('[data-rz]');
     if (handle) return startResize(e, handle);
     const id = node.dataset.screen, additive = e.ctrlKey || e.metaKey, onName = Boolean(e.target.closest('.node-business'));
-    const row = !additive && e.target.closest('.comp-row');
+    // Una fila, o cualquier zona libre de un bloque (su línea «Muestra», su lista vacía o su borde), que equivale a su título.
+    const row = !additive && (e.target.closest('.comp-row') || e.target.closest('.comp-block')?.querySelector(':scope > .comp-row'));
     if (row) return startComponentDrag(e, node, row);
     const ids = on.press(id, additive);
     // Un clic (sin arrastrar) sobre el nombre lo edita ahí mismo.

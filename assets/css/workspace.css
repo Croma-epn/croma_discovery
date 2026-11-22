@@ -2,7 +2,7 @@
    Columnas: [paleta --pal] [lienzo] [propiedades --props]. La barra de íconos ocupa el padding izquierdo. */
 .workspace { height: calc(100vh - 68px); min-height: 520px; display: grid; grid-template-rows: minmax(0, 1fr); animation: fadeIn .2s ease; }
 .workspace-body {
-  --pal: 218px;  /* en «Herramientas» panels.js lo fija al ancho real del contenido */
+  --pal: 250px;  /* el mismo para Herramientas, Capas y Datos: el del más ancho (Datos) */
   --props: 300px;
   position: relative; overflow: hidden; min-height: 0; display: grid;
   grid-template-columns: var(--pal) minmax(0, 1fr) var(--props);
@@ -22,17 +22,14 @@
 /* Panel Herramientas / Capas */
 .palette { overflow: hidden; min-width: 0; background: #fff; border-right: 1px solid var(--line); }
 .workspace-body.palette-collapsed .palette { border-right-width: 0; visibility: hidden; transition: visibility 0s linear .28s; }
-.palette-inner { width: 218px; height: 100%; display: flex; flex-direction: column; padding: 22px 15px; }
-[data-panel=tools] .palette-inner { width: max-content; overflow-y: auto; }
+.palette-inner { width: var(--pal); height: 100%; display: flex; flex-direction: column; padding: 22px 15px; }
+[data-panel=tools] .palette-inner { overflow-y: auto; }
 [data-panel]:not([data-panel=tools]) .panel-tools, [data-panel]:not([data-panel=nav]) .panel-nav, [data-panel]:not([data-panel=data]) .panel-data { display: none; }
-.workspace-body[data-panel=data] { --pal: 250px; }
-[data-panel=data] .palette-inner { width: 250px; }
 .palette-hint { max-width: 190px; margin: 0 0 19px; color: var(--muted); font-size: 11px; line-height: 1.7; }
-.palette-title { margin: 28px 0 4px; color: var(--ink); font-size: 12px; font-weight: 750; }
-.palette-title + .palette-hint { margin-bottom: 12px; }
 .palette-list { display: flex; flex-direction: column; gap: 8px; }
-.palette-group { margin: 4px 0 0; color: #8b8794; font-size: 10px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
-.palette-group:not(:first-child) { margin-top: 12px; }
+/* Grupos de la paleta (Pantallas, Bloques, Contenido): 8 px hasta sus piezas, 20 px desde el grupo anterior (proximidad) */
+.palette-group { margin: 0 0 8px; color: #8b8794; font-size: 10px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+.palette-list .palette-group { margin: 12px 0 0; } /* + 8 px de separación de la lista = 20 */
 .palette-item { width: 100%; display: flex; align-items: center; gap: 11px; padding: 12px; border: 1px solid #ded9e9; border-radius: 12px; background: #f9f7fc; color: var(--ink); text-align: left; transition: .15s; }
 .palette-item:hover { border-color: #9781c9; background: var(--primary-pale); transform: translateY(-1px); }
 .palette-item strong { display: block; font-size: 12px; }
@@ -53,6 +50,10 @@
 .tree-name { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .tree-code { flex: none; color: #a29cae; font: 600 9.5px ui-monospace, monospace; }
 .tree-item.active .tree-code { color: var(--primary); }
+/* Árbol de la pantalla actual: sangría por nivel (pantalla → elemento o bloque → elemento del bloque) */
+.tree-comp { padding-top: 6px; padding-bottom: 6px; font-size: 11px; }
+.tree-depth-1 { padding-left: 27px; }
+.tree-depth-2 { padding-left: 45px; }
 .tree-empty { margin: 0; padding: 6px 9px; color: var(--muted); font-size: 11px; line-height: 1.6; }
 
 /* Panel Datos: cada entidad es una tarjeta (región común) con sus atributos sangrados debajo */
@@ -61,7 +62,7 @@
 .data-add { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 12px; padding: 8px; border: 1px dashed #cfc5e3; border-radius: 10px; background: var(--primary-pale); color: var(--primary); font-size: 11.5px; font-weight: 700; }
 .data-add:hover { border-color: var(--primary); }
 .data-add .ic, .data-add-attr .ic { width: 13px; height: 13px; }
-.data-list { min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 10px; }
+.data-list { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 10px; } /* ocupa el alto del panel: los menús de tipo tienen espacio para abrirse */
 .data-entity { padding: 6px; border: 1px solid var(--line); border-radius: 10px; }
 .data-row { display: flex; align-items: center; gap: 6px; min-height: 28px; }
 .data-entity-head .ic { flex: none; width: 14px; height: 14px; color: var(--primary); }
@@ -70,7 +71,9 @@
 .data-entity-head .data-name { color: var(--ink); font-weight: 750; }
 .data-row .inline-edit { flex: 1; font-size: 11.5px; }
 .data-attrs { display: flex; flex-direction: column; gap: 2px; margin: 2px 0 0; padding: 0 0 0 20px; list-style: none; }
-.data-type { flex: none; padding: 2px 4px; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: #5d5769; font-size: 10.5px; }
+.data-type-picker { position: relative; flex: none; }
+.sort-btn.data-type { height: 26px; min-width: 82px; padding: 0 8px; border-radius: 7px; font-size: 11px; } /* «Ordenar por» en tamaño compacto */
+.sort-btn.data-type .sort-chev { margin-left: 2px; }
 .data-del { flex: none; width: 24px; height: 24px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 6px; background: none; color: var(--muted); }
 .data-del .ic { width: 13px; height: 13px; }
 .data-del:hover { background: var(--danger-soft); color: var(--danger); }
@@ -98,12 +101,12 @@
 .canvas-status { position: absolute; right: 18px; bottom: 22px; z-index: 3; display: flex; align-items: center; gap: 7px; color: #8b8794; font-size: 10px; }
 
 /* Pantalla en el lienzo (posición y tamaño los fija canvas.js) */
-.screen-node { position: absolute; min-height: 80px; padding: 10px 12px; background: #fff; border: 1px solid #dcd9e3; border-radius: 13px; box-shadow: 0 7px 20px #281d400c; cursor: grab; user-select: none; touch-action: none; transition: border-color .15s, box-shadow .15s; animation: nodeIn .22s ease both; }
-.screen-node:hover { border-color: #a08ecb; box-shadow: 0 10px 25px #33225b18; }
+.screen-node { position: absolute; min-height: 80px; padding: 10px 12px; background: #fff; border: 1px solid var(--line-strong); border-radius: 13px; box-shadow: 0 7px 20px #281d400c; cursor: grab; user-select: none; touch-action: none; transition: border-color .15s, box-shadow .15s; animation: nodeIn .22s ease both; }
+.screen-node:hover { border-color: var(--primary); box-shadow: 0 10px 25px #33225b18; }
 .screen-node.selected { border: 2px solid var(--primary); box-shadow: 0 0 0 4px #37256212, 0 10px 25px #33225b18; }
 .screen-node.dragging { z-index: 10; cursor: grabbing; box-shadow: 0 15px 35px #20163924; }
 .screen-node.resizing { z-index: 10; transition: none; }
-.node-head { height: 37px; display: flex; align-items: center; gap: 7px; margin: -10px -12px 6px; padding: 0 6px 0 12px; background: #f5f4f8; border-bottom: 1px solid #e9e7ee; border-radius: 12px 12px 0 0; }
+.node-head { height: 37px; display: flex; align-items: center; gap: 7px; margin: -10px -12px 12px; padding: 0 6px 0 12px; background: #f5f4f8; border-bottom: 1px solid #e9e7ee; border-radius: 12px 12px 0 0; }
 .node-head > .ic { width: 16px; height: 16px; color: var(--primary); }
 .node-business { flex: 1; min-width: 0; margin: 0; overflow: hidden; color: var(--ink); font: 700 12.5px Inter, system-ui, sans-serif; letter-spacing: 0; white-space: nowrap; text-overflow: ellipsis; }
 .node-code { color: var(--muted); font: 500 10.5px Inter, system-ui, sans-serif; white-space: nowrap; }
@@ -118,13 +121,17 @@
 .node-head .inline-edit { flex: 1; margin-left: -6px; padding: 1px 5px; font: 700 12.5px Inter, system-ui, sans-serif; }
 /* Pantalla inicial: contorno y etiqueta permanentes, sin animación (HU13) */
 /* Componentes de la pantalla (HU14): filas de alto fijo, una debajo de otra, en el orden en que se agregaron.
+   Proximidad: 12 px entre lo que no comparte bloque; 4 px dentro de un bloque.
    Si cambian estas medidas o las de .node-head, actualizar NODE en model.js (la pantalla crece con su contenido). */
-.comp-list { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.comp-list { display: flex; flex-direction: column; gap: 20px; margin: 0; padding: 0; list-style: none; }
 .comp-list:empty::before { content: 'Arrastra componentes aquí'; color: var(--muted); font-size: 10.5px; }
-/* Bloque (formulario, lista o ficha): caja con su fila de título y su contenido sangrado (región común).
+/* Bloque (formulario, lista o ficha): caja con su título y su contenido sangrado (región común). El título es solo texto,
+   sin contorno, para no parecer un botón; tampoco copia la franja de la pantalla (contenedor ≠ componente en IFML).
    Medidas fijas usadas por NODE en model.js: borde + relleno = 8, .comp-shown = 20, lista vacía = 22. */
-.comp-block { display: flex; flex-direction: column; gap: 4px; padding: 3px; border: 1px solid #d9d0ec; border-radius: 9px; background: #faf8fe; }
-.comp-block > .comp-row { background: #fff; }
+.comp-block { display: flex; flex-direction: column; gap: 4px; padding: 3px 8px 8px 3px; border: 1px solid var(--block-line); border-radius: 9px; background: var(--block-fill); }
+.comp-block > .comp-row, .comp-block > .comp-row:hover, .comp-block > .comp-row.selected { border-color: transparent; background: transparent; box-shadow: none; }
+.comp-block:hover { border-color: var(--primary); }
+.comp-block:has(> .comp-row.selected) { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); } /* bloque seleccionado */
 .comp-block > .comp-row .comp-text { font-weight: 750; }
 .comp-shown { height: 20px; margin: 0; padding: 0 6px 0 26px; overflow: hidden; color: var(--muted); font-size: 10px; line-height: 20px; white-space: nowrap; text-overflow: ellipsis; }
 .comp-shown.is-missing { color: var(--warning-icon); font-weight: 650; }
@@ -135,10 +142,10 @@
 .comp-row.moving, .comp-block.moving { opacity: .4; }
 .drop-line { position: absolute; z-index: 3; height: 2px; border-radius: 2px; background: var(--primary); box-shadow: 0 0 0 2px #fff; pointer-events: none; }
 .canvas-viewport.no-drop, .canvas-viewport.no-drop * { cursor: not-allowed; }
-.comp-block.drop-target { border: 2px dashed var(--primary); padding: 2px; background: var(--primary-pale); }
-.comp-row { position: relative; height: 26px; display: flex; align-items: center; gap: 7px; padding: 0 30px 0 8px; border: 1px solid #e6e3ec; border-radius: 7px; background: #fbfafd; font-size: 11.5px; transition: border-color .15s; }
-.comp-row:hover { border-color: #a08ecb; }
-.comp-row.selected { border-color: var(--primary); background: var(--primary-soft); }
+.comp-block.drop-target { border: 2px dashed var(--primary); padding: 2px 7px 7px 2px; background: var(--primary-pale); } /* 1 px menos de relleno por cada px extra de borde: no salta */
+.comp-row { position: relative; height: 26px; display: flex; align-items: center; gap: 7px; padding: 0 30px 0 8px; border: 1px solid var(--line-strong); border-radius: 7px; background: #fff; font-size: 11.5px; transition: border-color .15s; }
+.comp-row:hover { border-color: var(--primary); }
+.comp-row.selected { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 1px var(--primary); } /* sin relleno: el tipo y la papelera conservan su contraste */
 .comp-row > .ic { width: 14px; height: 14px; color: var(--primary); }
 .comp-text { flex: 1; min-width: 0; overflow: hidden; color: var(--ink); font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
 .comp-kind { color: var(--muted); font-size: 10px; white-space: nowrap; }
@@ -269,8 +276,6 @@
 
 @media (max-width: 1100px) {
   .workspace-body { --props: 272px; }
-  .workspace-body[data-panel=nav] { --pal: 190px; }
-  .palette-inner { width: 190px; }
   .properties-inner { width: 272px; }
 }
 

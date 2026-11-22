@@ -28,8 +28,6 @@ export function collapseFloatingPanels() {
 function setPanel(name) {
   body().dataset.panel = name;
   Object.entries(PANELS).forEach(([key, { rail }]) => $(rail).classList.toggle('active', key === name));
-  // «Herramientas» mide lo que ocupa su contenido; «Capas» y «Datos» usan el ancho fijo del CSS.
-  body().style.setProperty('--pal', name === 'tools' ? `${body().querySelector('.palette-inner').offsetWidth}px` : '');
   // La lengüeta para volver a mostrar el panel indica el último panel usado.
   const { icon, label } = PANELS[name], tab = $('expandPalette');
   tab.querySelector('use').setAttribute('href', `#${icon}`);

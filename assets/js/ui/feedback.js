@@ -22,7 +22,7 @@ export function showToast(message, { action, ms, icon = 'i-check' } = {}) {
   }
   ['mouseenter', 'focusin'].forEach(ev => toast.addEventListener(ev, pause));
   ['mouseleave', 'focusout'].forEach(ev => toast.addEventListener(ev, schedule));
-  $('toastStack').append(toast);
+  $('toastStack').replaceChildren(toast); // uno a la vez (Material Design): no se apilan ni se salen de la pantalla
   schedule();
 }
 
