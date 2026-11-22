@@ -10,7 +10,9 @@ import { initOauth } from './auth/oauth.js';
 import { initPortfolio, renderProjects, showPortfolio } from './projects/portfolio.js';
 import { initProjectEditor, showCreateProject, openEditProject, closeEditProject, resetCreateForm } from './projects/project-editor.js';
 import { initWorkspace, openWorkspace } from './workspace/workspace.js';
+import { seedDemo } from './demo.js'; // solo para la prueba de usabilidad del Sprint 2
 
+seedDemo();
 mountTemplates();
 initPasswordToggles();
 initMaxLengthWarnings();
