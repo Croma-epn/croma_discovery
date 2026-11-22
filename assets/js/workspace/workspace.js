@@ -139,6 +139,7 @@ function restoreScreens(project, removed, previousStart) {
 
 /* ---------- Componentes (HU14) ---------- */
 function pick(screenId, id) {
+  if (id) canvas.showComponent(findScreen(screenId), id); // si quedó oculto en una pantalla contraída, la expande
   selection.clear();
   selection.add(screenId);
   session.screenId = screenId;
@@ -193,9 +194,9 @@ function moveComponent(screenId, id, blockId, index) {
   pick(screenId, id);
 }
 // Grupos de la paleta bajo «Pantallas» (que está en el HTML): de lo que agrupa a lo que va dentro.
-const PALETTE_GROUPS = [['Bloques', ({ block }) => block], ['Contenido', ({ block }) => !block]];
-const paletteItem = ([kind, { label, icon }]) =>
-  `<button class="palette-item" type="button" draggable="true" data-component="${kind}" aria-label="Agregar ${label.toLowerCase()}"><span class="palette-icon"><svg class="ic"><use href="#${icon}"/></svg></span><span><strong>${label}</strong></span></button>`;
+const PALETTE_GROUPS = [['Bloques', ({ block }) => block], ['Controles', ({ block }) => !block]];
+const paletteItem = ([kind, { label, icon, hint }]) =>
+  `<button class="palette-item" type="button" draggable="true" data-component="${kind}" aria-label="Agregar ${label.toLowerCase()}"><span class="palette-icon"><svg class="ic"><use href="#${icon}"/></svg></span><span><strong>${label}</strong><small class="palette-hint">${hint}</small></span></button>`;
 
 const startRename = id => { select(id); canvas.rename(id, name => renameScreen(id, name)) };
 

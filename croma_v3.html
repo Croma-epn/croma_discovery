@@ -254,7 +254,7 @@
       <aside class="palette"><div class="palette-inner">
         <p class="palette-hint panel-tools">Arrastra al lienzo o haz clic para agregar a lo seleccionado</p>
         <p class="palette-group panel-tools">Pantallas</p>
-        <button id="screenPalette" class="palette-item panel-tools" type="button" draggable="true" aria-label="Agregar pantalla"><span class="palette-icon"><svg class="ic"><use href="#i-phone"/></svg></span><span><strong>Pantalla</strong></span></button>
+        <button id="screenPalette" class="palette-item panel-tools" type="button" draggable="true" aria-label="Agregar pantalla"><span class="palette-icon"><svg class="ic"><use href="#i-phone"/></svg></span><span><strong>Pantalla</strong><small class="palette-hint">Una vista de la aplicación</small></span></button>
         <div id="componentPalette" class="palette-list panel-tools"></div>
         <div class="tree-block panel-nav"><div class="tree-title"><svg class="ic"><use href="#i-folder"/></svg> <span id="treeProject"></span> <span id="treeCount" class="tree-count">0</span></div><div id="screenTree" class="screen-tree"></div></div>
         <!-- Modelo de dominio: entidades con atributos, sin relaciones (Libro cap. 3: basta el nivel entidad-relación) -->
@@ -298,9 +298,8 @@
             <h3 class="prop-section-title">Tamaño</h3>
             <div class="prop-size-row">
               <div class="prop-field"><label for="screenWidth">Ancho</label><div class="px-input"><input id="screenWidth" type="number" inputmode="numeric" min="200" max="800" step="10" autocomplete="off"><span aria-hidden="true">px</span></div><small id="screenWidthError" class="field-error"></small><small class="prop-hint">De 200 a 800 px.</small></div>
-              <div class="prop-field"><label for="screenHeight">Alto</label><div class="px-input"><input id="screenHeight" type="number" inputmode="numeric" min="80" max="600" step="10" autocomplete="off"><span aria-hidden="true">px</span></div><small id="screenHeightError" class="field-error"></small><small class="prop-hint">De 80 a 600 px.</small></div>
             </div>
-            <small class="prop-hint">También puedes arrastrar los bordes del elemento. Mantén Shift en una esquina para conservar la proporción.</small>
+            <small class="prop-hint">También puedes arrastrar sus bordes laterales. El alto se ajusta solo a su contenido: si no cabe, usa «Ver más» al pie de la pantalla.</small>
           </section>
         </form>
         <!-- Un componente seleccionado: su tipo con el elemento IFML que representa, e Identificación -->

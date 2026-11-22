@@ -2,10 +2,11 @@
 import { $, esc, clamp, plural } from '../util.js';
 import { currentProject, saveProject } from '../store.js';
 import { editInline } from '../ui/inline-edit.js';
-import { SIZE, sizeOf, COMPONENTS, BUTTON_ROLES, entityOf, findComponent, placementError } from './model.js';
+import { SIZE, sizeOf, canCollapse, listHeight, COMPONENTS, BUTTON_ROLES, entityOf, findComponent, placementError } from './model.js';
 
 const ZOOM = { min: .5, max: 1.6, step: .1, fitMax: 1.15 };
-const RESIZE_DIRS = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
+const RESIZE_DIRS = ['e', 'w']; // solo el ancho: el alto es automático (HU11)
+const MORE_BUTTON = '<button class="node-more hidden" type="button"><span></span><svg class="ic" aria-hidden="true"><use href="#i-chev-down"/></svg></button>';
 const START_BADGE = '<span class="start-badge"><svg class="ic"><use href="#i-home"/></svg>Inicio</span>';
 const snap = v => Math.round(v / 10) * 10; // cuadrícula de 10 px
 
@@ -52,7 +53,7 @@ const nodeHtml = s => {
   return `<article class="screen-node" data-screen="${esc(s.id)}" style="left:${s.x}px;top:${s.y}px;width:${w}px;height:${h}px">`
     + `<div class="node-head"><svg class="ic"><use href="#i-phone"/></svg><span class="node-business">${esc(s.businessName)}</span><span class="node-code">${esc(s.code)}</span>`
     + `<button class="del-btn node-del" type="button" title="Eliminar elemento" aria-label="Eliminar ${esc(s.businessName)}"><svg class="ic"><use href="#i-trash"/></svg></button></div>`
-    + `<ol class="comp-list">${componentsHtml(s)}</ol>`
+    + `<ol class="comp-list">${componentsHtml(s)}</ol>${MORE_BUTTON}`
     + RESIZE_DIRS.map(d => `<span class="rz rz-${d}" data-rz="${d}" aria-hidden="true"></span>`).join('')
     + '<span class="rz-size" aria-hidden="true"></span></article>';
 };
@@ -64,9 +65,9 @@ function syncCount() {
   $('canvasEmpty').classList.toggle('is-off', n > 0);
   $('canvasScreenCount').textContent = plural(n, 'elemento', 'elementos');
 }
-export function render() { world().innerHTML = screens().map(nodeHtml).join(''); syncCount() }
+export function render() { world().innerHTML = screens().map(nodeHtml).join(''); screens().forEach(applySize); syncCount() }
 // Solo añade el nodo nuevo, así los demás no repiten su animación de entrada.
-export function add(s) { world().insertAdjacentHTML('beforeend', nodeHtml(s)); syncCount() }
+export function add(s) { world().insertAdjacentHTML('beforeend', nodeHtml(s)); applySize(s); syncCount() }
 
 // ids: Set de pantallas seleccionadas (con varias, se ocultan las asas de tamaño). componentId: componente seleccionado.
 export function highlight(ids, componentId) {
@@ -96,7 +97,28 @@ export function updateComponents(s) {
 export function applySize(s) {
   const node = nodeEl(s.id), { w, h } = sizeOf(s);
   Object.assign(node.style, { left: `${s.x}px`, top: `${s.y}px`, width: `${w}px`, height: `${h}px` });
-  node.querySelector('.rz-size').textContent = `${w} × ${h}`;
+  node.querySelector('.rz-size').textContent = `${w} px`;
+  syncCollapse(s, node);
+}
+/* Pantalla contraída (HU11): la lista se corta a su alto visible y el pie dice cuántos elementos quedan ocultos, contando
+   los de los bloques; expandida, ofrece «Ver menos». Sin nada oculto no hay botón. */
+const hiddenRows = list => { const cut = list.getBoundingClientRect().bottom; return [...list.querySelectorAll('.comp-row')].filter(r => r.getBoundingClientRect().bottom > cut + 1) };
+function syncCollapse(s, node) {
+  const list = node.querySelector('.comp-list'), more = node.querySelector('.node-more'), collapsed = !s.expanded && canCollapse(s);
+  node.classList.toggle('is-collapsed', collapsed);
+  list.style.maxHeight = collapsed ? `${listHeight(s)}px` : '';
+  more.classList.toggle('hidden', !canCollapse(s));
+  more.setAttribute('aria-expanded', String(!collapsed));
+  const hidden = collapsed && hiddenRows(list).length; // 0 si solo se oculta el espacio vacío de un bloque
+  more.firstElementChild.textContent = collapsed ? (hidden ? `Ver ${hidden} más` : 'Ver más') : 'Ver menos';
+}
+// Expande la pantalla si el componente id quedó oculto (se acaba de agregar o se eligió en «Capas»).
+export function showComponent(s, id) {
+  const node = nodeEl(s.id);
+  if (!node?.classList.contains('is-collapsed') || !hiddenRows(node.querySelector('.comp-list')).some(r => r.dataset.comp === id)) return;
+  s.expanded = true;
+  save();
+  applySize(s);
 }
 export const rename = (id, onCommit) =>
   editInline(nodeEl(id).querySelector('.node-business'), { label: 'Nombre de la pantalla', maxLength: 20, onCommit });
@@ -192,29 +214,15 @@ function startResize(down, handle) {
   down.preventDefault();
   const node = handle.closest('.screen-node'), s = screens().find(x => x.id === node.dataset.screen);
   if (!s) return;
-  const dir = handle.dataset.rz, start = toCanvas(down.clientX, down.clientY);
-  const { w: w0, h: h0 } = sizeOf(s), x0 = s.x, y0 = s.y;
+  const dir = handle.dataset.rz, start = toCanvas(down.clientX, down.clientY).x, w0 = sizeOf(s).w, x0 = s.x;
   let changed = false;
   node.classList.add('resizing');
   applySize(s);
   capture(handle, down);
   trackPointer(down, e => {
-    const pt = toCanvas(e.clientX, e.clientY), dx = pt.x - start.x, dy = pt.y - start.y;
-    let w = w0 + (dir.includes('e') ? dx : dir.includes('w') ? -dx : 0);
-    let h = h0 + (dir.includes('s') ? dy : dir.includes('n') ? -dy : 0);
-    if (e.shiftKey && dir.length === 2) {
-      // Shift en una esquina: conserva la proporción según el eje que más cambió.
-      const k = clamp(Math.abs(w / w0 - 1) > Math.abs(h / h0 - 1) ? w / w0 : h / h0,
-        Math.max(SIZE.minW / w0, SIZE.minH / h0), Math.min(SIZE.maxW / w0, SIZE.maxH / h0));
-      w = Math.round(w0 * k);
-      h = Math.round(h0 * k);
-    } else {
-      // Ajuste a la cuadrícula y a los límites: al llegar al límite simplemente deja de cambiar.
-      w = clamp(snap(w), SIZE.minW, SIZE.maxW);
-      h = clamp(snap(h), SIZE.minH, SIZE.maxH);
-    }
-    // El borde opuesto queda fijo.
-    Object.assign(s, { x: dir.includes('w') ? x0 + w0 - w : x0, y: dir.includes('n') ? y0 + h0 - h : y0, w, h });
+    // Ajuste a la cuadrícula y a los límites (al llegar al límite deja de cambiar); el borde opuesto queda fijo.
+    const dx = toCanvas(e.clientX, e.clientY).x - start, w = clamp(snap(w0 + (dir === 'e' ? dx : -dx)), SIZE.minW, SIZE.maxW);
+    Object.assign(s, { x: dir === 'w' ? x0 + w0 - w : x0, w });
     changed = true;
     applySize(s);
     on.resize(s);
@@ -345,7 +353,7 @@ export function initCanvas(callbacks) {
     if (!node) on.background();
     // Mover el lienzo: rueda presionada, Espacio + arrastrar, o arrastrar con el dedo sobre el fondo.
     if (e.button === 1 || (e.button === 0 && spaceHeld)) return startPan(e, { clearOnTap: false });
-    if (e.button !== 0 || e.target.closest('.node-del, .comp-del')) return;
+    if (e.button !== 0 || e.target.closest('.node-del, .comp-del, .node-more')) return;
     if (!node) return e.pointerType === 'touch' ? startPan(e, { clearOnTap: true }) : startMarquee(e, e.ctrlKey || e.metaKey);
     const handle = e.target.closest('[data-rz]');
     if (handle) return startResize(e, handle);
@@ -359,13 +367,15 @@ export function initCanvas(callbacks) {
     if (ids.length) startDrag(e, node, ids, click);
   });
   world().addEventListener('click', e => {
+    const more = e.target.closest('.node-more'), moreScreen = more && screens().find(x => x.id === more.closest('.screen-node').dataset.screen);
+    if (moreScreen) { moreScreen.expanded = more.getAttribute('aria-expanded') !== 'true'; save(); return applySize(moreScreen) }
     const del = e.target.closest('.node-del, .comp-del'), screenId = del?.closest('.screen-node').dataset.screen;
     if (del?.matches('.comp-del')) on.removeComponent(screenId, del.closest('.comp-row').dataset.comp);
     else if (del) on.remove(screenId);
   });
   world().addEventListener('dblclick', e => {
     const node = e.target.closest('.screen-node');
-    if (node && !e.target.closest('.node-del, .inline-edit, .comp-row, .comp-block')) on.edit(node.dataset.screen);
+    if (node && !e.target.closest('.node-del, .node-more, .inline-edit, .comp-row, .comp-block')) on.edit(node.dataset.screen);
   });
 
   /* Soltar desde la paleta. «Pantalla» se centra en el punto donde se suelta; un componente va al final del bloque o de la

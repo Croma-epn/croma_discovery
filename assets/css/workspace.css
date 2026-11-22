@@ -34,6 +34,7 @@
 .palette-item { width: 100%; display: flex; align-items: center; gap: 11px; padding: 12px; border: 1px solid #ded9e9; border-radius: 12px; background: #f9f7fc; color: var(--ink); text-align: left; transition: .15s; }
 .palette-item:hover { border-color: #9781c9; background: var(--primary-pale); transform: translateY(-1px); }
 .palette-item strong { display: block; font-size: 12px; }
+.palette-hint { display: block; margin-top: 2px; color: var(--muted); font-size: 10.5px; line-height: 1.35; }
 .palette-icon { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 10px; background: var(--primary-soft); color: var(--primary); }
 
 /* Árbol de capas */
@@ -121,6 +122,15 @@
    Proximidad: 12 px entre lo que no comparte bloque; 4 px dentro de un bloque.
    Si cambian estas medidas o las de .node-head, actualizar NODE en model.js (la pantalla crece con su contenido). */
 .comp-list { display: flex; flex-direction: column; gap: 20px; margin: 0; padding: 0; list-style: none; }
+/* Pantalla contraída (HU11): corte con desvanecido (continuidad: hay más abajo) y botón «Ver n más / Ver menos» en el pie */
+.screen-node.is-collapsed .comp-list { clip-path: inset(-6px -6px 0 -6px); } /* corta justo abajo; a los lados deja ver los contornos de selección */
+.screen-node.is-collapsed .comp-list > * { flex-shrink: 0; } /* con alto máximo, las filas no se encogen: se ocultan */
+.screen-node.is-collapsed::after { content: ''; position: absolute; left: 2px; right: 2px; bottom: 36px; height: 36px; background: linear-gradient(#fff0, #fff 60%); pointer-events: none; } /* baja un poco más que el corte (pie de 44) sin tapar el botón */
+.node-more { position: absolute; left: 50%; bottom: 9px; display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 10px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--primary); font-family: inherit; font-size: 10.5px; font-weight: 750; white-space: nowrap; cursor: pointer; transform: translateX(-50%); }
+.node-more:hover { border-color: var(--primary); background: var(--primary-pale); }
+.node-more:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.node-more .ic { width: 12px; height: 12px; transition: transform .12s; }
+.node-more[aria-expanded="true"] .ic { transform: rotate(180deg); }
 .comp-list:empty::before { content: 'Arrastra componentes aquí'; color: var(--muted); font-size: 10.5px; }
 /* Bloque (formulario, lista o ficha): caja con su título y su contenido sangrado (región común). El título es solo texto,
    sin contorno, para no parecer un botón; tampoco copia la franja de la pantalla (contenedor ≠ componente en IFML).
@@ -134,7 +144,7 @@
 .comp-shown.is-missing { color: var(--warning-icon); font-weight: 650; }
 .comp-parts { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0 0 0 14px; list-style: none; }
 .comp-parts:empty { height: 22px; }
-.comp-parts:empty::before { content: attr(data-empty); color: var(--muted); font-size: 10px; line-height: 22px; }
+.comp-parts:empty::before { content: attr(data-empty); display: block; overflow: hidden; color: var(--muted); font-size: 10px; line-height: 22px; white-space: nowrap; text-overflow: ellipsis; }
 /* Mover un componente (HU16): la fila queda tenue y una línea indica dónde caerá */
 .comp-row.moving, .comp-block.moving { opacity: .4; }
 .drop-line { position: absolute; z-index: 3; height: 2px; border-radius: 2px; background: var(--primary); box-shadow: 0 0 0 2px #fff; pointer-events: none; }
@@ -161,13 +171,7 @@
 .rz::before { content: ""; position: absolute; inset: calc(-7px / var(--z, 1)); } /* área táctil de 24 px */
 .screen-node.selected .rz { display: block; }
 .is-multi .screen-node.selected .rz { display: none; } /* con varias seleccionadas no se redimensiona */
-.rz-nw { left: 0; top: 0; cursor: nwse-resize; }
-.rz-n { left: 50%; top: 0; cursor: ns-resize; }
-.rz-ne { left: 100%; top: 0; cursor: nesw-resize; }
 .rz-e { left: 100%; top: 50%; cursor: ew-resize; }
-.rz-se { left: 100%; top: 100%; cursor: nwse-resize; }
-.rz-s { left: 50%; top: 100%; cursor: ns-resize; }
-.rz-sw { left: 0; top: 100%; cursor: nesw-resize; }
 .rz-w { left: 0; top: 50%; cursor: ew-resize; }
 .rz-size { display: none; position: absolute; left: 50%; top: 100%; z-index: 4; padding: 3px 8px; border-radius: 6px; background: var(--primary); color: #fff; font: 700 11px Inter, system-ui, sans-serif; white-space: nowrap; pointer-events: none; transform: translate(-50%, calc(12px / var(--z, 1))) scale(calc(1 / var(--z, 1))); transform-origin: top center; }
 .screen-node.resizing .rz-size { display: block; }

@@ -11,18 +11,14 @@ import { renderData, initData } from './properties-data.js';
 const TEXT_FIELDS = { screenBusiness: 'businessName', screenCode: 'code', screenTechnical: 'technicalName' };
 const COMPONENT_FIELDS = { componentText: 'text', componentName: 'name' };
 const SIZE_FIELDS = {
-  screenWidth: { key: 'w', other: 'h', min: SIZE.minW, max: SIZE.maxW, empty: 'Escribe el ancho.' },
-  screenHeight: { key: 'h', other: 'w', min: SIZE.minH, max: SIZE.maxH, empty: 'Escribe el alto.' },
+  screenWidth: { key: 'w', min: SIZE.minW, max: SIZE.maxW, empty: 'Escribe el ancho.' },
 };
-const DEFAULT_SIZE = { w: SIZE.defW, h: SIZE.defH };
 let on; // { rename(screen), resize(screen), start(id), align(kind), component(screen), openData(), move(id, blockId, index) }
 let component = null; // componente mostrado
 let setKindLabel; // marca el tipo elegido en el menú «Tipo»
 
 export function fillSize(s) {
-  const { w, h } = sizeOf(s);
-  $('screenWidth').value = w;
-  $('screenHeight').value = h;
+  $('screenWidth').value = sizeOf(s).w;
   Object.keys(SIZE_FIELDS).forEach(id => setFieldError(id, ''));
 }
 
@@ -57,7 +53,7 @@ function fillText(fields, target) {
 const KIND_HINTS = {
   field: 'Puedes cambiarlo por otro campo; se conserva el texto visible.',
   event: 'Un botón no cambia a otro tipo: dispara una acción y no guarda datos como un campo.',
-  content: 'Un texto fijo no cambia a otro tipo: solo muestra contenido, como un título o una instrucción.',
+  content: 'Un contenido no cambia a otro tipo: solo muestra información, como un título, un párrafo o una imagen.',
   form: 'Un formulario no cambia a otro tipo: agrupa los campos y los botones que envían sus datos.',
   data: 'Puedes cambiarla entre lista y ficha de datos; se conservan la entidad y los botones.',
 };
@@ -155,11 +151,10 @@ function onComponentInput(id) {
 function onSizeInput(id) {
   const project = currentProject(), s = selectedScreen();
   if (!s) return;
-  const { key, other, min, max, empty } = SIZE_FIELDS[id], raw = $(id).value.trim();
+  const { key, min, max, empty } = SIZE_FIELDS[id], raw = $(id).value.trim();
   const error = !raw ? empty : !/^\d+$/.test(raw) ? 'Usa solo números enteros.' : +raw < min || +raw > max ? `Usa un valor entre ${min} y ${max}.` : '';
   if (!check(id, error)) return;
   s[key] = +raw;
-  s[other] ||= DEFAULT_SIZE[other];
   on.resize(s);
   saveProject(project, { debounce: true });
 }

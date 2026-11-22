@@ -1,24 +1,25 @@
 import { uid } from '../util.js';
 // Reglas de un proyecto (sin interfaz): pantallas (tamaño, código, componentes, pantalla inicial, ubicación, alineación) y modelo de dominio.
-export const SIZE = { defW: 260, defH: 80, minW: 200, maxW: 800, minH: 80, maxH: 600 };
+export const SIZE = { defW: 260, defH: 80, minW: 200, maxW: 800 };
 
 /* ---------- Componentes (HU14) y bloques (propuesta sin HU) ----------
    Nombres conocidos en la paleta; por debajo, el elemento IFML que representan (Spec IFML 1.0 §7.4, §8.1.4, §8.1.10).
    Dos niveles: la pantalla (ViewContainer) contiene elementos sueltos y bloques; los bloques contienen elementos (parts).
    - in: dónde puede ir (screen o el tipo de bloque). Un campo solo existe dentro de un Form (§8.3.53, §8.4.4): si se suelta
-     en la pantalla, se crea un formulario. Un ViewComponent (texto fijo, bloques) solo va en la pantalla (§8.1.4).
+     en la pantalla, se crea un formulario. Un ViewComponent (contenido, bloques) solo va en la pantalla (§8.1.4).
    - block: 'form' o 'data' (lista y ficha, que exigen un DataBinding a una entidad: §8.4.1, §8.4.5).
+   - hint: qué abarca, visible en la paleta (incluye los nombres con que el usuario lo buscaría: casilla, enlace, imagen…).
    - family: tipos que son la misma clase IFML; el tipo solo cambia dentro de su familia (§8.3.25, §8.4.3).
    El botón no es un componente sino el evento de quien lo contiene (§7.2, §8.1.6): ver BUTTON_ROLES. */
 const ANYWHERE = ['screen', 'form', 'list', 'details'];
 export const COMPONENTS = {
-  textbox: { label: 'Campo de texto', icon: 'i-textbox', prefix: 'txt', family: 'field', in: ['form'], place: 'dentro de un formulario', ifml: 'SimpleField (del Form)' },
-  select: { label: 'Campo de selección', icon: 'i-select', prefix: 'sel', family: 'field', in: ['form'], place: 'dentro de un formulario', ifml: 'SelectionField (del Form)' },
-  button: { label: 'Botón', icon: 'i-button', prefix: 'btn', family: 'event', in: ANYWHERE },
-  label: { label: 'Texto fijo', icon: 'i-label', prefix: 'lbl', family: 'content', in: ['screen'], place: 'directo en la pantalla', ifml: 'ViewComponent' },
-  form: { label: 'Formulario', icon: 'i-form', prefix: 'frm', family: 'form', in: ['screen'], place: 'directo en la pantalla', block: 'form', ifml: 'Form' },
-  list: { label: 'Lista de datos', icon: 'i-list', prefix: 'lst', family: 'data', in: ['screen'], place: 'directo en la pantalla', block: 'data', ifml: 'List (con DataBinding)' },
-  details: { label: 'Ficha de datos', icon: 'i-details', prefix: 'fch', family: 'data', in: ['screen'], place: 'directo en la pantalla', block: 'data', ifml: 'Details (con DataBinding)' },
+  textbox: { label: 'Campo de texto', icon: 'i-textbox', hint: 'Para escribir un dato', prefix: 'txt', family: 'field', in: ['form'], place: 'dentro de un formulario', ifml: 'SimpleField (del Form)' },
+  select: { label: 'Campo de selección', icon: 'i-select', hint: 'Desplegable, opciones o casillas', prefix: 'sel', family: 'field', in: ['form'], place: 'dentro de un formulario', ifml: 'SelectionField (del Form)' },
+  button: { label: 'Botón', icon: 'i-button', hint: 'Botón o enlace: dispara una acción', prefix: 'btn', family: 'event', in: ANYWHERE },
+  label: { label: 'Contenido', icon: 'i-label', hint: 'Título, párrafo, etiqueta o imagen', prefix: 'cnt', family: 'content', in: ['screen'], place: 'directo en la pantalla', ifml: 'ViewComponent' },
+  form: { label: 'Formulario', icon: 'i-form', hint: 'Agrupa campos que se envían juntos', prefix: 'frm', family: 'form', in: ['screen'], place: 'directo en la pantalla', block: 'form', ifml: 'Form' },
+  list: { label: 'Lista de datos', icon: 'i-list', hint: 'Lista o tabla de registros', prefix: 'lst', family: 'data', in: ['screen'], place: 'directo en la pantalla', block: 'data', ifml: 'List (con DataBinding)' },
+  details: { label: 'Ficha de datos', icon: 'i-details', hint: 'Muestra un solo registro', prefix: 'fch', family: 'data', in: ['screen'], place: 'directo en la pantalla', block: 'data', ifml: 'Details (con DataBinding)' },
 };
 // El tipo IFML del botón sale de dónde está: así se sabe si envía datos o solo navega.
 export const BUTTON_ROLES = {
@@ -123,7 +124,9 @@ export function addAttribute(entity) {
   return attribute;
 }
 
-/* La pantalla crece sola para mostrar todo su contenido; el alto elegido por el usuario es el mínimo.
+/* Alto de la pantalla (HU11, P20 del profesor: «el cambio de tamaño en las pantallas no existe»): automático, no se
+   redimensiona. Crece con su contenido hasta COLLAPSE_AT (unos 4 elementos simples); lo que pase de ahí queda oculto
+   mientras esté contraída; expandida (s.expanded, se guarda en el proyecto) muestra todo. Solo el ancho es manual.
    Medidas en px (deben coincidir con workspace.css): .node-head (37 + 12 de margen), .comp-row (26), separación entre lo que
    no comparte bloque (.comp-list: 20) y dentro de un bloque (4), .comp-block (borde 1 + 1 y relleno 3 + 8: 13), su línea
    «Muestra» (.comp-shown: 20) y su lista vacía (.comp-parts:empty: 22). */
@@ -133,7 +136,11 @@ const itemHeight = c => (!c.parts ? NODE.row
   : NODE.block + NODE.row + NODE.gap + (COMPONENTS[c.kind].block === 'data' ? NODE.shown + NODE.gap : 0) + partsHeight(c.parts.length));
 const contentHeight = s => (s.components?.length
   ? NODE.head + s.components.reduce((h, c) => h + itemHeight(c), 0) + (s.components.length - 1) * NODE.top + NODE.foot : 0);
-export const sizeOf = s => ({ w: s.w || SIZE.defW, h: Math.max(s.h || SIZE.defH, contentHeight(s)) });
+const COLLAPSE_AT = 280;
+export const canCollapse = s => contentHeight(s) > COLLAPSE_AT;
+export const sizeOf = s => ({ w: s.w || SIZE.defW, h: Math.max(SIZE.defH, s.expanded ? contentHeight(s) : Math.min(contentHeight(s), COLLAPSE_AT)) });
+// Alto visible de la lista de elementos (sin el encabezado ni el pie, donde va «Ver n más»).
+export const listHeight = s => sizeOf(s).h - NODE.head - NODE.foot;
 
 export const screenCode = n => `VC-${String(n).padStart(2, '0')}`;
 // Primer número libre entre los códigos «VC-n» existentes.
