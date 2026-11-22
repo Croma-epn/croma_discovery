@@ -34,7 +34,7 @@ const rowHtml = (c, parent, tag = 'li') => {
   const { label, icon } = COMPONENTS[c.kind], extra = detail(c, parent);
   return `<${tag} class="comp-row" data-comp="${esc(c.id)}"><svg class="ic"><use href="#${icon}"/></svg><span class="comp-text">${esc(c.text)}</span>`
     + `<span class="comp-kind">${label}${extra ? ` · ${esc(extra)}` : ''}</span>`
-    + `<button class="comp-del" type="button" title="Eliminar" aria-label="Eliminar ${esc(c.text)}"><svg class="ic"><use href="#i-trash"/></svg></button></${tag}>`;
+    + `<button class="del-btn comp-del" type="button" title="Eliminar" aria-label="Eliminar ${esc(c.text)}"><svg class="ic"><use href="#i-trash"/></svg></button></${tag}>`;
 };
 // Lista o ficha: qué atributos de su entidad muestra.
 function shownHtml(c) {
@@ -51,7 +51,7 @@ const nodeHtml = s => {
   const { w, h } = sizeOf(s);
   return `<article class="screen-node" data-screen="${esc(s.id)}" style="left:${s.x}px;top:${s.y}px;width:${w}px;height:${h}px">`
     + `<div class="node-head"><svg class="ic"><use href="#i-phone"/></svg><span class="node-business">${esc(s.businessName)}</span><span class="node-code">${esc(s.code)}</span>`
-    + `<button class="node-del" type="button" title="Eliminar elemento" aria-label="Eliminar ${esc(s.businessName)}"><svg class="ic"><use href="#i-trash"/></svg></button></div>`
+    + `<button class="del-btn node-del" type="button" title="Eliminar elemento" aria-label="Eliminar ${esc(s.businessName)}"><svg class="ic"><use href="#i-trash"/></svg></button></div>`
     + `<ol class="comp-list">${componentsHtml(s)}</ol>`
     + RESIZE_DIRS.map(d => `<span class="rz rz-${d}" data-rz="${d}" aria-hidden="true"></span>`).join('')
     + '<span class="rz-size" aria-hidden="true"></span></article>';

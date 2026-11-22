@@ -4,25 +4,21 @@ import { $, esc, plural } from '../util.js';
 import { currentProject, saveProject } from '../store.js';
 import { showToast, confirmDialog } from '../ui/feedback.js';
 import { editInline } from '../ui/inline-edit.js';
-import { initSelectMenu } from '../ui/menus.js';
+import { mountSelect } from '../ui/menus.js';
 import { ATTR_TYPES, addEntity, addAttribute, taken } from './model.js';
 
 const NAME_MAX = 30;
 let onChange; // avisa al coordinador que cambió el modelo de dominio
 const icon = id => `<svg class="ic"><use href="#${id}"/></svg>`;
-const delButton = label => `<button class="data-del" type="button" data-delete aria-label="${label}" title="${label}">${icon('i-trash')}</button>`;
+const delButton = label => `<button class="del-btn data-del" type="button" data-delete aria-label="${label}" title="${label}">${icon('i-trash')}</button>`;
 const nameButton = (name, label) => `<button class="data-name" type="button" data-rename title="${label}">${esc(name)}</button>`;
-// Tipo de dato: mismo desplegable que «Ordenar por» del catálogo (sort-btn + toolbar-menu + initSelectMenu), en tamaño compacto.
-const typePicker = a => `<div class="data-type-picker"><button class="sort-btn data-type" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="type-${a.id}" aria-label="Tipo de ${esc(a.name)}"><span class="dropdown-label"></span><svg class="ic sort-chev" aria-hidden="true"><use href="#i-chev-down"/></svg></button>`
-  + `<div id="type-${a.id}" class="menu toolbar-menu hidden" role="menu" aria-label="Tipo de dato"><div class="toolbar-menu-title" aria-hidden="true">Tipo de dato</div>`
-  + Object.entries(ATTR_TYPES).map(([value, label]) => `<button type="button" role="menuitemradio" aria-checked="false" data-value="${value}">${label}<svg class="ic"><use href="#i-check"/></svg></button>`).join('')
-  + '</div></div>';
+const TYPE_OPTIONS = Object.entries(ATTR_TYPES).map(([value, label]) => ({ value, label }));
 
-const attributeHtml = a => `<li class="data-row" data-attr="${a.id}">${nameButton(a.name, 'Cambiar nombre del atributo')}${typePicker(a)}${delButton(`Borrar atributo ${esc(a.name)}`)}</li>`;
+const attributeHtml = a => `<li class="data-row" data-attr="${a.id}">${nameButton(a.name, 'Cambiar nombre del atributo')}<div class="toolbar-dropdown data-type"></div>${delButton(`Borrar atributo ${esc(a.name)}`)}</li>`;
 const entityHtml = e => `<div class="data-entity" data-entity="${e.id}">
   <div class="data-row data-entity-head">${icon('i-entity')}${nameButton(e.name, 'Cambiar nombre de la entidad')}${delButton(`Borrar entidad ${esc(e.name)}`)}</div>
   <ul class="data-attrs">${e.attributes.map(attributeHtml).join('')}</ul>
-  <button class="data-add-attr" type="button" data-add-attr>${icon('i-plus')} Atributo</button>
+  <button class="link-btn data-add-attr" type="button" data-add-attr>${icon('i-plus')} Atributo</button>
 </div>`;
 
 export function render() {
@@ -30,9 +26,11 @@ export function render() {
   $('dataCount').textContent = domain.length;
   $('dataList').innerHTML = domain.length ? domain.map(entityHtml).join('')
     : '<p class="tree-empty">Aún no hay entidades. Crea la primera, por ejemplo «Usuario» con los atributos «correo» y «clave».</p>';
-  $('dataList').querySelectorAll('.data-type').forEach(trigger => {
-    const setLabel = initSelectMenu(trigger, type => { locate(trigger).item.type = type; setLabel(type); save() });
-    setLabel(locate(trigger).item.type);
+  // Tipo de dato: el mismo desplegable que «Ordenar por», compacto.
+  $('dataList').querySelectorAll('.data-type').forEach(host => {
+    const { item } = locate(host);
+    mountSelect(host, { id: `type-${item.id}`, options: TYPE_OPTIONS, value: item.type, title: 'Tipo de dato', ariaLabel: `Tipo de ${item.name}`, compact: true,
+      onSelect: type => { item.type = type; save() } });
   });
 }
 

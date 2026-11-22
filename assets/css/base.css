@@ -36,10 +36,10 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
 .field { display: grid; gap: 6px; margin-bottom: 2px; }
 .field label { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #474351; }
 .field label .ic { width: 14px; height: 14px; color: var(--primary); }
-.field input, .field textarea { width: 100%; padding: 12px 13px; border: 1px solid #d9d6e1; border-radius: 10px; background: #fff; color: var(--ink); transition: border .15s, box-shadow .15s; }
+.field input, .field textarea, .prop-field input { width: 100%; padding: 12px 13px; border: 1px solid #d9d6e1; border-radius: 10px; background: #fff; color: var(--ink); transition: border .15s, box-shadow .15s; }
 .field textarea { min-height: 90px; resize: vertical; }
-.field input:focus, .field textarea:focus { border-color: var(--primary); outline: 3px solid #e7e1f4; }
-.field input.invalid, .field textarea.invalid { border-color: var(--danger); background: #fffafb; outline-color: #ffe2e5; }
+.field input:focus, .field textarea:focus, .prop-field input:focus { border-color: var(--primary); outline: 3px solid #e7e1f4; }
+.field input.invalid, .field textarea.invalid, .prop-field input.invalid { border-color: var(--danger); background: #fffafb; outline-color: #ffe2e5; }
 .field small { font-size: 11px; color: var(--muted); }
 .hint-action { font-size: 11px; }
 

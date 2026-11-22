@@ -1,6 +1,6 @@
 /* Menús desplegables. Convención: el botón tiene aria-haspopup="menu" y aria-controls con el id del panel,
    y botón y panel comparten un contenedor. Un clic fuera de ese contenedor cierra el menú. */
-import { $ } from '../util.js';
+import { $, esc } from '../util.js';
 
 const openTriggers = () => [...document.querySelectorAll('[aria-haspopup="menu"][aria-expanded="true"]')];
 const isExpanded = trigger => trigger.getAttribute('aria-expanded') === 'true';
@@ -58,4 +58,19 @@ export function initSelectMenu(trigger, onSelect) {
     items.forEach(item => item.setAttribute('aria-checked', String(item.dataset.value === value)));
     trigger.querySelector('.dropdown-label').textContent = items.find(item => item.dataset.value === value).textContent.trim();
   };
+}
+
+/* Desplegable de opción única con el aspecto de «Ordenar por», dibujado dentro de `host` (.toolbar-dropdown). Para opciones
+   que cambian: cada llamada lo reemplaza y, si el foco estaba dentro, lo devuelve al botón.
+   options: [{ value, label }]. ariaLabel solo si no hay un <label for={id}> visible. compact: tamaño .sort-btn-sm. */
+export function mountSelect(host, { id, options, value, onSelect, title = '', ariaLabel = '', disabled = false, compact = false }) {
+  const hadFocus = host.contains(document.activeElement), current = options.some(o => o.value === value) ? value : options[0].value;
+  host.innerHTML = `<button id="${id}" class="sort-btn${compact ? ' sort-btn-sm' : ''}" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="${id}Menu"`
+    + `${ariaLabel ? ` aria-label="${esc(ariaLabel)}"` : ''}${disabled ? ' disabled' : ''}><span class="dropdown-label"></span><svg class="ic sort-chev" aria-hidden="true"><use href="#i-chev-down"/></svg></button>`
+    + `<div id="${id}Menu" class="menu toolbar-menu hidden" role="menu"${title ? ` aria-label="${esc(title)}"` : ''}>${title ? `<div class="toolbar-menu-title" aria-hidden="true">${esc(title)}</div>` : ''}`
+    + options.map(o => `<button type="button" role="menuitemradio" aria-checked="false" data-value="${esc(o.value)}">${esc(o.label)}<svg class="ic"><use href="#i-check"/></svg></button>`).join('')
+    + '</div>';
+  const trigger = host.firstElementChild, setLabel = initSelectMenu(trigger, v => { setLabel(v); onSelect(v) });
+  setLabel(current);
+  if (hadFocus) trigger.focus();
 }

@@ -3,7 +3,8 @@ import { $, esc, focusLater } from '../util.js';
 
 /* ---------- Notificaciones ---------- */
 // action: { label, onClick } añade un botón (p. ej. «Deshacer»). icon: 'i-info' para avisos que no confirman un éxito.
-// La notificación no se cierra mientras se apunta o enfoca.
+// La notificación no se cierra mientras se apunta o enfoca. Se apilan hasta MAX_TOASTS.
+const MAX_TOASTS = 5;
 export function showToast(message, { action, ms, icon = 'i-check' } = {}) {
   const toast = document.createElement('div');
   toast.className = 'toast';
@@ -22,7 +23,9 @@ export function showToast(message, { action, ms, icon = 'i-check' } = {}) {
   }
   ['mouseenter', 'focusin'].forEach(ev => toast.addEventListener(ev, pause));
   ['mouseleave', 'focusout'].forEach(ev => toast.addEventListener(ev, schedule));
-  $('toastStack').replaceChildren(toast); // uno a la vez (Material Design): no se apilan ni se salen de la pantalla
+  const stack = $('toastStack');
+  stack.append(toast);
+  while (stack.children.length > MAX_TOASTS) stack.firstElementChild.remove(); // la más antigua deja espacio a la nueva
   schedule();
 }
 

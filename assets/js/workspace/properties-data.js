@@ -5,14 +5,15 @@
      «Marcar todos / Quitar todos» (VisualizationAttribute, §8.3.58). */
 import { $, esc } from '../util.js';
 import { currentProject, saveProject } from '../store.js';
+import { mountSelect } from '../ui/menus.js';
 import { COMPONENTS, entityOf } from './model.js';
 
 let on; // { changed(), openData() }
 let target; // { component, parent } mostrado
 
 const show = (id, visible) => $(id).classList.toggle('hidden', !visible);
-const options = (items, selected, empty) => `<option value="">${empty}</option>`
-  + items.map(x => `<option value="${esc(x.id)}"${x.id === selected ? ' selected' : ''}>${esc(x.name)}</option>`).join('');
+// Opciones del desplegable: la vacía primero (value '') y luego entidades o atributos.
+const options = (items, empty) => [{ value: '', label: empty }, ...items.map(x => ({ value: x.id, label: x.name }))];
 const entityOfTarget = () => entityOf(currentProject(), target.component.entityId);
 
 export function renderData(component, parent) {
@@ -30,8 +31,8 @@ export function renderData(component, parent) {
 function renderEntity(domain, isData) {
   const entity = entityOfTarget();
   $('componentEntityLabel').innerHTML = isData ? 'Entidad <span class="req">*</span>' : 'Entidad que llena';
-  $('componentEntity').innerHTML = options(domain, entity?.id, isData ? 'Elige una entidad' : 'Ninguna');
-  $('componentEntity').disabled = !domain.length;
+  mountSelect($('componentEntityHost'), { id: 'componentEntity', title: 'Entidad', options: options(domain, isData ? 'Elige una entidad' : 'Ninguna'),
+    value: entity?.id ?? '', disabled: !domain.length, onSelect: chooseEntity });
   $('componentEntityHint').textContent = !domain.length ? 'Aún no hay entidades: créalas en el panel «Datos».'
     : !isData ? 'Opcional. Sus campos podrán elegir su dato entre los atributos de esta entidad.'
       : entity ? `Muestra registros de «${entity.name}».` : 'Obligatoria: de qué entidad muestra registros.';
@@ -52,12 +53,17 @@ function syncToggle(entity) {
 }
 function renderAttribute(entity) {
   const attributes = entity?.attributes ?? [];
-  $('componentAttribute').innerHTML = options(attributes, target.component.attributeId, 'Sin dato');
-  $('componentAttribute').disabled = !attributes.length;
+  mountSelect($('componentAttributeHost'), { id: 'componentAttribute', title: 'Dato', options: options(attributes, 'Sin dato'),
+    value: target.component.attributeId ?? '', disabled: !attributes.length, onSelect: id => apply(c => { c.attributeId = id || null }) });
   $('componentAttributeHint').textContent = !entity ? 'Primero elige la entidad del formulario: selecciona el formulario.'
     : !attributes.length ? `«${entity.name}» aún no tiene atributos.` : `Atributo de «${entity.name}» que guarda este campo.`;
 }
 
+const chooseEntity = id => apply(c => {
+  c.entityId = id || null;
+  if (c.shown) c.shown = []; // lo elegido era de la entidad anterior
+  else c.parts.forEach(p => { p.attributeId = null });
+});
 // Aplica el cambio, guarda y actualiza el lienzo. rerender: false conserva el foco en la casilla que se marcó.
 function apply(change, rerender = true) {
   change(target.component);
@@ -68,12 +74,6 @@ function apply(change, rerender = true) {
 
 export function initData(callbacks) {
   on = callbacks;
-  $('componentEntity').addEventListener('change', e => apply(c => {
-    c.entityId = e.target.value || null;
-    if (c.shown) c.shown = []; // lo elegido era de la entidad anterior
-    else c.parts.forEach(p => { p.attributeId = null });
-  }));
-  $('componentAttribute').addEventListener('change', e => apply(c => { c.attributeId = e.target.value || null }));
   $('shownList').addEventListener('change', () => {
     apply(c => { c.shown = [...$('shownList').querySelectorAll('input:checked')].map(input => input.value) }, false);
     syncToggle(entityOfTarget());

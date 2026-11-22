@@ -2,6 +2,41 @@
 
 /* Menú desplegable (cuenta, opciones de proyecto, ordenar). Se posiciona según su contenedor. */
 .menu { position: absolute; right: 0; z-index: 80; padding: 6px; background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 16px 36px #24183f22; animation: pop .16s ease; }
+/* Desplegable de opción única («Ordenar por», «Tipo», tipo de dato, Entidad, Dato, Está en): botón .sort-btn + panel .toolbar-menu.
+   Se arma con initSelectMenu (botón fijo en el HTML) o mountSelect (opciones que cambian). .sort-btn-sm = tamaño compacto. */
+.toolbar-dropdown { position: relative; }
+.sort-btn { height: 38px; min-width: 128px; display: inline-flex; align-items: center; justify-content: space-between; gap: 5px; padding: 0 14px; border: 1px solid #d9d6e1; border-radius: 10px; background: #fff; color: #5c5668; font-family: inherit; font-size: 11.5px; font-weight: 750; white-space: nowrap; transition: border-color .15s, background .15s, color .15s; }
+.sort-btn:hover:not(:disabled) { border-color: #bfaee8; background: #faf8fe; color: var(--primary); }
+.sort-btn[aria-expanded="true"] { border-color: #a58ad9; background: #f8f5fe; color: var(--primary); }
+.sort-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.sort-btn .ic { width: 14px; height: 14px; color: #8b80a2; }
+.sort-btn .sort-icon { display: none; }
+.sort-btn .sort-chev { width: 12px; height: 12px; margin-left: 5px; transition: transform .18s; }
+.sort-btn[aria-expanded="true"] .sort-chev { transform: rotate(180deg); }
+.sort-btn .sort-prefix { color: #7a7189; font-weight: 600; }
+.sort-btn .dropdown-label { color: var(--ink); }
+.sort-btn:hover:not(:disabled) .dropdown-label, .sort-btn[aria-expanded="true"] .dropdown-label { color: var(--primary); }
+.toolbar-menu { top: calc(100% + 8px); min-width: 176px; }
+.toolbar-menu-title { padding: 8px 12px 6px; color: #7a7189; font-size: 10px; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+.toolbar-menu button { display: flex; align-items: center; justify-content: space-between; gap: 22px; width: 100%; padding: 11px 12px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); font-family: inherit; font-size: 12px; font-weight: 600; text-align: left; cursor: pointer; }
+.toolbar-menu button:hover, .toolbar-menu button:focus-visible { background: #f5f1fb; outline: none; }
+.toolbar-menu button[aria-checked="true"] { background: #efe8fc; color: var(--primary); font-weight: 750; }
+.toolbar-menu button .ic { width: 15px; height: 15px; visibility: hidden; }
+.toolbar-menu button[aria-checked="true"] .ic { visibility: visible; }
+.sort-btn:disabled { opacity: .45; cursor: not-allowed; }
+.sort-btn.sort-btn-sm { height: 26px; min-width: 0; padding: 0 8px; border-radius: 7px; font-size: 11px; }
+.sort-btn.sort-btn-sm .sort-chev { margin-left: 2px; }
+/* Botón de borrar (ícono de papelera): gris, rojo al pasar el mouse. Cada uso define tamaño y posición. */
+.del-btn { display: grid; place-items: center; padding: 0; border: 0; border-radius: 6px; background: none; color: var(--muted); line-height: 1; cursor: pointer; transition: opacity .15s, background .15s; }
+.del-btn:hover { background: var(--danger-soft); color: var(--danger); }
+.del-btn:focus-visible { outline: 2px solid var(--danger); outline-offset: 1px; opacity: 1; }
+/* Botón con aspecto de enlace (texto morado, fondo suave al pasar el mouse) */
+.link-btn { display: inline-flex; align-items: center; gap: 5px; align-self: flex-start; padding: 2px 4px; border: 0; border-radius: 6px; background: none; color: var(--primary); font-size: 11px; font-weight: 700; }
+.link-btn:hover:not(:disabled) { background: var(--primary-soft); }
+.link-btn:disabled { color: var(--muted); cursor: not-allowed; }
+.link-btn .ic { width: 13px; height: 13px; }
+/* Ícono de estado vacío (lienzo sin pantallas, Propiedades sin selección): recuadro lila; cada uso define su tamaño */
+.empty-icon { display: grid; place-items: center; background: var(--primary-soft); color: var(--primary); line-height: 1; }
 .menu.menu-up { top: auto; bottom: calc(100% + 6px); } /* no cabía debajo del botón */
 .menu-item { display: flex; align-items: center; gap: 9px; width: 100%; padding: 9px 10px; border: 0; border-radius: 8px; background: none; color: var(--ink); font-size: 12px; font-weight: 650; text-align: left; white-space: nowrap; }
 .menu-item:hover { background: #f7f5fb; }

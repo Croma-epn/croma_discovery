@@ -308,7 +308,7 @@
           <div class="prop-type-group">
             <!-- Cambiar el tipo desde donde se lee (como Balsamiq), solo a tipos de la misma familia IFML; conserva el texto visible -->
             <div class="prop-type kind-picker">Tipo:
-              <button id="componentKind" class="kind-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="componentKindMenu" aria-describedby="componentKindHint"><svg class="ic"><use id="componentIcon" href="#i-button"/></svg><span class="dropdown-label"></span><svg class="ic kind-chev" aria-hidden="true"><use href="#i-chev-down"/></svg></button>
+              <button id="componentKind" class="sort-btn sort-btn-sm" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="componentKindMenu" aria-describedby="componentKindHint"><svg class="ic kind-icon"><use id="componentIcon" href="#i-button"/></svg><span class="dropdown-label"></span><svg class="ic sort-chev" aria-hidden="true"><use href="#i-chev-down"/></svg></button>
               <div id="componentKindMenu" class="menu toolbar-menu kind-menu hidden" role="menu" aria-label="Cambiar el tipo del componente"><div class="toolbar-menu-title" aria-hidden="true">Cambiar a</div></div>
             </div>
             <small id="componentKindHint" class="prop-hint"></small>
@@ -322,16 +322,16 @@
           <!-- Datos (propuesta sin HU): entidad del bloque, dato del campo y atributos que muestra una lista o ficha -->
           <section id="componentData" class="prop-section hidden">
             <h3 class="prop-section-title">Datos</h3>
-            <div id="entityField" class="prop-field"><label for="componentEntity"><svg class="ic"><use href="#i-entity"/></svg> <span id="componentEntityLabel">Entidad</span></label><select id="componentEntity" class="prop-select"></select><small id="componentEntityHint" class="prop-hint"></small></div>
-            <div id="attributeField" class="prop-field"><label for="componentAttribute"><svg class="ic"><use href="#i-database"/></svg> Dato</label><select id="componentAttribute" class="prop-select"></select><small id="componentAttributeHint" class="prop-hint"></small></div>
-            <div id="shownField" class="prop-field"><div class="shown-head"><span id="shownTitle" class="shown-title">Muestra</span><button id="toggleShown" class="prop-link" type="button"></button></div><div id="shownList" class="shown-list" role="group" aria-labelledby="shownTitle"></div></div>
-            <button id="goToData" class="prop-link" type="button"><svg class="ic"><use href="#i-database"/></svg> Ir al panel «Datos»</button>
+            <div id="entityField" class="prop-field"><label for="componentEntity"><svg class="ic"><use href="#i-entity"/></svg> <span id="componentEntityLabel">Entidad</span></label><div id="componentEntityHost" class="toolbar-dropdown"></div><small id="componentEntityHint" class="prop-hint"></small></div>
+            <div id="attributeField" class="prop-field"><label for="componentAttribute"><svg class="ic"><use href="#i-database"/></svg> Dato</label><div id="componentAttributeHost" class="toolbar-dropdown"></div><small id="componentAttributeHint" class="prop-hint"></small></div>
+            <div id="shownField" class="prop-field"><div class="shown-head"><span id="shownTitle" class="shown-title">Muestra</span><button id="toggleShown" class="link-btn" type="button"></button></div><div id="shownList" class="shown-list" role="group" aria-labelledby="shownTitle"></div></div>
+            <button id="goToData" class="link-btn" type="button"><svg class="ic"><use href="#i-database"/></svg> Ir al panel «Datos»</button>
           </section>
           <!-- Ubicación (HU16): alternativa al arrastre para cambiar de bloque o de posición -->
           <section class="prop-section">
             <h3 class="prop-section-title">Ubicación</h3>
-            <div class="prop-field"><label for="componentParent"><svg class="ic"><use href="#i-layers"/></svg> Está en</label><select id="componentParent" class="prop-select"></select><small class="prop-hint">También puedes arrastrarlo en el lienzo dentro de su pantalla.</small></div>
-            <div class="place-row"><button id="moveUp" class="align-btn" type="button"><svg class="ic flip"><use href="#i-chev-down"/></svg>Subir</button><button id="moveDown" class="align-btn" type="button"><svg class="ic"><use href="#i-chev-down"/></svg>Bajar</button></div>
+            <div class="prop-field"><label for="componentParent"><svg class="ic"><use href="#i-layers"/></svg> Está en</label><div id="componentParentHost" class="toolbar-dropdown"></div><small class="prop-hint">También puedes arrastrarlo en el lienzo dentro de su pantalla.</small></div>
+            <div class="place-row"><button id="moveUp" class="tool-btn" type="button"><svg class="ic flip"><use href="#i-chev-down"/></svg>Subir</button><button id="moveDown" class="tool-btn" type="button"><svg class="ic"><use href="#i-chev-down"/></svg>Bajar</button></div>
           </section>
         </form>
         <!-- Varias pantallas seleccionadas -->
@@ -342,17 +342,17 @@
             <div class="align-group" role="group" aria-labelledby="alignHTitle">
               <span id="alignHTitle" class="align-group-title">Horizontal</span>
               <div class="align-row">
-                <button class="align-btn" type="button" data-align="left" aria-label="Alinear a la izquierda"><svg class="ic"><use href="#i-align-left"/></svg>Izquierda</button>
-                <button class="align-btn" type="button" data-align="hcenter" aria-label="Centrar en horizontal"><svg class="ic"><use href="#i-align-hcenter"/></svg>Centro</button>
-                <button class="align-btn" type="button" data-align="right" aria-label="Alinear a la derecha"><svg class="ic"><use href="#i-align-right"/></svg>Derecha</button>
+                <button class="tool-btn" type="button" data-align="left" aria-label="Alinear a la izquierda"><svg class="ic"><use href="#i-align-left"/></svg>Izquierda</button>
+                <button class="tool-btn" type="button" data-align="hcenter" aria-label="Centrar en horizontal"><svg class="ic"><use href="#i-align-hcenter"/></svg>Centro</button>
+                <button class="tool-btn" type="button" data-align="right" aria-label="Alinear a la derecha"><svg class="ic"><use href="#i-align-right"/></svg>Derecha</button>
               </div>
             </div>
             <div class="align-group" role="group" aria-labelledby="alignVTitle">
               <span id="alignVTitle" class="align-group-title">Vertical</span>
               <div class="align-row">
-                <button class="align-btn" type="button" data-align="top" aria-label="Alinear arriba"><svg class="ic"><use href="#i-align-top"/></svg>Arriba</button>
-                <button class="align-btn" type="button" data-align="vcenter" aria-label="Centrar en vertical"><svg class="ic"><use href="#i-align-vcenter"/></svg>Centro</button>
-                <button class="align-btn" type="button" data-align="bottom" aria-label="Alinear abajo"><svg class="ic"><use href="#i-align-bottom"/></svg>Abajo</button>
+                <button class="tool-btn" type="button" data-align="top" aria-label="Alinear arriba"><svg class="ic"><use href="#i-align-top"/></svg>Arriba</button>
+                <button class="tool-btn" type="button" data-align="vcenter" aria-label="Centrar en vertical"><svg class="ic"><use href="#i-align-vcenter"/></svg>Centro</button>
+                <button class="tool-btn" type="button" data-align="bottom" aria-label="Alinear abajo"><svg class="ic"><use href="#i-align-bottom"/></svg>Abajo</button>
               </div>
             </div>
             <small id="alignHint" class="prop-hint"></small>
