@@ -3,6 +3,7 @@
    Se crean una sola vez por navegador; si la cuenta ya existe, no se toca lo que el profesor haya hecho. */
 import { $, uid } from './util.js';
 import { db, persist, findUser } from './store.js';
+import { SIZE } from './workspace/model.js';
 
 const EMAIL = 'test@croma.com', PASSWORD = '123456';
 const field = (name, text) => ({ id: uid(), kind: 'textbox', name, text });
@@ -19,9 +20,10 @@ export function seedDemo() {
     field('txtClave', 'Clave'), field('txtConfirmar', 'Confirmar clave'), field('txtCarrera', 'Carrera'), field('txtSemestre', 'Semestre')] };
   db.users.push(user);
   db.projects.push({ id: uid(), userId: user.id, name: 'Sistema de Tutorías', description: 'App para agendar tutorías entre estudiantes y docentes', image: '', createdAt: now, updatedAt: now, screens: [
-    screen(1, 'Pantalla1', 'Pantala1', 60, 300), // error de escritura intencional (tarea 2)
-    screen(2, 'Registro', 'Registro', 380, 120, [form]), // sin teléfono y contraída (tarea 8)
-    screen(3, 'Tutorias', 'Tutorías', 760, 40),
-    screen(4, 'DetalleTutoria', 'Detalle de tutoría', 1100, 380)] });
+    // Desordenadas en ambos ejes (tarea 2): ni de izquierda a derecha ni de arriba abajo siguen el flujo.
+    screen(4, 'DetalleTutoria', 'Detalle de tutoría', 60, 360),
+    { ...screen(2, 'Registro', 'Registro', 380, 40, [form]), w: SIZE.minW }, // ancho mínimo para ensancharla (tarea 2); sin teléfono y contraída (tarea 8)
+    screen(1, 'Pantalla1', 'Pantala1', 720, 420), // error de escritura intencional (tarea 2)
+    screen(3, 'Tutorias', 'Tutorías', 1040, 140)] });
   persist();
 }
