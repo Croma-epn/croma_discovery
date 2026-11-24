@@ -198,6 +198,11 @@
       <span class="crumb-sep">/</span>
       <div class="topbar-current"><strong id="breadcrumbCurrent">Mis proyectos</strong></div>
     </div>
+    <!-- Vistas del proyecto (como las pestañas Data / Interface de OutSystems): o se ven los datos o las interfaces -->
+    <div id="viewTabs" class="view-tabs hidden" role="tablist" aria-label="Vista del proyecto">
+      <button id="tabData" class="view-tab" type="button" role="tab" aria-selected="false" aria-controls="dataView" tabindex="-1" data-view="data"><svg class="ic"><use href="#i-database"/></svg>Datos</button>
+      <button id="tabInterfaces" class="view-tab" type="button" role="tab" aria-selected="true" aria-controls="workspaceBody" data-view="interfaces"><svg class="ic"><use href="#i-phone"/></svg>Interfaces</button>
+    </div>
     <div class="topbar-right">
       <button id="saveButton" class="save-state hidden" type="button" data-state="saved" title="Guardar ahora (Ctrl+S)" aria-label="Guardar ahora (Ctrl+S)"><svg class="ic"><use href="#i-check"/></svg><span>Guardado</span></button>
       <div class="user-menu-wrap">
@@ -246,11 +251,6 @@
   </main>
 
   <main id="workspacePage" class="workspace hidden">
-    <!-- Vistas del proyecto (como las pestañas Data / Interface de OutSystems): o se ven los datos o las interfaces -->
-    <div id="viewTabs" class="view-tabs" role="tablist" aria-label="Vista del proyecto">
-      <button id="tabData" class="view-tab" type="button" role="tab" aria-selected="false" aria-controls="dataView" tabindex="-1" data-view="data"><svg class="ic"><use href="#i-database"/></svg>Datos</button>
-      <button id="tabInterfaces" class="view-tab" type="button" role="tab" aria-selected="true" aria-controls="workspaceBody" data-view="interfaces"><svg class="ic"><use href="#i-phone"/></svg>Interfaces</button>
-    </div>
     <div id="workspaceBody" class="workspace-body" data-panel="tools" role="tabpanel" aria-labelledby="tabInterfaces">
       <nav class="rail" aria-label="Paneles">
         <button id="railTools" class="rail-btn active" type="button" title="Panel de herramientas" aria-label="Panel de herramientas"><svg class="ic"><use href="#i-tool"/></svg><span>Herramientas</span></button>

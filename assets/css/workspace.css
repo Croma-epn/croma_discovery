@@ -1,15 +1,6 @@
 /* Espacio de trabajo: barra de paneles, Herramientas/Capas, lienzo, pantallas y Propiedades.
    Columnas: [paleta --pal] [lienzo] [propiedades --props]. La barra de íconos ocupa el padding izquierdo. */
-.workspace { height: calc(100vh - var(--topbar-h)); min-height: 520px; display: grid; grid-template-rows: auto minmax(0, 1fr); animation: fadeIn .2s ease; }
-/* Pestañas Datos / Interfaces: franja propia bajo el encabezado, lengüetas cuadradas y centradas.
-   La elegida es blanca como lo que muestra y tapa la línea inferior: se lee unida a su contenido (región común). */
-.view-tabs { display: flex; justify-content: center; height: 32px; background: #f3f1f6; border-bottom: 1px solid var(--line); }
-.view-tab { display: inline-flex; align-items: center; gap: 6px; margin-bottom: -1px; padding: 0 16px; border: 0; border-right: 1px solid var(--line); background: none; color: var(--muted); font-size: 12.5px; font-weight: 650; transition: color .15s, background .15s; }
-.view-tab:first-child { border-left: 1px solid var(--line); }
-.view-tab:hover { color: var(--ink); background: #ebe8f0; }
-.view-tab[aria-selected=true] { background: #fff; color: var(--ink); box-shadow: inset 0 2px var(--primary); }
-.view-tab .ic { width: 15px; height: 15px; }
-.view-tab[aria-selected=true] .ic { color: var(--primary); }
+.workspace { height: calc(100vh - var(--topbar-h)); min-height: 520px; display: grid; grid-template-rows: minmax(0, 1fr); animation: fadeIn .2s ease; }
 .workspace-body {
   --pal: 250px;  /* el mismo para Herramientas, Capas y Datos: el del más ancho (Datos) */
   --props: 300px;

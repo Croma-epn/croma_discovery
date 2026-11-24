@@ -3,21 +3,29 @@
 /* Barra superior */
 .app-shell { min-height: 100vh; }
 .app-topbar { position: sticky; top: 0; z-index: 10; height: var(--topbar-h); display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 clamp(20px, 3vw, 42px); background: #fff; border-bottom: 1px solid var(--line); }
+.topbar-left, .topbar-right { flex: 1 1 0; } /* mismo ancho a cada lado: las vistas del proyecto quedan centradas */
 .topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .topbar-brand { display: flex; align-items: center; gap: 10px; padding: 3px 4px 3px 0; border: 0; border-radius: 10px; background: none; color: var(--ink); }
 .topbar-brand .app-mark { width: 28px; height: 28px; border-radius: 9px; font-size: 17px; transition: transform .18s; }
 .topbar-brand:hover .app-mark { transform: scale(1.05); }
 .topbar-brand strong { font: 800 15px Manrope; letter-spacing: -.03em; }
 .crumb-sep { color: #c1bdc9; }
-.topbar-current { display: flex; align-items: center; min-width: 0; }
+.topbar-current { flex: 1; display: flex; align-items: center; min-width: 0; }
 .topbar-current strong { max-width: 46vw; overflow: hidden; color: var(--ink); font-size: 12.5px; font-weight: 700; white-space: nowrap; text-overflow: ellipsis; }
 /* Nombre del proyecto editable con un clic (en el lienzo) */
 /* Al pasar el mouse aparece el mismo contorno que al editar (como NotebookLM); mismas medidas para que el texto no salte */
-.topbar-current strong.editable, .topbar-current .inline-edit { width: min(46vw, 420px); margin: -4px -7px; padding: 3px 6px; border: 1px solid transparent; border-radius: 6px; }
+.topbar-current strong.editable, .topbar-current .inline-edit { width: min(100%, 420px); margin: -4px -7px; padding: 3px 6px; border: 1px solid transparent; border-radius: 6px; }
 .topbar-current strong.editable { cursor: text; transition: border-color .15s; }
 .topbar-current strong.editable:hover { border-color: var(--primary); }
 .topbar-current .inline-edit { border-color: var(--primary); font-size: 12.5px; font-weight: 700; }
-.topbar-right { display: flex; align-items: center; gap: 13px; }
+.topbar-right { display: flex; align-items: center; justify-content: flex-end; gap: 13px; }
+/* Vistas del proyecto (Datos / Interfaces): control segmentado; la elegida va en blanco */
+.view-tabs { flex: none; display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: #f1eff5; }
+.view-tab { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border: 0; border-radius: 7px; background: none; color: var(--muted); font-size: 12px; font-weight: 650; transition: color .15s, background .15s; }
+.view-tab:hover { color: var(--ink); }
+.view-tab[aria-selected=true] { background: #fff; color: var(--ink); box-shadow: 0 1px 3px #2a1f4426; }
+.view-tab .ic { width: 14px; height: 14px; }
+.view-tab[aria-selected=true] .ic { color: var(--primary); }
 /* Indicador de guardado: muestra el estado real y al pulsarlo guarda (Ctrl+S) */
 /* Ancho fijo (el del texto más largo, «No se pudo guardar»): al cambiar de estado el ícono no se mueve */
 .save-state { min-width: 136px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 5px 9px; border: 1px solid transparent; border-radius: 8px; background: none; color: var(--primary); font-size: 11px; white-space: nowrap; transition: background .15s, border-color .15s; }
@@ -154,7 +162,10 @@
 }
 @media (max-width: 760px) {
   :root { --topbar-h: 48px; }
-  .app-topbar { padding: 0 16px; }
+  .app-topbar { gap: 10px; padding: 0 16px; }
+  .topbar-right { flex: none; } /* en celular el espacio va al nombre del proyecto */
+  .view-tab { padding: 0 9px; }
+  .view-tab .ic { display: none; }
   .save-state { min-width: 0; }
   .save-state span { display: none; } /* en celular queda solo el ícono */
   .page { padding: 27px 16px 42px; }
@@ -169,6 +180,7 @@
   .form-card { padding: 20px; }
 }
 @media (max-width: 480px) {
+  .topbar-brand strong { display: none; } /* queda el logo: más espacio para el nombre del proyecto */
   .sort-btn { min-width: 112px; padding: 0 11px; }
   .sort-btn .sort-prefix { display: none; }
   .sort-btn .sort-icon { display: inline-block; }

@@ -26,6 +26,7 @@ export function showAppPage(name, { title, saved = false, editable = false }) {
   editable ? heading.setAttribute('tabindex', '0') : heading.removeAttribute('tabindex');
   heading.title = editable ? 'Cambiar nombre' : '';
   $('saveButton').classList.toggle('hidden', !saved);
+  $('viewTabs').classList.toggle('hidden', name !== 'workspace');
   closeMenus();
 }
 
