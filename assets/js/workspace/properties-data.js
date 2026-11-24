@@ -33,7 +33,7 @@ function renderEntity(domain, isData) {
   $('componentEntityLabel').innerHTML = isData ? 'Entidad <span class="req">*</span>' : 'Entidad que llena';
   mountSelect($('componentEntityHost'), { id: 'componentEntity', title: 'Entidad', options: options(domain, isData ? 'Elige una entidad' : 'Ninguna'),
     value: entity?.id ?? '', disabled: !domain.length, onSelect: chooseEntity });
-  $('componentEntityHint').textContent = !domain.length ? 'Aún no hay entidades: créalas en el panel «Datos».'
+  $('componentEntityHint').textContent = !domain.length ? ''
     : !isData ? 'Opcional. Sus campos podrán elegir su dato entre los atributos de esta entidad.'
       : entity ? `Muestra registros de «${entity.name}».` : 'Obligatoria: de qué entidad muestra registros.';
   if (isData && entity) renderShown(entity);

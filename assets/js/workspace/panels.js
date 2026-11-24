@@ -1,11 +1,11 @@
-/* Paneles laterales del lienzo: Herramientas/Capas/Datos (izquierda) y Propiedades (derecha).
+/* Vistas del proyecto (pestañas Datos / Interfaces de la barra superior) y paneles laterales del lienzo:
+   Herramientas/Capas (izquierda) y Propiedades (derecha).
    Tablet (≤980 px): Propiedades flota sobre el lienzo. Celular (≤760 px): los paneles izquierdos también. */
 import { $ } from '../util.js';
 
 const PANELS = {
   tools: { icon: 'i-tool', label: 'Herramientas', rail: 'railTools' },
   nav: { icon: 'i-layers', label: 'Capas', rail: 'railNav' },
-  data: { icon: 'i-database', label: 'Datos', rail: 'railData' },
 };
 const body = () => $('workspaceBody');
 export const isTablet = () => matchMedia('(max-width:980px)').matches;
@@ -36,22 +36,37 @@ function setPanel(name) {
   tab.setAttribute('aria-label', tab.title);
 }
 
-// Abre un panel izquierdo (p. ej. «Datos» desde Propiedades).
-export function showPanel(name) {
-  if (isPhone()) collapseProperties();
-  collapsePalette(false);
-  setPanel(name);
+// O se ven los datos o las interfaces (prueba de usabilidad Sprint 2): la vista elegida ocupa todo el espacio de trabajo.
+const TABS = ['tabData', 'tabInterfaces'];
+export const isDataView = () => !$('dataView').classList.contains('hidden');
+export function setView(view) {
+  $('dataView').classList.toggle('hidden', view !== 'data');
+  body().classList.toggle('hidden', view === 'data');
+  TABS.forEach(id => {
+    const selected = $(id).dataset.view === view;
+    $(id).setAttribute('aria-selected', String(selected));
+    $(id).tabIndex = selected ? 0 : -1; // patrón de pestañas WAI-ARIA: Tab entra a la elegida, las flechas cambian
+  });
 }
 
-// Cada proyecto abre con «Herramientas» activo (HU10 CA1). En celular los paneles empiezan ocultos,
+// Cada proyecto abre en «Interfaces» con «Herramientas» activo (HU10 CA1). En celular los paneles empiezan ocultos,
 // y en tablet Propiedades también, para dejar libre el lienzo.
 export function resetPanels() {
   collapsePalette(isPhone());
   collapseProperties(isTablet());
   setPanel('tools');
+  setView('interfaces');
 }
 
 export function initPanels() {
+  const tabs = $('viewTabs');
+  tabs.addEventListener('click', e => { const tab = e.target.closest('[role=tab]'); if (tab) setView(tab.dataset.view) });
+  tabs.addEventListener('keydown', e => {
+    if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+    const next = $(TABS.find(id => $(id).tabIndex === -1));
+    setView(next.dataset.view);
+    next.focus();
+  });
   Object.entries(PANELS).forEach(([key, { rail }]) => $(rail).addEventListener('click', () => setPanel(key)));
   $('collapsePalette').addEventListener('click', () => collapsePalette());
   $('expandPalette').addEventListener('click', () => { if (isPhone()) collapseProperties(); collapsePalette(false) });

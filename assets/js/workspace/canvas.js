@@ -51,7 +51,7 @@ const componentsHtml = s => (s.components ?? []).map(componentHtml).join('');
 const nodeHtml = s => {
   const { w, h } = sizeOf(s);
   return `<article class="screen-node" data-screen="${esc(s.id)}" style="left:${s.x}px;top:${s.y}px;width:${w}px;height:${h}px">`
-    + `<div class="node-head"><svg class="ic"><use href="#i-phone"/></svg><span class="node-business">${esc(s.businessName)}</span><span class="node-code">${esc(s.code)}</span>`
+    + `<div class="node-head"><svg class="ic node-grip" aria-hidden="true"><use href="#i-grip"/></svg><svg class="ic"><use href="#i-phone"/></svg><span class="node-business">${esc(s.businessName)}</span><span class="node-code">${esc(s.code)}</span>`
     + `<button class="del-btn node-del" type="button" title="Eliminar elemento" aria-label="Eliminar ${esc(s.businessName)}"><svg class="ic"><use href="#i-trash"/></svg></button></div>`
     + `<ol class="comp-list">${componentsHtml(s)}</ol>${MORE_BUTTON}`
     + RESIZE_DIRS.map(d => `<span class="rz rz-${d}" data-rz="${d}" aria-hidden="true"></span>`).join('')
@@ -311,7 +311,7 @@ function startMarquee(down, additive) {
 let spaceHeld = false;
 function trackSpace(e) {
   const keyboardControl = e.target.matches('button, [role=button], a, select, input[type=checkbox]') && e.target.matches(':focus-visible');
-  if (e.code !== 'Space' || e.target.matches('input:not([type=checkbox]), textarea') || keyboardControl || $('workspacePage').classList.contains('hidden')) return;
+  if (e.code !== 'Space' || e.target.matches('input:not([type=checkbox]), textarea') || keyboardControl || !viewport().offsetParent) return; // lienzo oculto: otra página o la vista «Datos»
   e.preventDefault(); // evita desplazar la página o pulsar el botón enfocado
   spaceHeld = e.type === 'keydown';
   viewport().classList.toggle('pan-ready', spaceHeld);

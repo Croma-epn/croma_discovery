@@ -1,4 +1,4 @@
-/* Panel «Datos»: modelo de dominio del proyecto como lista de entidades con sus atributos (nombre y tipo).
+/* Vista «Datos» (pestaña de la barra superior): modelo de dominio del proyecto como tarjetas de entidades con sus atributos (nombre y tipo).
    No es un diagrama: el profesor pidió una lista o estructura simple de clases y atributos (entrevista sprint 2, P14). */
 import { $, esc, plural } from '../util.js';
 import { currentProject, saveProject } from '../store.js';
@@ -24,8 +24,7 @@ const entityHtml = e => `<div class="data-entity" data-entity="${e.id}">
 export function render() {
   const domain = currentProject()?.domain ?? [];
   $('dataCount').textContent = domain.length;
-  $('dataList').innerHTML = domain.length ? domain.map(entityHtml).join('')
-    : '<p class="tree-empty">Aún no hay entidades. Crea la primera, por ejemplo «Usuario» con los atributos «correo» y «clave».</p>';
+  $('dataList').innerHTML = domain.map(entityHtml).join('');
   // Tipo de dato: el mismo desplegable que «Ordenar por», compacto.
   $('dataList').querySelectorAll('.data-type').forEach(host => {
     const { item } = locate(host);

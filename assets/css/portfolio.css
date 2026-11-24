@@ -2,10 +2,10 @@
 
 /* Barra superior */
 .app-shell { min-height: 100vh; }
-.app-topbar { position: sticky; top: 0; z-index: 10; height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 clamp(20px, 3vw, 42px); background: #fff; border-bottom: 1px solid var(--line); }
+.app-topbar { position: sticky; top: 0; z-index: 10; height: var(--topbar-h); display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 clamp(20px, 3vw, 42px); background: #fff; border-bottom: 1px solid var(--line); }
 .topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .topbar-brand { display: flex; align-items: center; gap: 10px; padding: 3px 4px 3px 0; border: 0; border-radius: 10px; background: none; color: var(--ink); }
-.topbar-brand .app-mark { width: 32px; height: 32px; border-radius: 10px; font-size: 17px; transition: transform .18s; }
+.topbar-brand .app-mark { width: 28px; height: 28px; border-radius: 9px; font-size: 17px; transition: transform .18s; }
 .topbar-brand:hover .app-mark { transform: scale(1.05); }
 .topbar-brand strong { font: 800 15px Manrope; letter-spacing: -.03em; }
 .crumb-sep { color: #c1bdc9; }
@@ -31,7 +31,7 @@
 
 /* Menú de cuenta */
 .user-menu-wrap { position: relative; }
-.user-avatar-btn { width: 36px; height: 36px; display: grid; place-items: center; padding: 0; border: 1px solid #ddd5ee; border-radius: 50%; background: var(--primary-soft); color: var(--primary); font-size: 11.5px; font-weight: 800; transition: box-shadow .15s, border-color .15s; }
+.user-avatar-btn { width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 1px solid #ddd5ee; border-radius: 50%; background: var(--primary-soft); color: var(--primary); font-size: 11.5px; font-weight: 800; transition: box-shadow .15s, border-color .15s; }
 .user-avatar-btn:hover { border-color: #bfaee8; box-shadow: 0 0 0 3px #f1ecfa; }
 .user-menu { top: calc(100% + 10px); width: 250px; }
 .user-menu-head { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 9px; }
@@ -153,7 +153,8 @@
   .create-layout { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 760px) {
-  .app-topbar { height: 60px; padding: 0 16px; }
+  :root { --topbar-h: 48px; }
+  .app-topbar { padding: 0 16px; }
   .save-state { min-width: 0; }
   .save-state span { display: none; } /* en celular queda solo el ícono */
   .page { padding: 27px 16px 42px; }

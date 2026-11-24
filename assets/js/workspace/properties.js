@@ -1,5 +1,5 @@
 /* Panel «Propiedades», en bloques como Figma.
-   Una pantalla: Identificación, Flujo, Tamaño y Alinear (deshabilitado). Varias: Alinear.
+   Una pantalla: tipo y pantalla inicial, Identificación, Tamaño y Alinear (deshabilitado). Varias: Alinear.
    Un componente: su tipo, el elemento IFML que representa, Identificación y Datos (properties-data.js). Ninguna: ayuda. */
 import { $ } from '../util.js';
 import { currentProject, selectedScreen, saveProject } from '../store.js';
@@ -24,7 +24,7 @@ export function fillSize(s) {
 
 const START_HINTS = {
   this: 'Es la primera pantalla que verá el usuario.',
-  none: 'Aún no hay pantalla inicial: márcala para definir dónde empieza el flujo.',
+  none: '',
   other: 'Márcala para que el flujo empiece aquí en lugar de la pantalla inicial actual.',
 };
 function renderStart(s) {
@@ -33,13 +33,11 @@ function renderStart(s) {
   $('screenStartHint').textContent = START_HINTS[start === s.id ? 'this' : start ? 'other' : 'none'];
 }
 
-// Alinear siempre está a la vista; con menos de 2 pantallas se ve deshabilitado y explica cómo activarlo.
+// Alinear siempre está a la vista; con menos de 2 pantallas se ve deshabilitado.
 function renderAlign(count) {
   const enabled = count > 1;
   document.querySelectorAll('[data-align]').forEach(button => { button.disabled = !enabled });
-  $('alignHint').textContent = enabled
-    ? 'Ctrl + clic agrega o quita pantallas de la selección. Arrastra una para mover todo el grupo.'
-    : 'Selecciona 2 o más pantallas (Ctrl + clic o arrastrando sobre el fondo) para alinearlas.';
+  $('alignHint').textContent = enabled ? 'Ctrl + clic agrega o quita pantallas de la selección. Arrastra una para mover todo el grupo.' : '';
 }
 
 function fillText(fields, target) {
@@ -49,19 +47,11 @@ function fillText(fields, target) {
     $(`${id}Count`).textContent = target[key].length;
   });
 }
-// Por qué se puede o no cambiar el tipo (el menú solo ofrece tipos de la misma familia IFML).
-const KIND_HINTS = {
-  field: 'Puedes cambiarlo por otro campo; se conserva el texto visible.',
-  event: 'Un botón no cambia a otro tipo: dispara una acción y no guarda datos como un campo.',
-  content: 'Un contenido no cambia a otro tipo: solo muestra información, como un título, un párrafo o una imagen.',
-  form: 'Un formulario no cambia a otro tipo: agrupa los campos y los botones que envían sus datos.',
-  data: 'Puedes cambiarla entre lista y ficha de datos; se conservan la entidad y los botones.',
-};
+// El menú solo ofrece tipos de la misma familia IFML; sin otro tipo posible, el botón se deshabilita.
 function renderKind(kind) {
   const options = kindsLike(kind);
   $('componentKindMenu').querySelectorAll('[data-value]').forEach(item => item.classList.toggle('hidden', !options.includes(item.dataset.value)));
   $('componentKind').disabled = options.length < 2;
-  $('componentKindHint').textContent = KIND_HINTS[COMPONENTS[kind].family];
   setKindLabel(kind);
 }
 // Ubicación: alternativa al arrastre (WCAG 2.5.7) para cambiar de bloque y de posición dentro de la pantalla.

@@ -48,7 +48,8 @@
 <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="m4 18 5.5-5.5a1.4 1.4 0 0 1 2 0L18 19"/></symbol>
 <symbol id="i-chev-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
 <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4.5"/><path d="m11.5 11.5 8-8M17 6l2.5 2.5M14 9l2 2"/></symbol>
-<symbol id="i-more" viewBox="0 0 24 24"><path d="M12 5h.01M12 12h.01M12 19h.01" stroke-width="3.2" stroke-linecap="round"/></symbol>
+<symbol id="i-grip" viewBox="0 0 24 24"><path d="M9 6h.01M9 12h.01M9 18h.01M15 6h.01M15 12h.01M15 18h.01" stroke-width="3" stroke-linecap="round"/></symbol>
+<symbol id="i-more"viewBox="0 0 24 24"><path d="M12 5h.01M12 12h.01M12 19h.01" stroke-width="3.2" stroke-linecap="round"/></symbol>
 <symbol id="i-sort" viewBox="0 0 24 24"><path d="M4 7h10M4 12h7M4 17h4"/><path d="M18 5v14M14.5 15.5 18 19l3.5-3.5"/></symbol>
 <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M5 3v3m0 4v11M12 3v10m0 4v4M19 3v3m0 4v11M2 6h6M9 17h6M16 6h6"/></symbol>
 <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
@@ -245,25 +246,21 @@
   </main>
 
   <main id="workspacePage" class="workspace hidden">
-    <div id="workspaceBody" class="workspace-body" data-panel="tools">
+    <!-- Vistas del proyecto (como las pestañas Data / Interface de OutSystems): o se ven los datos o las interfaces -->
+    <div id="viewTabs" class="view-tabs" role="tablist" aria-label="Vista del proyecto">
+      <button id="tabData" class="view-tab" type="button" role="tab" aria-selected="false" aria-controls="dataView" tabindex="-1" data-view="data"><svg class="ic"><use href="#i-database"/></svg>Datos</button>
+      <button id="tabInterfaces" class="view-tab" type="button" role="tab" aria-selected="true" aria-controls="workspaceBody" data-view="interfaces"><svg class="ic"><use href="#i-phone"/></svg>Interfaces</button>
+    </div>
+    <div id="workspaceBody" class="workspace-body" data-panel="tools" role="tabpanel" aria-labelledby="tabInterfaces">
       <nav class="rail" aria-label="Paneles">
         <button id="railTools" class="rail-btn active" type="button" title="Panel de herramientas" aria-label="Panel de herramientas"><svg class="ic"><use href="#i-tool"/></svg><span>Herramientas</span></button>
         <button id="railNav" class="rail-btn" type="button" title="Panel de capas" aria-label="Panel de capas"><svg class="ic"><use href="#i-layers"/></svg><span>Capas</span></button>
-        <button id="railData" class="rail-btn" type="button" title="Panel de datos" aria-label="Panel de datos"><svg class="ic"><use href="#i-database"/></svg><span>Datos</span></button>
       </nav>
       <aside class="palette"><div class="palette-inner">
-        <p class="palette-hint panel-tools">Arrastra al lienzo o haz clic para agregar a lo seleccionado</p>
         <p class="palette-group panel-tools">Pantallas</p>
-        <button id="screenPalette" class="palette-item panel-tools" type="button" draggable="true" aria-label="Agregar pantalla"><span class="palette-icon"><svg class="ic"><use href="#i-phone"/></svg></span><span><strong>Pantalla</strong><small class="palette-hint">Una vista de la aplicación</small></span></button>
+        <button id="screenPalette" class="palette-item panel-tools" type="button" draggable="true" aria-label="Agregar pantalla"><span class="palette-icon"><svg class="ic"><use href="#i-phone"/></svg></span><span><strong>Pantalla</strong><small class="palette-desc">Una vista de la aplicación</small></span></button>
         <div id="componentPalette" class="palette-list panel-tools"></div>
         <div class="tree-block panel-nav"><div class="tree-title"><svg class="ic"><use href="#i-folder"/></svg> <span id="treeProject"></span> <span id="treeCount" class="tree-count">0</span></div><div id="screenTree" class="screen-tree"></div></div>
-        <!-- Modelo de dominio: entidades con atributos, sin relaciones (Libro cap. 3: basta el nivel entidad-relación) -->
-        <div class="data-block panel-data">
-          <div class="tree-title"><svg class="ic"><use href="#i-database"/></svg> <span>Datos</span> <span id="dataCount" class="tree-count">0</span></div>
-          <p class="palette-hint">Las entidades y atributos con los que trabajan tus pantallas, como «Usuario» con «correo» y «clave».</p>
-          <button id="addEntity" class="data-add" type="button"><svg class="ic"><use href="#i-plus"/></svg> Nueva entidad</button>
-          <div id="dataList" class="data-list"></div>
-        </div>
       </div></aside>
       <section class="canvas-wrap" aria-label="Lienzo del modelo">
         <button id="collapsePalette" class="mini-collapse collapse-left" type="button" aria-expanded="true" aria-label="Ocultar paneles laterales" title="Ocultar paneles laterales"><svg class="ic"><use href="#i-chev-left"/></svg></button>
@@ -281,25 +278,23 @@
         <div class="panel-head"><h2 class="panel-title">Propiedades de elemento</h2><button id="closePropertiesPanel" class="mini-collapse props-close" type="button" aria-label="Ocultar propiedades" title="Ocultar propiedades"><svg class="ic"><use href="#i-close"/></svg></button></div>
         <div id="propertiesEmpty" class="properties-empty"><div class="empty-icon"><svg class="ic"><use href="#i-phone"/></svg></div><h3>Sin selección</h3><p>Selecciona un elemento en el lienzo o en el panel «Capas» para ver y editar sus propiedades. Para alinear varios, selecciónalos con Ctrl + clic o arrastrando sobre el fondo. Espacio + arrastrar mueve el lienzo.</p></div>
         <div id="propertiesBody" class="properties-form hidden">
-        <!-- Una pantalla seleccionada: bloques Identificación, Flujo y Tamaño -->
+        <!-- Una pantalla seleccionada: tipo y pantalla inicial arriba (lo más importante, patrón de Figma); luego Identificación y Tamaño -->
         <form id="inlineProperties" class="prop-stack" novalidate>
           <div class="prop-type">Tipo: <b><svg class="ic"><use href="#i-phone"/></svg>Pantalla</b></div>
           <section class="prop-section">
-            <h3 class="prop-section-title">Identificación</h3>
-            <div class="prop-field"><label for="screenBusiness"><svg class="ic"><use href="#i-briefcase"/></svg> Nombre de negocio <span class="req">*</span></label><input id="screenBusiness" maxlength="20" placeholder="Inicio de sesión" required autocomplete="off"><small id="screenBusinessError" class="field-error"></small><small class="prop-hint"><span id="screenBusinessCount">0</span>/20 · Lo que se ve en el lienzo.</small></div>
-            <div class="prop-field"><label for="screenCode"><svg class="ic"><use href="#i-hash"/></svg> Código <span class="req">*</span></label><input id="screenCode" maxlength="20" placeholder="VC-01" required autocomplete="off"><small id="screenCodeError" class="field-error"></small><small class="prop-hint"><span id="screenCodeCount">0</span>/20 · Identificador único del modelo.</small></div>
-            <div class="prop-field"><label for="screenTechnical"><svg class="ic"><use href="#i-code"/></svg> Nombre técnico <span class="req">*</span></label><input id="screenTechnical" maxlength="20" placeholder="PantallaInicio" required autocomplete="off"><small id="screenTechnicalError" class="field-error"></small><small class="prop-hint"><span id="screenTechnicalCount">0</span>/20 · Nombre en el código, sin espacios.</small></div>
+            <div class="prop-field"><label class="prop-check"><input id="screenStart" type="checkbox"><svg class="ic"><use href="#i-home"/></svg> Pantalla inicial</label><small id="screenStartHint" class="prop-hint"></small></div>
           </section>
           <section class="prop-section">
-            <h3 class="prop-section-title">Flujo</h3>
-            <div class="prop-field"><label class="prop-check"><input id="screenStart" type="checkbox"><svg class="ic"><use href="#i-home"/></svg> Pantalla inicial</label><small id="screenStartHint" class="prop-hint"></small></div>
+            <h3 class="prop-section-title">Identificación</h3>
+            <div class="prop-field"><label for="screenBusiness"><svg class="ic"><use href="#i-briefcase"/></svg> Nombre de negocio <span class="req">*</span></label><div class="input-suffix"><input id="screenBusiness" maxlength="20" placeholder="Inicio de sesión" required autocomplete="off"><span><span id="screenBusinessCount">0</span>/20</span></div><small id="screenBusinessError" class="field-error"></small></div>
+            <div class="prop-field"><label for="screenCode"><svg class="ic"><use href="#i-hash"/></svg> Código <span class="req">*</span></label><div class="input-suffix"><input id="screenCode" maxlength="20" placeholder="VC-01" required autocomplete="off"><span><span id="screenCodeCount">0</span>/20</span></div><small id="screenCodeError" class="field-error"></small></div>
+            <div class="prop-field"><label for="screenTechnical"><svg class="ic"><use href="#i-code"/></svg> Nombre técnico <span class="req">*</span></label><div class="input-suffix"><input id="screenTechnical" maxlength="20" placeholder="PantallaInicio" required autocomplete="off"><span><span id="screenTechnicalCount">0</span>/20</span></div><small id="screenTechnicalError" class="field-error"></small></div>
           </section>
           <section class="prop-section">
             <h3 class="prop-section-title">Tamaño</h3>
             <div class="prop-size-row">
-              <div class="prop-field"><label for="screenWidth">Ancho</label><div class="px-input"><input id="screenWidth" type="number" inputmode="numeric" min="200" max="800" step="10" autocomplete="off"><span aria-hidden="true">px</span></div><small id="screenWidthError" class="field-error"></small><small class="prop-hint">De 200 a 800 px.</small></div>
+              <div class="prop-field"><label for="screenWidth">Ancho</label><div class="input-suffix"><input id="screenWidth" type="number" inputmode="numeric" min="200" max="800" step="10" autocomplete="off"><span aria-hidden="true">px</span></div><small id="screenWidthError" class="field-error"></small></div>
             </div>
-            <small class="prop-hint">También puedes arrastrar sus bordes laterales. El alto se ajusta solo a su contenido: si no cabe, usa «Ver más» al pie de la pantalla.</small>
           </section>
         </form>
         <!-- Un componente seleccionado: su tipo con el elemento IFML que representa, e Identificación -->
@@ -307,16 +302,15 @@
           <div class="prop-type-group">
             <!-- Cambiar el tipo desde donde se lee (como Balsamiq), solo a tipos de la misma familia IFML; conserva el texto visible -->
             <div class="prop-type kind-picker">Tipo:
-              <button id="componentKind" class="sort-btn sort-btn-sm" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="componentKindMenu" aria-describedby="componentKindHint"><svg class="ic kind-icon"><use id="componentIcon" href="#i-button"/></svg><span class="dropdown-label"></span><svg class="ic sort-chev" aria-hidden="true"><use href="#i-chev-down"/></svg></button>
+              <button id="componentKind" class="sort-btn sort-btn-sm" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="componentKindMenu"><svg class="ic kind-icon"><use id="componentIcon" href="#i-button"/></svg><span class="dropdown-label"></span><svg class="ic sort-chev" aria-hidden="true"><use href="#i-chev-down"/></svg></button>
               <div id="componentKindMenu" class="menu toolbar-menu kind-menu hidden" role="menu" aria-label="Cambiar el tipo del componente"><div class="toolbar-menu-title" aria-hidden="true">Cambiar a</div></div>
             </div>
-            <small id="componentKindHint" class="prop-hint"></small>
             <div class="prop-type">Elemento IFML: <b id="componentIfml"></b></div>
           </div>
           <section class="prop-section">
             <h3 class="prop-section-title">Identificación</h3>
-            <div class="prop-field"><label for="componentText"><svg class="ic"><use href="#i-label"/></svg> Texto visible <span class="req">*</span></label><input id="componentText" maxlength="30" placeholder="Guardar" required autocomplete="off"><small id="componentTextError" class="field-error"></small><small class="prop-hint"><span id="componentTextCount">0</span>/30 · Lo que lee el usuario: el texto del botón, el rótulo del campo o el título del bloque.</small></div>
-            <div class="prop-field"><label for="componentName"><svg class="ic"><use href="#i-code"/></svg> Nombre técnico <span class="req">*</span></label><input id="componentName" maxlength="30" placeholder="btnGuardar" required autocomplete="off"><small id="componentNameError" class="field-error"></small><small class="prop-hint"><span id="componentNameCount">0</span>/30 · Nombre en el código, único en la pantalla.</small></div>
+            <div class="prop-field"><label for="componentText"><svg class="ic"><use href="#i-label"/></svg> Texto visible <span class="req">*</span></label><div class="input-suffix"><input id="componentText" maxlength="30" placeholder="Guardar" required autocomplete="off"><span><span id="componentTextCount">0</span>/30</span></div><small id="componentTextError" class="field-error"></small></div>
+            <div class="prop-field"><label for="componentName"><svg class="ic"><use href="#i-code"/></svg> Nombre técnico <span class="req">*</span></label><div class="input-suffix"><input id="componentName" maxlength="30" placeholder="btnGuardar" required autocomplete="off"><span><span id="componentNameCount">0</span>/30</span></div><small id="componentNameError" class="field-error"></small></div>
           </section>
           <!-- Datos (propuesta sin HU): entidad del bloque, dato del campo y atributos que muestra una lista o ficha -->
           <section id="componentData" class="prop-section hidden">
@@ -324,12 +318,12 @@
             <div id="entityField" class="prop-field"><label for="componentEntity"><svg class="ic"><use href="#i-entity"/></svg> <span id="componentEntityLabel">Entidad</span></label><div id="componentEntityHost" class="toolbar-dropdown"></div><small id="componentEntityHint" class="prop-hint"></small></div>
             <div id="attributeField" class="prop-field"><label for="componentAttribute"><svg class="ic"><use href="#i-database"/></svg> Dato</label><div id="componentAttributeHost" class="toolbar-dropdown"></div><small id="componentAttributeHint" class="prop-hint"></small></div>
             <div id="shownField" class="prop-field"><div class="shown-head"><span id="shownTitle" class="shown-title">Muestra</span><button id="toggleShown" class="link-btn" type="button"></button></div><div id="shownList" class="shown-list" role="group" aria-labelledby="shownTitle"></div></div>
-            <button id="goToData" class="link-btn" type="button"><svg class="ic"><use href="#i-database"/></svg> Ir al panel «Datos»</button>
+            <button id="goToData" class="link-btn" type="button"><svg class="ic"><use href="#i-database"/></svg> Ir a la pestaña «Datos»</button>
           </section>
           <!-- Ubicación (HU16): alternativa al arrastre para cambiar de bloque o de posición -->
           <section class="prop-section">
             <h3 class="prop-section-title">Ubicación</h3>
-            <div class="prop-field"><label for="componentParent"><svg class="ic"><use href="#i-layers"/></svg> Está en</label><div id="componentParentHost" class="toolbar-dropdown"></div><small class="prop-hint">También puedes arrastrarlo en el lienzo dentro de su pantalla.</small></div>
+            <div class="prop-field"><label for="componentParent"><svg class="ic"><use href="#i-layers"/></svg> Está en</label><div id="componentParentHost" class="toolbar-dropdown"></div></div>
             <div class="place-row"><button id="moveUp" class="tool-btn" type="button"><svg class="ic flip"><use href="#i-chev-down"/></svg>Subir</button><button id="moveDown" class="tool-btn" type="button"><svg class="ic"><use href="#i-chev-down"/></svg>Bajar</button></div>
           </section>
         </form>
@@ -359,6 +353,11 @@
         </div>
       </div></aside>
     </div>
+    <!-- Modelo de dominio: entidades con atributos, sin relaciones (Libro cap. 3: basta el nivel entidad-relación) -->
+    <section id="dataView" class="data-view hidden" role="tabpanel" aria-labelledby="tabData">
+      <div class="data-view-head"><h2 class="data-view-title">Entidades <span id="dataCount" class="tree-count">0</span></h2><button id="addEntity" class="btn btn-primary btn-sm" type="button"><svg class="ic"><use href="#i-plus"/></svg> Nueva entidad</button></div>
+      <div id="dataList" class="data-list"></div>
+    </section>
   </main>
 </div>
 

@@ -11,7 +11,7 @@ import * as canvas from './canvas.js';
 import * as layers from './layers.js';
 import * as properties from './properties.js';
 import * as dataPanel from './data-panel.js';
-import { initPanels, resetPanels, collapsePalette, collapseFloatingPanels, isPhone, showPanel } from './panels.js';
+import { initPanels, resetPanels, collapsePalette, collapseFloatingPanels, isPhone, setView, isDataView } from './panels.js';
 
 // Pantallas seleccionadas. session.screenId es la última elegida (la que muestran las propiedades).
 const selection = new Set();
@@ -196,7 +196,7 @@ function moveComponent(screenId, id, blockId, index) {
 // Grupos de la paleta bajo «Pantallas» (que está en el HTML): de lo que agrupa a lo que va dentro.
 const PALETTE_GROUPS = [['Bloques', ({ block }) => block], ['Controles', ({ block }) => !block]];
 const paletteItem = ([kind, { label, icon, hint }]) =>
-  `<button class="palette-item" type="button" draggable="true" data-component="${kind}" aria-label="Agregar ${label.toLowerCase()}"><span class="palette-icon"><svg class="ic"><use href="#${icon}"/></svg></span><span><strong>${label}</strong><small class="palette-hint">${hint}</small></span></button>`;
+  `<button class="palette-item" type="button" draggable="true" data-component="${kind}" aria-label="Agregar ${label.toLowerCase()}"><span class="palette-icon"><svg class="ic"><use href="#${icon}"/></svg></span><span><strong>${label}</strong><small class="palette-desc">${hint}</small></span></button>`;
 
 const startRename = id => { select(id); canvas.rename(id, name => renameScreen(id, name)) };
 
@@ -213,7 +213,7 @@ function renameProject() {
 }
 
 const isTyping = target => target.matches('input, textarea, select') || target.isContentEditable;
-const inWorkspace = () => !$('workspacePage').classList.contains('hidden') && !isOpen($('dialogBackdrop'));
+const inWorkspace = () => !$('workspacePage').classList.contains('hidden') && !isDataView() && !isOpen($('dialogBackdrop'));
 
 export function initWorkspace() {
   initPanels();
@@ -244,7 +244,7 @@ export function initWorkspace() {
     start: setStart,
     align,
     component: s => { canvas.updateComponents(s); canvas.highlight(selection, componentId); renderLayers() },
-    openData: () => showPanel('data'),
+    openData: () => setView('data'),
     move: (id, blockId, index) => moveComponent(session.screenId, id, blockId, index),
   });
   // Cambiar el modelo de dominio actualiza los nombres de entidades y datos que muestran las pantallas.
@@ -277,8 +277,7 @@ export function initWorkspace() {
 
   // Teclado: Supr o Retroceso borran el componente o las pantallas seleccionadas; F2 renombra la pantalla (salvo mientras se escribe).
   document.addEventListener('keydown', e => {
-    // En el panel «Datos» el foco está en entidades y atributos: Supr o Retroceso no deben borrar lo seleccionado en el lienzo.
-    if (!inWorkspace() || isTyping(e.target) || e.target.closest('.data-block') || !selection.size) return;
+    if (!inWorkspace() || isTyping(e.target) || !selection.size) return; // en «Datos» no se borra lo seleccionado en el lienzo
     if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); componentId ? deleteComponent(session.screenId, componentId) : deleteScreens([...selection]) }
     if (e.key === 'F2' && selection.size === 1 && !componentId) { e.preventDefault(); startRename(session.screenId) }
   });
