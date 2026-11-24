@@ -6,7 +6,8 @@ export const SIZE = { defW: 260, defH: 80, minW: 200, maxW: 800 };
    Nombres conocidos en la paleta; por debajo, el elemento IFML que representan (Spec IFML 1.0 §7.4, §8.1.4, §8.1.10).
    Dos niveles: la pantalla (ViewContainer) contiene elementos sueltos y bloques; los bloques contienen elementos (parts).
    - in: dónde puede ir (screen o el tipo de bloque). Un campo solo existe dentro de un Form (§8.3.53, §8.4.4): si se suelta
-     en la pantalla, se crea un formulario. Un ViewComponent (contenido, bloques) solo va en la pantalla (§8.1.4).
+     en la pantalla, se crea un formulario. Un ViewComponent (contenido, bloques) va en la pantalla (§8.1.4); el contenido
+     también va en una lista o ficha, donde es un VisualizationAttribute: muestra un atributo de su entidad (§8.3.58).
    - block: 'form' o 'data' (lista y ficha, que exigen un DataBinding a una entidad: §8.4.1, §8.4.5).
    - hint: qué abarca, visible en la paleta (incluye los nombres con que el usuario lo buscaría: casilla, enlace, imagen…).
    - family: tipos que son la misma clase IFML; el tipo solo cambia dentro de su familia (§8.3.25, §8.4.3).
@@ -16,7 +17,7 @@ export const COMPONENTS = {
   textbox: { label: 'Campo de texto', icon: 'i-textbox', hint: 'Para escribir un dato', prefix: 'txt', family: 'field', in: ['form'], place: 'dentro de un formulario', ifml: 'SimpleField (del Form)' },
   select: { label: 'Campo de selección', icon: 'i-select', hint: 'Desplegable, opciones o casillas', prefix: 'sel', family: 'field', in: ['form'], place: 'dentro de un formulario', ifml: 'SelectionField (del Form)' },
   button: { label: 'Botón', icon: 'i-button', hint: 'Botón o enlace: dispara una acción', prefix: 'btn', family: 'event', in: ANYWHERE },
-  label: { label: 'Contenido', icon: 'i-label', hint: 'Título, párrafo, etiqueta o imagen', prefix: 'cnt', family: 'content', in: ['screen'], place: 'directo en la pantalla', ifml: 'ViewComponent' },
+  label: { label: 'Contenido', icon: 'i-label', hint: 'Título, párrafo, etiqueta, imagen o dato', prefix: 'cnt', family: 'content', in: ['screen', 'list', 'details'], place: 'en la pantalla, una lista o una ficha', ifml: 'ViewComponent' },
   form: { label: 'Formulario', icon: 'i-form', hint: 'Agrupa campos que se envían juntos', prefix: 'frm', family: 'form', in: ['screen'], place: 'directo en la pantalla', block: 'form', ifml: 'Form' },
   list: { label: 'Lista de datos', icon: 'i-list', hint: 'Lista o tabla de registros', prefix: 'lst', family: 'data', in: ['screen'], place: 'directo en la pantalla', block: 'data', ifml: 'List (con DataBinding)' },
   details: { label: 'Ficha de datos', icon: 'i-details', hint: 'Muestra un solo registro', prefix: 'fch', family: 'data', in: ['screen'], place: 'directo en la pantalla', block: 'data', ifml: 'Details (con DataBinding)' },
@@ -28,7 +29,9 @@ export const BUTTON_ROLES = {
   list: { role: 'elige un registro', ifml: 'OnSelectEvent (de la List)' },
   details: { role: 'usa el registro', ifml: 'ViewElementEvent (de la ficha)' },
 };
-export const ifmlOf = (c, parent) => (c.kind === 'button' ? BUTTON_ROLES[parent?.kind ?? 'screen'].ifml : COMPONENTS[c.kind].ifml);
+// Igual el contenido: suelto es un ViewComponent; dentro de una lista o ficha, el atributo que muestra (como un campo en el formulario).
+export const ifmlOf = (c, parent) => (c.kind === 'button' ? BUTTON_ROLES[parent?.kind ?? 'screen'].ifml
+  : c.kind === 'label' && parent ? 'VisualizationAttribute (de la lista o ficha)' : COMPONENTS[c.kind].ifml);
 const isField = kind => COMPONENTS[kind].family === 'field';
 // Tipos a los que puede cambiar un componente (incluye el suyo).
 export const kindsLike = kind => Object.keys(COMPONENTS).filter(k => COMPONENTS[k].family === COMPONENTS[kind].family);
@@ -59,7 +62,7 @@ function create(kind, all) {
   const name = freeName(all, prefix);
   // Un bloque nace con número para distinguirlo de su tipo («Formulario 1», no «Formulario · Formulario»).
   const c = { id: uid(), kind, name, text: block ? `${label} ${name.slice(prefix.length)}` : label };
-  if (block) Object.assign(c, { entityId: null, parts: [] }, block === 'data' && { shown: [] });
+  if (block) Object.assign(c, { entityId: null, parts: [] });
   all.push(c);
   return c;
 }
@@ -97,6 +100,17 @@ export function nestLooseFields(screen) {
   });
   return true;
 }
+// Proyectos con atributos marcados en «Muestra»: cada uno pasa a ser un contenido dentro de su lista o ficha. Devuelve si cambió algo.
+export function shownToParts(screen, project) {
+  const blocks = (screen.components ?? []).filter(c => c.shown), all = allComponents(screen);
+  blocks.forEach(b => {
+    const attributes = entityOf(project, b.entityId)?.attributes ?? [];
+    const shown = attributes.filter(a => b.shown.includes(a.id));
+    b.parts.unshift(...shown.map(a => Object.assign(create('label', all), { text: a.name, attributeId: a.id })));
+    delete b.shown;
+  });
+  return blocks.length > 0;
+}
 /* Cambiar el tipo (dentro de la familia, ver kindsLike) conserva el texto visible, la posición y lo que contiene. Si el nombre
    técnico empieza con el prefijo del tipo anterior, se cambia el prefijo: btnGuardar → txtGuardar; btn1 → primer txtN libre. */
 export function changeKind(screen, component, kind) {
@@ -128,12 +142,11 @@ export function addAttribute(entity) {
    redimensiona. Crece con su contenido hasta COLLAPSE_AT (unos 4 elementos simples); lo que pase de ahí queda oculto
    mientras esté contraída; expandida (s.expanded, se guarda en el proyecto) muestra todo. Solo el ancho es manual.
    Medidas en px (deben coincidir con workspace.css): .node-head (37 + 12 de margen), .comp-row (26), separación entre lo que
-   no comparte bloque (.comp-list: 20) y dentro de un bloque (4), .comp-block (borde 1 + 1 y relleno 3 + 8: 13), su línea
-   «Muestra» (.comp-shown: 20) y su lista vacía (.comp-parts:empty: 22). */
-const NODE = { head: 49, row: 26, top: 20, gap: 4, foot: 44, block: 13, shown: 20, empty: 22 };
+   no comparte bloque (.comp-list: 20) y dentro de un bloque (4), .comp-block (borde 1 + 1 y relleno 3 + 8: 13) y su lista
+   vacía (.comp-parts:empty: 22). */
+const NODE = { head: 49, row: 26, top: 20, gap: 4, foot: 44, block: 13, empty: 22 };
 const partsHeight = n => (n ? n * (NODE.row + NODE.gap) - NODE.gap : NODE.empty);
-const itemHeight = c => (!c.parts ? NODE.row
-  : NODE.block + NODE.row + NODE.gap + (COMPONENTS[c.kind].block === 'data' ? NODE.shown + NODE.gap : 0) + partsHeight(c.parts.length));
+const itemHeight = c => (!c.parts ? NODE.row : NODE.block + NODE.row + NODE.gap + partsHeight(c.parts.length));
 const contentHeight = s => (s.components?.length
   ? NODE.head + s.components.reduce((h, c) => h + itemHeight(c), 0) + (s.components.length - 1) * NODE.top + NODE.foot : 0);
 const COLLAPSE_AT = 280;

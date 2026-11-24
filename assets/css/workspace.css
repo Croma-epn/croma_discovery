@@ -133,14 +133,12 @@
 .comp-list:empty::before { content: 'Arrastra componentes aquí'; color: var(--muted); font-size: 10.5px; }
 /* Bloque (formulario, lista o ficha): caja con su título y su contenido sangrado (región común). El título es solo texto,
    sin contorno, para no parecer un botón; tampoco copia la franja de la pantalla (contenedor ≠ componente en IFML).
-   Medidas fijas usadas por NODE en model.js: borde + relleno = 8, .comp-shown = 20, lista vacía = 22. */
+   Medidas fijas usadas por NODE en model.js: borde + relleno = 8, lista vacía = 22. */
 .comp-block { display: flex; flex-direction: column; gap: 4px; padding: 3px 8px 8px 3px; border: 1px solid var(--block-line); border-radius: 9px; background: var(--block-fill); }
 .comp-block > .comp-row, .comp-block > .comp-row:hover, .comp-block > .comp-row.selected { border-color: transparent; background: transparent; box-shadow: none; }
 .comp-block:hover { border-color: var(--primary); }
 .comp-block:has(> .comp-row.selected) { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); } /* bloque seleccionado */
 .comp-block > .comp-row .comp-text { font-weight: 750; }
-.comp-shown { height: 20px; margin: 0; padding: 0 6px 0 26px; overflow: hidden; color: var(--muted); font-size: 10px; line-height: 20px; white-space: nowrap; text-overflow: ellipsis; }
-.comp-shown.is-missing { color: var(--warning-icon); font-weight: 650; }
 .comp-parts { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0 0 0 14px; list-style: none; }
 .comp-parts:empty { height: 22px; }
 .comp-parts:empty::before { content: attr(data-empty); display: block; overflow: hidden; color: var(--muted); font-size: 10px; line-height: 22px; white-space: nowrap; text-overflow: ellipsis; }
@@ -233,9 +231,6 @@
 /* Sección Datos del componente */
 .prop-field .toolbar-dropdown, .prop-field .toolbar-dropdown > .sort-btn { width: 100%; }
 .prop-field .toolbar-menu { left: 0; right: 0; }
-.shown-head { display: flex; align-items: center; justify-content: space-between; }
-.shown-title { color: #474351; font-size: 11px; font-weight: 750; }
-.shown-list { display: flex; flex-direction: column; gap: 6px; }
 .prop-size-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 /* Cuadro con un texto fijo a la derecha: unidad (px) o contador de caracteres */
 .input-suffix { position: relative; }

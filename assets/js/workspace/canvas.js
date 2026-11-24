@@ -25,10 +25,10 @@ const draggedKind = types => types.find(t => t.startsWith(`${COMPONENT_MIME}-`))
 /* ---------- Dibujo ---------- */
 /* Componentes uno debajo del otro, en el orden en que se agregaron (el orden comunica qué es la pantalla).
    Un bloque (formulario, lista o ficha) es una caja con su fila de título y, debajo, lo que contiene. */
-// Lo que se lee junto al tipo: qué hace el botón, la entidad del bloque o el dato del campo.
+// Lo que se lee junto al tipo: qué hace el botón, la entidad del bloque o el dato del campo o contenido.
 function detail(c, parent) {
   if (c.kind === 'button') return BUTTON_ROLES[parent?.kind ?? 'screen'].role;
-  if (c.parts) return entityOf(currentProject(), c.entityId)?.name ?? '';
+  if (c.parts) return entityOf(currentProject(), c.entityId)?.name ?? (COMPONENTS[c.kind].block === 'data' ? 'sin entidad' : '');
   return (parent && entityOf(currentProject(), parent.entityId)?.attributes.find(a => a.id === c.attributeId)?.name) ?? '';
 }
 const rowHtml = (c, parent, tag = 'li') => {
@@ -37,16 +37,9 @@ const rowHtml = (c, parent, tag = 'li') => {
     + `<span class="comp-kind">${label}${extra ? ` · ${esc(extra)}` : ''}</span>`
     + `<button class="del-btn comp-del" type="button" title="Eliminar" aria-label="Eliminar ${esc(c.text)}"><svg class="ic"><use href="#i-trash"/></svg></button></${tag}>`;
 };
-// Lista o ficha: qué atributos de su entidad muestra.
-function shownHtml(c) {
-  const entity = entityOf(currentProject(), c.entityId);
-  if (!entity) return '<p class="comp-shown is-missing">Elige su entidad en Propiedades</p>';
-  const names = entity.attributes.filter(a => c.shown.includes(a.id)).map(a => a.name);
-  return `<p class="comp-shown">Muestra: ${names.length ? esc(names.join(', ')) : 'nada aún'}</p>`;
-}
-const EMPTY_BLOCK = { form: 'Arrastra campos y botones aquí', data: 'Arrastra botones aquí' };
+const EMPTY_BLOCK = { form: 'Arrastra campos y botones aquí', data: 'Arrastra contenidos y botones aquí' };
 const componentHtml = c => (!c.parts ? rowHtml(c) : `<li class="comp-block" data-block="${esc(c.id)}">${rowHtml(c, null, 'div')}`
-  + `${c.shown ? shownHtml(c) : ''}<ol class="comp-parts" data-empty="${EMPTY_BLOCK[COMPONENTS[c.kind].block]}">${c.parts.map(p => rowHtml(p, c)).join('')}</ol></li>`);
+  + `<ol class="comp-parts" data-empty="${EMPTY_BLOCK[COMPONENTS[c.kind].block]}">${c.parts.map(p => rowHtml(p, c)).join('')}</ol></li>`);
 const componentsHtml = s => (s.components ?? []).map(componentHtml).join('');
 const nodeHtml = s => {
   const { w, h } = sizeOf(s);

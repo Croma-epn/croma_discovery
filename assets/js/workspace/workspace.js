@@ -25,7 +25,8 @@ export function openWorkspace(id) {
   const project = findProject(id);
   if (!project) return;
   session.projectId = id;
-  if (project.screens.map(model.nestLooseFields).some(Boolean)) saveProject(project); // campos sueltos de versiones anteriores
+  // Versiones anteriores: campos sueltos y atributos marcados en «Muestra» (se ejecutan las dos migraciones en cada pantalla).
+  if (project.screens.map(s => [model.nestLooseFields(s), model.shownToParts(s, project)].some(Boolean)).some(Boolean)) saveProject(project);
   showAppPage('workspace', { title: project.name, saved: true, editable: true });
   resetPanels();
   selection.clear();
