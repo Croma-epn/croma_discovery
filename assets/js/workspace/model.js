@@ -78,8 +78,9 @@ export function addComponent(screen, kind, block = null) {
 /* Mover (HU16) dentro de la pantalla: a `block` (null = la pantalla) en la posición index, contada con el componente aún en
    su lugar. Validar antes con placementError. Un campo llevado a la pantalla queda en un formulario nuevo. */
 export function moveComponent(screen, id, block, index) {
-  const { component, list } = findComponent(screen, id), target = block ? block.parts : screen.components;
+  const { component, list, parent } = findComponent(screen, id), target = block ? block.parts : screen.components;
   const from = list.indexOf(component);
+  if (parent?.entityId !== block?.entityId) delete component.attributeId; // el dato pertenece a la entidad de su bloque
   list.splice(from, 1);
   if (list === target && from < index) index--;
   let item = component;
@@ -144,7 +145,7 @@ export function addAttribute(entity) {
    Medidas en px (deben coincidir con workspace.css): .node-head (37 + 12 de margen), .comp-row (26), separación entre lo que
    no comparte bloque (.comp-list: 20) y dentro de un bloque (4), .comp-block (borde 1 + 1 y relleno 3 + 8: 13) y su lista
    vacía (.comp-parts:empty: 22). */
-const NODE = { head: 49, row: 26, top: 20, gap: 4, foot: 44, block: 13, empty: 22 };
+const NODE = { head: 49, row: 26, top: 20, gap: 4, foot: 44, block: 14, empty: 22 };
 const partsHeight = n => (n ? n * (NODE.row + NODE.gap) - NODE.gap : NODE.empty);
 const itemHeight = c => (!c.parts ? NODE.row : NODE.block + NODE.row + NODE.gap + partsHeight(c.parts.length));
 const contentHeight = s => (s.components?.length

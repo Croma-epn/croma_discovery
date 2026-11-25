@@ -18,7 +18,7 @@
 </head>
 <body>
 <!-- Íconos: se usan con <svg class="ic"><use href="#i-nombre"/></svg> -->
-<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+<svg class="sprite" aria-hidden="true">
 <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
 <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2h6.5A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/></symbol>
 <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -48,8 +48,8 @@
 <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="m4 18 5.5-5.5a1.4 1.4 0 0 1 2 0L18 19"/></symbol>
 <symbol id="i-chev-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
 <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4.5"/><path d="m11.5 11.5 8-8M17 6l2.5 2.5M14 9l2 2"/></symbol>
-<symbol id="i-grip" viewBox="0 0 24 24"><path d="M9 6h.01M9 12h.01M9 18h.01M15 6h.01M15 12h.01M15 18h.01" stroke-width="3" stroke-linecap="round"/></symbol>
-<symbol id="i-more"viewBox="0 0 24 24"><path d="M12 5h.01M12 12h.01M12 19h.01" stroke-width="3.2" stroke-linecap="round"/></symbol>
+<symbol id="i-grip" viewBox="0 0 24 24"><path d="M9 6h.01M9 12h.01M9 18h.01M15 6h.01M15 12h.01M15 18h.01" class="ic-trazo-puntos" stroke-linecap="round"/></symbol>
+<symbol id="i-more"viewBox="0 0 24 24"><path d="M12 5h.01M12 12h.01M12 19h.01" class="ic-trazo-puntos" stroke-linecap="round"/></symbol>
 <symbol id="i-sort" viewBox="0 0 24 24"><path d="M4 7h10M4 12h7M4 17h4"/><path d="M18 5v14M14.5 15.5 18 19l3.5-3.5"/></symbol>
 <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M5 3v3m0 4v11M12 3v10m0 4v4M19 3v3m0 4v11M2 6h6M9 17h6M16 6h6"/></symbol>
 <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
@@ -82,7 +82,7 @@
   <div class="aside-copy">
     <h1>Diseña el flujo, no solo las pantallas.</h1>
     <div class="aside-demo" aria-hidden="true">
-      <svg viewBox="0 0 360 236"><path class="demo-line" pathLength="1" d="M172,154 C192,154 198,90 220,90"/><g><rect class="demo-screen-body" x="216" y="52" width="112" height="76" rx="10"/><rect x="225" y="62" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="232" cy="66.5" r="2" fill="#c6b5f2"/><rect x="225" y="80" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="225" y="91" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="102" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="225" y="113" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><path class="demo-arrow" d="M216 90 L205 84.5 L205 95.5 Z"/><circle class="demo-port demo-port-b" cx="216" cy="90" r="4.5"/></g><g class="demo-screen-a"><rect class="demo-ants" x="-5" y="-5" width="122" height="86" rx="12"/><rect class="demo-screen-body" x="0" y="0" width="112" height="76" rx="10"/><rect x="9" y="10" width="76" height="9" rx="4.5" fill="#4b3a7a"/><circle cx="16" cy="14.5" r="2" fill="#c6b5f2"/><rect x="9" y="28" width="66" height="6" rx="3" fill="#ffffff2e"/><rect x="9" y="39" width="86" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="50" width="52" height="6" rx="3" fill="#ffffff21"/><rect x="9" y="61" width="34" height="8" rx="4" fill="#c6b5f2" opacity=".9"/><circle class="demo-port demo-port-a" cx="112" cy="38" r="4.5"/></g><g class="demo-cursor"><path d="M0 0 L0 16.9 L4.3 13.2 L6.9 19.3 L10.2 17.9 L7.6 11.9 L13.2 11.4 Z" fill="#fff" stroke="#2a1e4a" stroke-width="1.4" stroke-linejoin="round"/></g></svg>
+      <svg viewBox="0 0 360 236"><path class="demo-line" pathLength="1" d="M172,154 C192,154 198,90 220,90"/><g><rect class="demo-screen-body" x="216" y="52" width="112" height="76" rx="10"/><rect x="225" y="62" width="76" height="9" rx="4.5" class="demo-head"/><circle cx="232" cy="66.5" r="2" class="demo-dot"/><rect x="225" y="80" width="66" height="6" rx="3" class="demo-text"/><rect x="225" y="91" width="86" height="6" rx="3" class="demo-text-soft"/><rect x="225" y="102" width="52" height="6" rx="3" class="demo-text-soft"/><rect x="225" y="113" width="34" height="8" rx="4" class="demo-btn"/><path class="demo-arrow" d="M216 90 L205 84.5 L205 95.5 Z"/><circle class="demo-port demo-port-b" cx="216" cy="90" r="4.5"/></g><g class="demo-screen-a"><rect class="demo-ants" x="-5" y="-5" width="122" height="86" rx="12"/><rect class="demo-screen-body" x="0" y="0" width="112" height="76" rx="10"/><rect x="9" y="10" width="76" height="9" rx="4.5" class="demo-head"/><circle cx="16" cy="14.5" r="2" class="demo-dot"/><rect x="9" y="28" width="66" height="6" rx="3" class="demo-text"/><rect x="9" y="39" width="86" height="6" rx="3" class="demo-text-soft"/><rect x="9" y="50" width="52" height="6" rx="3" class="demo-text-soft"/><rect x="9" y="61" width="34" height="8" rx="4" class="demo-btn"/><circle class="demo-port demo-port-a" cx="112" cy="38" r="4.5"/></g><g class="demo-cursor"><path d="M0 0 L0 16.9 L4.3 13.2 L6.9 19.3 L10.2 17.9 L7.6 11.9 L13.2 11.4 Z" class="demo-pointer"/></g></svg>
     </div>
     <span class="eyebrow">Modela. Conecta. Valida.</span>
     <p>Arrastra pantallas al lienzo, conéctalas con flechas y define la navegación completa de tu producto. Croma convierte tu modelo en un prototipo navegable — sin escribir una sola línea de código.</p>

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "azure-devops": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@azure-devops/mcp@2.11.0", "GR07-TITD104-26B", "-d", "core", "work", "work-items"]
+    }
+  }
+}

@@ -25,7 +25,7 @@ function readCoverImage(file) {
       canvas.width = Math.max(1, Math.round(img.width * scale));
       canvas.height = Math.max(1, Math.round(img.height * scale));
       const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#fff';
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--croma-color-superficie');
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       try { resolve(canvas.toDataURL('image/jpeg', .82)) } catch { reject(new Error('No se pudo procesar la imagen.')) }

@@ -11,6 +11,10 @@ export const initials = (name = 'Estudiante') =>
 
 export const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
+/* Lee un token de diseño de tokens.css (sin el prefijo --croma-): token('quiebre-tablet') → '980px'. */
+export const token = name => getComputedStyle(document.documentElement).getPropertyValue(`--croma-${name}`).trim();
+export const tokenMs = name => parseFloat(token(name)) * 1000; // duraciones en segundos → ms
+
 export const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 export const isEmail = value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);

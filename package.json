@@ -1,0 +1,8 @@
+{
+  "name": "croma-tokens",
+  "version": "1.0.0",
+  "description": "Tokens de diseño de Croma (--croma-*) compartidos por el prototipo y el frontend",
+  "private": true,
+  "files": ["assets/css/tokens.css"],
+  "exports": { "./tokens.css": "./assets/css/tokens.css" }
+}

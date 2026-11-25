@@ -1,5 +1,5 @@
 // Notificaciones, modales y diálogo de confirmación.
-import { $, esc, focusLater } from '../util.js';
+import { $, esc, focusLater, tokenMs } from '../util.js';
 
 /* ---------- Notificaciones ---------- */
 // action: { label, onClick } añade un botón (p. ej. «Deshacer»). icon: 'i-info' para avisos que no confirman un éxito.
@@ -12,7 +12,7 @@ export function showToast(message, { action, ms, icon = 'i-check' } = {}) {
   let timer;
   const dismiss = () => { clearTimeout(timer); toast.remove() };
   const pause = () => clearTimeout(timer);
-  const schedule = () => { pause(); timer = setTimeout(dismiss, ms || (action ? 8000 : 3400)) };
+  const schedule = () => { pause(); timer = setTimeout(dismiss, ms || tokenMs(action ? 'duracion-aviso-accion' : 'duracion-aviso')) };
   if (action) {
     const button = document.createElement('button');
     button.type = 'button';
@@ -35,7 +35,7 @@ export const showModal = backdrop => backdrop.classList.remove('closing', 'hidde
 export function hideModal(backdrop) {
   if (!isOpen(backdrop)) return;
   backdrop.classList.add('closing'); // deja terminar la animación de salida
-  setTimeout(() => { if (backdrop.classList.contains('closing')) backdrop.classList.replace('closing', 'hidden') }, 170);
+  backdrop.addEventListener('animationend', () => { if (backdrop.classList.contains('closing')) backdrop.classList.replace('closing', 'hidden') }, { once: true });
 }
 
 // Clic fuera del modal o Escape ejecutan onDismiss del modal abierto.

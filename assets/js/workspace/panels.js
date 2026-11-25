@@ -1,15 +1,15 @@
 /* Vistas del proyecto (pestañas Datos / Interfaces de la barra superior) y paneles laterales del lienzo:
    Herramientas/Capas (izquierda) y Propiedades (derecha).
    Tablet (≤980 px): Propiedades flota sobre el lienzo. Celular (≤760 px): los paneles izquierdos también. */
-import { $ } from '../util.js';
+import { $, token } from '../util.js';
 
 const PANELS = {
   tools: { icon: 'i-tool', label: 'Herramientas', rail: 'railTools' },
   nav: { icon: 'i-layers', label: 'Capas', rail: 'railNav' },
 };
 const body = () => $('workspaceBody');
-export const isTablet = () => matchMedia('(max-width:980px)').matches;
-export const isPhone = () => matchMedia('(max-width:760px)').matches;
+export const isTablet = () => matchMedia(`(max-width:${token('quiebre-tablet')})`).matches;
+export const isPhone = () => matchMedia(`(max-width:${token('quiebre-celular')})`).matches;
 
 export function collapsePalette(collapsed = true) {
   body().classList.toggle('palette-collapsed', collapsed);

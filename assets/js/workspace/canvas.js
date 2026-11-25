@@ -34,7 +34,7 @@ function detail(c, parent) {
 const rowHtml = (c, parent, tag = 'li') => {
   const { label, icon } = COMPONENTS[c.kind], extra = detail(c, parent);
   return `<${tag} class="comp-row" data-comp="${esc(c.id)}"><svg class="ic"><use href="#${icon}"/></svg><span class="comp-text">${esc(c.text)}</span>`
-    + `<span class="comp-kind">${label}${extra ? ` · ${esc(extra)}` : ''}</span>`
+    + `<span class="comp-kind"${extra ? ` title="${label} · ${esc(extra)}"` : ''}>${label}${extra ? ` · ${esc(extra)}` : ''}</span>`
     + `<button class="del-btn comp-del" type="button" title="Eliminar" aria-label="Eliminar ${esc(c.text)}"><svg class="ic"><use href="#i-trash"/></svg></button></${tag}>`;
 };
 const EMPTY_BLOCK = { form: 'Arrastra campos y botones aquí', data: 'Arrastra contenidos y botones aquí' };

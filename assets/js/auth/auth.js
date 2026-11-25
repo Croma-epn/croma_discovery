@@ -1,5 +1,5 @@
 // Iniciar sesión, crear cuenta y recuperar contraseña (simulado: el prototipo no tiene servidor).
-import { $, uid, focusLater, isEmail } from '../util.js';
+import { $, uid, focusLater, isEmail, tokenMs } from '../util.js';
 import { db, persist, findUser, socialLabel } from '../store.js';
 import { check, emailError, setFieldError, setMessage, validateLive } from '../ui/forms.js';
 import { showToast } from '../ui/feedback.js';
@@ -61,7 +61,7 @@ function resetRecover() {
 }
 function sendCode(user) {
   recovery = { user, code: String(Math.floor(100000 + Math.random() * 900000)) };
-  showToast(`Correo simulado: tu código de recuperación es ${recovery.code}`, { ms: 20000 });
+  showToast(`Correo simulado: tu código de recuperación es ${recovery.code}`, { ms: tokenMs('duracion-aviso-largo') });
 }
 const submitStep = {
   1() {

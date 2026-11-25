@@ -1,23 +1,280 @@
-/* Variables de diseño. Cambiar un color aquí lo cambia en toda la app. */
+/* Tokens de diseño de Croma: única fuente de valores para el prototipo y el frontend (ver propuesta de tokens unificados).
+   Dos capas, como en Figma: las escalas (primitivos) no se usan directo; los componentes usan solo los tokens por función.
+   Familias: color · radio · letra · peso · sombra · alto. Prefijo --croma- para no chocar con shadcn. */
 :root {
-  --bg: #f6f5f7;
-  --ink: #23202b;
-  --muted: #767180;
-  --line: #e4e2e9;
-  --topbar-h: 52px; /* alto del encabezado: el espacio de trabajo ocupa el resto */
-  /* Contornos de pantallas, bloques y elementos del lienzo: contraste ≥ 3:1 con su fondo (WCAG 1.4.11) */
-  --line-strong: #857c98;
-  --block-line: #8b74c9;
-  --block-fill: #f5f4f8;
-  --primary: #6d4fc2;
-  --primary-dark: #5a3fa8;
-  --primary-soft: #ece7fa;
-  --primary-pale: #f6f3fd;
-  --danger: #c43d4b;
-  --danger-soft: #fff0f1;
-  --warning-ink: #6b4700;
-  --warning-icon: #a86a00;
-  --warning-bg: #fff8e1;
-  --warning-line: #ecc96b;
-  --shadow: 0 12px 34px rgba(60, 40, 110, .10);
+  /* Escalas */
+  --croma-color-morado-50: #f6f3fd;
+  --croma-color-morado-100: #ece7fa;
+  --croma-color-morado-200: #c6b5f2;
+  --croma-color-morado-300: #a894d7;
+  --croma-color-morado-400: #8f77c7;
+  --croma-color-morado-500: #6d4fc2;
+  --croma-color-morado-600: #5a3fa8;
+  --croma-color-morado-700: #372562;
+  --croma-color-morado-800: #2a1e4a;
+  --croma-color-morado-900: #201639;
+  --croma-color-neutro-50: #ffffff;
+  --croma-color-neutro-100: #f6f5f7;
+  --croma-color-neutro-150: #e4e2e9;
+  --croma-color-neutro-200: #d9d6e1;
+  --croma-color-neutro-300: #c1bdc9;
+  --croma-color-neutro-400: #9e9aa7;
+  --croma-color-neutro-500: #767180;
+  --croma-color-neutro-600: #5d5769;
+  --croma-color-neutro-700: #474351;
+  --croma-color-neutro-800: #23202b;
+  --croma-color-neutro-900: #171028;
+  --croma-color-peligro-100: #fff0f1;
+  --croma-color-peligro-200: #f1d9dc;
+  --croma-color-peligro-500: #c43d4b;
+  --croma-color-peligro-700: #8f2836;
+  --croma-color-advertencia-100: #fff8e1;
+  --croma-color-advertencia-500: #ecc96b;
+  --croma-color-advertencia-600: #a86a00;
+  --croma-color-advertencia-700: #6b4700;
+
+  /* Colores por función */
+  --croma-color-fondo: var(--croma-color-neutro-100);
+  --croma-color-superficie: var(--croma-color-neutro-50);
+  --croma-color-texto: var(--croma-color-neutro-800);
+  --croma-color-texto-fuerte: var(--croma-color-neutro-600);
+  --croma-color-texto-secundario: var(--croma-color-neutro-500);
+  --croma-color-texto-tenue: var(--croma-color-neutro-400); /* solo íconos y separadores, no texto (contraste < 4.5:1) */
+  --croma-color-texto-invertido: var(--croma-color-neutro-50);
+  --croma-color-borde: var(--croma-color-neutro-150);
+  --croma-color-borde-campo: var(--croma-color-neutro-200);
+  --croma-color-borde-principal: var(--croma-color-morado-200);
+  --croma-color-principal: var(--croma-color-morado-500);
+  --croma-color-principal-oscuro: var(--croma-color-morado-600);
+  --croma-color-principal-tenue: var(--croma-color-morado-300);
+  --croma-color-principal-suave: var(--croma-color-morado-100);
+  --croma-color-principal-palido: var(--croma-color-morado-50);
+  --croma-color-campo-foco: #e7e1f4;
+  --croma-color-campo-error: #fffafb;
+  --croma-color-error: var(--croma-color-peligro-500);
+  --croma-color-error-suave: var(--croma-color-peligro-100);
+  --croma-color-error-borde: var(--croma-color-peligro-200);
+  --croma-color-advertencia-texto: var(--croma-color-advertencia-700);
+  --croma-color-advertencia-fondo: var(--croma-color-advertencia-100);
+  --croma-color-advertencia-borde: var(--croma-color-advertencia-500);
+  --croma-color-advertencia-icono: var(--croma-color-advertencia-600);
+  /* Lienzo: contornos con contraste ≥ 3:1 con su fondo (WCAG 1.4.11) */
+  --croma-color-lienzo-borde: #857c98;
+  --croma-color-bloque-borde: #8b74c9;
+  --croma-color-bloque-fondo: #f5f4f8;
+  --croma-color-seleccion-fondo: rgba(109, 79, 194, .08);
+  /* Superficies oscuras: panel de inicio de sesión y avisos */
+  --croma-color-oscuro-fondo: var(--croma-color-morado-900);
+  --croma-color-oscuro-acento: var(--croma-color-morado-200);
+  --croma-color-panel-texto: #cbc4dc;
+  --croma-color-panel-subtitulo: #c2b9d8;
+  --croma-color-velo: #17102870; /* fondo de los modales */
+  /* Blanco translúcido sobre fondos oscuros o morados (halos, hover, líneas de la demo) */
+  --croma-color-blanco-sutil: #ffffff08;
+  --croma-color-blanco-suave: #ffffff1f;
+  --croma-color-blanco-medio: #ffffff2e;
+  /* Ilustración del inicio de sesión (diagrama de pantallas) */
+  --croma-color-diagrama-fondo: #372a5e;
+  --croma-color-diagrama-cabecera: #4b3a7a;
+  --croma-color-diagrama-contorno: var(--croma-color-morado-800);
+  /* Portada de proyecto sin imagen */
+  --croma-fondo-portada: linear-gradient(135deg, #efe9fb, #ded3f4);
+  --croma-color-portada-iniciales: #8768c9;
+
+  /* Radios: escala de shadcn con --radius = 10px */
+  --croma-radio-xs: 6px;
+  --croma-radio-sm: 8px;
+  --croma-radio-control: 10px;
+  --croma-radio-tarjeta: 14px;
+  --croma-radio-modal: 18px;
+  --croma-radio-completo: 999px;
+
+  /* Fuentes. El frontend cambia el valor por las de next/font: --croma-fuente-titulo: var(--fuente-manrope) */
+  --croma-fuente-texto: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --croma-fuente-titulo: Manrope, Inter, system-ui, sans-serif;
+  --croma-fuente-codigo: ui-monospace, monospace;
+
+  /* Tamaños de letra (mínimo 11px, como labelSmall de Material 3) */
+  --croma-letra-nota: 11px;
+  --croma-letra-etiqueta: 12px;
+  --croma-letra-cuerpo: 14px;
+  --croma-letra-destacado: 16px;
+  --croma-letra-subtitulo: 18px;
+  --croma-letra-seccion: 20px;
+  --croma-letra-titulo: clamp(25px, 2.3vw, 31px);
+  --croma-letra-portada: clamp(30px, 3.4vw, 46px);
+  --croma-letra-iniciales: 34px; /* iniciales grandes de la portada de proyecto */
+
+  /* Interletrado (valores de Tailwind: tighter, tight, wider, widest) */
+  --croma-interletrado-titulo: -.05em;
+  --croma-interletrado-subtitulo: -.025em;
+  --croma-interletrado-amplio: .05em;
+  --croma-interletrado-mayusculas: .1em;
+
+  /* Interlineado */
+  --croma-interlineado-titulo: 1.1;
+  --croma-interlineado-compacto: 1.4;
+  --croma-interlineado-normal: 1.5;
+  --croma-interlineado-amplio: 1.7;
+
+  /* Pesos: solo los que se cargan (Inter 400–700, Manrope 400–800) */
+  --croma-peso-normal: 400;
+  --croma-peso-medio: 500;
+  --croma-peso-semi: 600;
+  --croma-peso-negrita: 700;
+  --croma-peso-extra: 800; /* solo Manrope (títulos) */
+
+  /* Sombras */
+  --croma-sombra-sutil: 0 1px 3px #2a1f4426;
+  --croma-sombra-boton: 0 3px 8px #37256222;
+  --croma-sombra-reposo: 0 6px 20px #28203a0c;
+  --croma-sombra-elevada: 0 12px 34px rgba(60, 40, 110, .10);
+  --croma-sombra-cajon: 0 0 32px #24183f24;
+  --croma-sombra-modal: 0 25px 80px #17102830;
+  /* Anillos (box-shadow sin desenfoque alrededor de un elemento) */
+  --croma-anillo-foco: 0 0 0 3px var(--croma-color-campo-foco);
+  --croma-anillo-borde: 0 0 0 var(--croma-borde) var(--croma-color-principal); /* completa el borde de selección de filas y bloques */
+  --croma-anillo-seleccion: 0 0 0 4px var(--croma-color-principal-suave);      /* pantalla seleccionada */
+  --croma-anillo-resaltado: 0 0 0 3px var(--croma-color-principal);            /* proyecto recién duplicado */
+  --croma-anillo-linea: 0 0 0 2px var(--croma-color-superficie);               /* separa la línea de soltar de lo que tiene detrás */
+  /* Halos decorativos (anillos concéntricos de los fondos morados) */
+  --croma-halo-sm: 24px;
+  --croma-halo-md: 45px;
+  --croma-halo-lg: 90px;
+  --croma-sombra-diagrama: 0 10px 16px rgba(15, 7, 34, .5);  /* pantallas de la demo (filter: drop-shadow) */
+  --croma-sombra-cursor: 0 3px 6px rgba(15, 7, 34, .55);
+
+  /* Íconos (en Lucide, la propiedad size) */
+  --croma-icono-xs: 12px;
+  --croma-icono-sm: 14px;
+  --croma-icono-md: 16px;
+  --croma-icono-lg: 18px;
+  --croma-icono-xl: 24px;
+  --croma-icono-trazo: 1.8;       /* en Lucide, strokeWidth (su valor por defecto es 2) */
+  --croma-icono-trazo-puntos: 3;  /* íconos hechos de puntos (⋮⋮, ⋮): más gruesos para que se vean */
+
+  /* Espaciado: sin tokens propios. Paddings, márgenes y gaps usan la escala de Tailwind (--spacing: 4px):
+     múltiplos de 2 hasta 8px (p-0.5 … p-2) y múltiplos de 4 desde ahí (p-3 = 12px, p-4 = 16px…). */
+
+  /* Duraciones de transición */
+  --croma-duracion-rapida: .15s;  /* hover, color, borde */
+  --croma-duracion-normal: .2s;   /* aparecer, entrar, desplegar */
+  --croma-duracion-panel: .28s;   /* paneles que se deslizan */
+  --croma-curva: ease;            /* curva de todas las transiciones */
+  --croma-duracion-destello: .7s; /* destello de «Guardado» al guardar a mano */
+  --croma-duracion-resaltado: 2.2s; /* resaltado del proyecto recién duplicado */
+  --croma-duracion-demo: 7.5s;    /* ciclo de la demo del inicio de sesión */
+  --croma-duracion-hormigas: .55s; /* contorno punteado en movimiento de la demo */
+  --croma-curva-demo: cubic-bezier(.5, .05, .35, .95);
+  --croma-duracion-aviso: 3.4s;   /* tiempo que se ve un aviso */
+  --croma-duracion-aviso-accion: 8s; /* aviso con botón (p. ej. «Deshacer») */
+  --croma-duracion-aviso-largo: 20s; /* aviso con un dato que hay que copiar */
+  --croma-retraso-escalonado: 35ms; /* entrada de tarjetas, una tras otra */
+  --croma-retraso-maximo: 210ms;
+  /* Elevación al pasar el mouse */
+  --croma-elevacion-hover: -3px;  /* tarjetas que suben al pasar el mouse */
+  --croma-elevacion-hover-sutil: -1px; /* elementos de lista (paleta) */
+  /* Escalas de interacción */
+  --croma-escala-presion: .985;   /* botón al presionar */
+  --croma-escala-hover: 1.05;     /* logo al pasar el mouse */
+  --croma-escala-entrada: .92;    /* pantalla al aparecer en el lienzo */
+  --croma-escala-clic: .84;       /* cursor de la demo al hacer clic */
+  /* Desplazamientos de entrada y salida */
+  --croma-desplazamiento-entrada: 8px;     /* modales y tarjetas */
+  --croma-desplazamiento-aviso: 10px;      /* avisos */
+  --croma-desplazamiento-desplegable: -3px; /* menús y mensajes de error */
+  --croma-desplazamiento-lengueta: 10px;   /* lengüetas para mostrar un panel */
+  --croma-desplazamiento-oculto: 105%;     /* panel flotante escondido fuera de la vista */
+  /* Efectos */
+  --croma-desenfoque-velo: 3px;   /* fondo detrás de un modal */
+  --croma-brillo-hover: 1.07;     /* «Crear proyecto» al pasar el mouse */
+
+  /* Lienzo */
+  --croma-lienzo-cuadricula: 22px; /* separación de la cuadrícula de puntos */
+  --croma-lienzo-punto: 1px;
+
+  /* Cajas cuadradas: íconos con fondo, logo y avatares */
+  --croma-caja-xs: 28px;          /* logo de la barra superior */
+  --croma-caja-sm: 32px;          /* avatar, botón dentro de un campo */
+  --croma-caja-md: 40px;          /* logo, ícono de la paleta, avatar del menú */
+  --croma-caja-lg: 44px;          /* ícono de diálogo y de Propiedades vacío */
+  --croma-caja-xl: 56px;          /* ícono del lienzo vacío */
+  --croma-casilla: 16px;          /* casilla de verificación */
+
+  /* Anchos de contenido */
+  --croma-ancho-pagina: 1480px;
+  --croma-ancho-formulario: 390px;        /* tarjeta de acceso */
+  --croma-ancho-formulario-amplio: 680px; /* crear proyecto */
+  --croma-ancho-modal: 510px;
+  --croma-ancho-modal-amplio: 560px;      /* editar proyecto */
+  --croma-ancho-menu: 176px;              /* ancho mínimo de un menú */
+  --croma-ancho-menu-amplio: 250px;       /* menú de la cuenta */
+
+  /* Posición de lo que flota */
+  --croma-separacion-menu: 8px;   /* entre un botón y su menú */
+  --croma-margen-flotante: 16px;  /* controles sobre el borde del lienzo y de los paneles */
+  --croma-margen-aviso: 24px;     /* avisos desde la esquina */
+
+  /* Espacio de trabajo */
+  --croma-ancho-barra: 84px;      /* barra de íconos */
+  --croma-ancho-paleta: 250px;    /* Herramientas y Capas */
+  --croma-ancho-propiedades: 300px;
+
+  /* Capas (z-index) de toda la página; el orden dentro de un mismo componente usa números locales pequeños */
+  --croma-capa-encabezado: 10;
+  --croma-capa-panel: 20;         /* paneles flotantes en tablet y celular */
+  --croma-capa-menu: 80;
+  --croma-capa-modal: 100;
+  --croma-capa-aviso: 150;
+
+  /* Bordes y foco */
+  --croma-borde: 1px;
+  --croma-borde-seleccion: 2px;   /* pantalla seleccionada, zona donde se suelta */
+  --croma-foco-ancho: 3px;        /* contorno de foco con teclado (WCAG 2.4.7) */
+  --croma-foco-separacion: 2px;
+  --croma-opacidad-deshabilitado: .45;
+  --croma-opacidad-arrastre: .4;   /* fila o bloque que se está moviendo */
+  --croma-opacidad-guia: .45;      /* guías verticales del árbol de capas */
+  --croma-opacidad-iniciales: .55;
+  --croma-opacidad-diagrama: .9;   /* botón y contorno punteado de la demo */
+
+  /* Trazos de la ilustración del inicio de sesión */
+  --croma-diagrama-trazo-fino: 1;
+  --croma-diagrama-trazo-medio: 1.5;
+  --croma-diagrama-trazo-grueso: 2;
+  --croma-diagrama-trazo-linea: 2.5;
+  --croma-diagrama-punteado: 5 5;
+
+  /* Altos de control (múltiplos de 4: h-7, h-8, h-9, h-12 en Tailwind) */
+  --croma-alto-control-mini: 28px; /* botones de ícono pequeños, pestañas Datos/Interfaces; no crece en táctil: ya supera los 24px de WCAG 2.5.8 */
+  --croma-alto-control-denso: 32px;
+  --croma-alto-control: 36px;
+  --croma-alto-control-grande: 48px;
+  --croma-alto-encabezado: 52px;
+
+  /* Puntos de quiebre. CSS no acepta var() en @media: los @media de cada archivo repiten estos números;
+     el JS los lee de aquí (token('quiebre-tablet')) y el frontend los copia en sus --breakpoint-* */
+  --croma-quiebre-escritorio: 1240px;
+  --croma-quiebre-laptop: 1100px;
+  --croma-quiebre-tablet: 980px;
+  --croma-quiebre-celular: 760px;
+  --croma-quiebre-celular-sm: 480px;
+  --croma-quiebre-celular-xs: 430px;
+}
+/* Pantallas táctiles: objetivo de 44px (WCAG 2.5.5) */
+@media (pointer: coarse) {
+  :root { --croma-alto-control-denso: 44px; --croma-alto-control: 44px; }
+}
+/* Entre 981 y 1100px Propiedades se angosta; desde 980px flota sobre el lienzo con su ancho normal */
+@media (min-width: 981px) and (max-width: 1100px) {
+  :root { --croma-ancho-propiedades: 272px; }
+}
+@media (max-width: 760px) {
+  :root { --croma-alto-encabezado: 48px; }
+}
+@media (max-width: 480px) {
+  :root { --croma-ancho-menu: 160px; }
+}
+@media (max-width: 430px) {
+  :root { --croma-ancho-barra: 48px; }
 }

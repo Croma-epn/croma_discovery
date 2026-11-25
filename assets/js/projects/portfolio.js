@@ -30,7 +30,7 @@ const menu = p => `<div class="card-menu-wrap">
     <button class="menu-item danger" data-action="delete" type="button" role="menuitem"><svg class="ic"><use href="#i-trash"/></svg><span>Borrar proyecto</span></button>
   </div></div>`;
 
-const card = (p, i) => { const m = meta(p); return `<article class="project-card" role="button" tabindex="0" data-project="${esc(p.id)}" style="animation-delay:${Math.min(i * 35, 210)}ms">
+const card = (p, i) => { const m = meta(p); return `<article class="project-card" role="button" tabindex="0" data-project="${esc(p.id)}" style="--i:${i}">
   <div class="project-cover">${cover(p)}</div>
   <div class="card-title-row"><h3>${esc(p.name)}</h3>${menu(p)}</div>
   <p class="desc">${esc(p.description || 'Sin descripción. Abre el proyecto para comenzar a modelar sus pantallas.')}</p>
